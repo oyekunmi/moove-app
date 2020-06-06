@@ -1,9 +1,8 @@
 {
   "expo": {
-    "name": "moove-app",
+    "name": "Moovelogic",
     "slug": "moove-app",
     "platforms": [
-      "ios",
       "android",
       "web"
     ],
@@ -21,8 +20,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true
+    "android": {
+      "package": "com.oyekunmi.moovelogic",
+      "versionCode": 1
     }
   }
 }
