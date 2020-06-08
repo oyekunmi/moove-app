@@ -1,0 +1,6 @@
+export const RESTORE_TOKEN = 'RESTORE_TOKEN'
+export const SIGN_IN = 'SIGN_IN'
+export const SIGN_OUT = 'SIGN_OUT'
+export const SHOW_INTRO = 'SHOW_INTRO'
+export const HIDE_INTRO = 'HIDE_INTRO'
+export const APP_LOADED = 'APP_LOADED'
