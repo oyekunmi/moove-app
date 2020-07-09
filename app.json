@@ -23,6 +23,10 @@
     "android": {
       "package": "com.oyekunmi.moovelogic",
       "versionCode": 1
-    }
+    },
+    "ios": {
+      "bundleIdentifier": "com.oyekunmi.moovelogic"
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
   }
 }
