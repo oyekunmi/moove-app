@@ -4,27 +4,12 @@ import AppIntroSlider from 'react-native-app-intro-slider';
 import { normalize } from './../normalizeFont';
 import { useDispatch } from 'react-redux';
 import { hideIntro } from '../redux/actions';
-
+import Title from '../components/Title';
 
 const styles = StyleSheet.create({
-  slide: {
+  container: {
     flex: 1,
-  },
-  titleContainerStyle: {
-    flex: 1,
-    paddingTop: 50 + StatusBar.currentHeight?? 20,
-    paddingHorizontal: 18,
-  },
-  title: {
-    fontSize: normalize(14),
-    color: '#F1F1F1',
-    fontFamily: 'Roboto_400Regular'
-  },
-  subTitle: {
-    fontSize:  normalize(28),
-    marginTop: 15,
-    fontFamily: 'Roboto_900Black',
-    color: '#FFFFFF',
+    paddingHorizontal: normalize(18),
   },
   contentStyle: {
     flex: 4,
@@ -35,7 +20,6 @@ const styles = StyleSheet.create({
     width: '95%',
     height: '50%',
     resizeMode: 'contain',
-    
   },
   text: {
     color: '#FFFFFF',
@@ -54,7 +38,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const slides = [
+const slides = [ 
   {
     key: '1',
     title: 'Deliveries shouldn’t be a pain',
@@ -63,14 +47,6 @@ const slides = [
     image: require('./../../assets/intro1.png'),
     backgroundColor: '#FFFFFF',
     statusBarStyle: 'dark-content',
-    titleStyle: [
-      styles.title,
-      { color: '#908F8F'}
-    ],
-    subTitleStyle: {
-      ...styles.subTitle,
-      color: '#181818',
-    },
     textStyle: {
       ...styles.text,
       color: "#525151",
@@ -85,8 +61,6 @@ const slides = [
     image: require('./../../assets/intro2.png'),
     statusBarStyle: 'light-content',
     backgroundColor: '#132535',
-    titleStyle: styles.title,
-    subTitleStyle: styles.subTitle,
     textStyle: styles.text,
     imageStyle: styles.image,
   },
@@ -98,8 +72,6 @@ const slides = [
     image: require('./../../assets/intro3.png'), 
     statusBarStyle: 'light-content',
     backgroundColor: '#CE0303',
-    titleStyle: styles.title,
-    subTitleStyle: styles.subTitle,
     textStyle: styles.text,
     imageStyle: styles.image,
   }
@@ -122,16 +94,17 @@ export default function IntroSliders() {
 
       <View
         style={[
-          styles.slide,
+          styles.container,
           {
             backgroundColor: item.backgroundColor,
           },
         ]}
       >
-        <View style={styles.titleContainerStyle}>
-          <Text style={item.titleStyle}>{item.title}</Text>
-          <Text style={item.subTitleStyle}>{item.subTitle}</Text>
-        </View>
+        <Title
+          title={item.title}
+          subTitle={item.subTitle}
+          statusBarStyle={item.statusBarStyle}
+        />
 
         <View style={styles.contentStyle}>
           <Image source={item.image} style={styles.image} />

@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react'
-import { AsyncStorage, Button, Text, TextInput, View } from 'react-native';
+import { AsyncStorage, Button, Text, TextInput, View, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn, appLoaded, showIntro, restoreToken, hideIntro } from '../redux/actions';
 import { AppLoading } from 'expo';
 import {
   useFonts,
   Roboto_900Black,
-  Roboto_400Regular
+  Roboto_400Regular,
+  Roboto_700Bold,
 } from '@expo-google-fonts/roboto';
 import { createStackNavigator } from '@react-navigation/stack';
 
@@ -14,6 +15,7 @@ import HistoryScreen from './/HistoryScreen';
 import HomeScreen from './HomeScreen';
 import LoginScreen from './LoginScreen';
 import IntroSliders from './IntroSlides';
+import PackageDescription from './PackageDescription';
 
 const Stack = createStackNavigator();
 
@@ -27,6 +29,9 @@ export default function Application() {
       let userToken, introduced;
 
       try {
+        await AsyncStorage.removeItem('introduced');
+        await AsyncStorage.removeItem('userToken');
+        
         userToken = await AsyncStorage.getItem('userToken');
         introduced = await AsyncStorage.getItem('introduced');
       } catch (e) {
@@ -46,7 +51,8 @@ export default function Application() {
 
   let [fontsLoaded] = useFonts({
     Roboto_900Black,
-    Roboto_400Regular
+    Roboto_400Regular,
+    Roboto_700Bold,
   });
 
   if (state.isLoading || !fontsLoaded) {
@@ -56,13 +62,16 @@ export default function Application() {
   if (state.showIntro) {
     return <IntroSliders />
   }
-
+  console.log(state.userToken)
   return (
-    <Stack.Navigator>
-      {state.userToken != null ?
+    <>
+    <StatusBar translucent backgroundColor="transparent" />
+    <Stack.Navigator headerMode="none">
+      {state.userToken != null && state.userToken != undefined ?
         <>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="History" component={HistoryScreen} />
+          <Stack.Screen name="PackageDescription" component={PackageDescription} />
         </>
         :
         <>
@@ -70,5 +79,6 @@ export default function Application() {
         </>
       }
     </Stack.Navigator>
+    </>
   )
 }

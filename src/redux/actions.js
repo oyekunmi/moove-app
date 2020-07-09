@@ -2,7 +2,7 @@ import { APP_LOADED, SIGN_IN, SIGN_OUT, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN } 
 
 export const restoreToken = (token, introduced) => ({
   type: RESTORE_TOKEN,
-  token: 'dummy-auth-token',
+  token: token,
   showIntro: !introduced
 });
 
