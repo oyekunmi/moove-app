@@ -1,4 +1,7 @@
-import { APP_LOADED, SIGN_IN, SIGN_OUT, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN } from "./actionTypes";
+import { 
+  APP_LOADED, SIGN_IN, SIGN_OUT, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN, 
+  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, PACKAGE_INFO_CHANGED 
+} from "./actionTypes";
 
 export const restoreToken = (token, introduced) => ({
   type: RESTORE_TOKEN,
@@ -27,4 +30,20 @@ export const showIntro = () => ({
 
 export const hideIntro = () => ({
   type: HIDE_INTRO,
+})
+
+export const changeSourceAddress = (value, coord) => ({
+  type: SOURCE_ADDRESS_CHANGED,
+  value,
+  coord
+})
+
+export const changeDestinationAddress = (value) => ({
+  type: DESTINATION_ADDRESS_CHANGED,
+  value
+})
+
+export const changePackageInfo = (value) => ({
+  type: PACKAGE_INFO_CHANGED,
+  value
 })

@@ -6,6 +6,7 @@ import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
 import Link from '../components/Link';
 import Title from '../components/Title';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function LoginScreen() {
 
@@ -21,13 +22,14 @@ export default function LoginScreen() {
     },
     image: {
       width: normalize(150),
+      height: normalize(80),
       resizeMode: 'contain',
-      flex: 1,
-      justifyContent: "center",
-      flex: 1
+      // backgroundColor: "red",
+      // flex: 1,
+      marginVertical: normalize(20),
     },
     content: {
-      flex: 4,
+      // flex: 4,
       justifyContent: "center",
     },
     contentInputContainer: {
@@ -61,9 +63,11 @@ export default function LoginScreen() {
   })
 
   StatusBar.setBarStyle('dark-content');
+  StatusBar.setTranslucent(false);
+  StatusBar.setBackgroundColor("#Fff");
   return (
 
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       
       <Title
           title="welcome"
@@ -111,6 +115,6 @@ export default function LoginScreen() {
         onPress={() => dispatch(signIn({ username, password }))}>
       </RedButton>
 
-    </View>
+    </ScrollView>
   );
 }

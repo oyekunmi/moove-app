@@ -1,19 +1,19 @@
 import React from "react";
-import { StatusBar, View, Text, StyleSheet, Button, TouchableWithoutFeedback } from "react-native";
+import { StatusBar, View, Text, StyleSheet, Button } from "react-native";
 import { FontAwesome } from '@expo/vector-icons';
 import { normalize } from "../normalizeFont";
 import { useNavigation } from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   titleContainer: {
+    flex: 1,
     marginTop: normalize(StatusBar.currentHeight ?? 20),
-    paddingBottom: normalize(20),
   },
   backIcon: {
+    // backgroundColor: "#ccc",
     color: "#000",
     padding: 0,
     marginBottom: normalize(10),
-    width: normalize(50),
   },
   title: {
     fontSize: normalize(14),
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 export default function Title({ subTitle, subTitleStyle, title, titleStyle, containerStyle, statusBarStyle, showBackButton }) {
 
   let navigation;
-  if (showBackButton)
+  if(showBackButton)
     navigation = useNavigation();
 
   const titleColor = statusBarStyle === 'light-content' ? '#F1F1F1' : styles.title.color
@@ -42,15 +42,17 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
 
   return (
     <View style={_containerStyle}>
-      
-      {showBackButton && (
-        <TouchableWithoutFeedback
-          onPress={() => navigation.goBack()}
-        >
-          <FontAwesome name="long-arrow-left" size={normalize(24)} style={{ paddingVertical: normalize(10) }}  />
-        </TouchableWithoutFeedback>
-      )}
-      
+
+      {showBackButton && <View style={styles.backIcon}>
+          <FontAwesome.Button
+            style={{ padding: 0 }}
+            name="long-arrow-left"
+            color="#000"
+            // backgroundColor="#fff"
+            onPress={() => navigation.goBack()}
+          >Back</FontAwesome.Button>
+        </View>
+      }
       <Text style={_titleStyle}>{title}</Text>
       <Text style={_subTitleStyle}>{subTitle}</Text>
     </View>

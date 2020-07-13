@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: normalize(18),
+    paddingTop: normalize(20),
   },
   contentStyle: {
     flex: 4,
