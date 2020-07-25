@@ -14,8 +14,12 @@ import { createStackNavigator } from '@react-navigation/stack';
 import HistoryScreen from './/HistoryScreen';
 import HomeScreen from './HomeScreen';
 import LoginScreen from './LoginScreen';
-import IntroSliders from './IntroSlides';
-import PackageDescription from './PackageDescription';
+import IntroSlidersScreen from './IntroSlidesScreen';
+import PackageDescriptionScreen from './PackageDescriptionScreen';
+import MooveVerificationScreen from './MooveVerificationScreen';
+import PaymentMethodScreen from './PaymentMethodScreen';
+import ActiveMooveDetailsScreen from './ActiveMooveDetailsScreen';
+import TrackActiveMooveScreen from './TrackActiveMooveScreen';
 
 const Stack = createStackNavigator();
 
@@ -60,7 +64,7 @@ export default function Application() {
   }
 
   if (state.showIntro) {
-    return <IntroSliders />
+    return <IntroSlidersScreen />
   }
   console.log(state.userToken)
   return (
@@ -71,7 +75,11 @@ export default function Application() {
         <>
           <Stack.Screen name="Home" component={HomeScreen} />
           <Stack.Screen name="History" component={HistoryScreen} />
-          <Stack.Screen name="PackageDescription" component={PackageDescription} />
+          <Stack.Screen name="PackageDescription" component={PackageDescriptionScreen} />
+          <Stack.Screen name="MooveVerification" component={MooveVerificationScreen} />
+          <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
+          <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
+          <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
         </>
         :
         <>

@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
     color: '#181818',
   },
 });
+
 export default function Title({ subTitle, subTitleStyle, title, titleStyle, containerStyle, statusBarStyle, showBackButton }) {
 
   let navigation;
@@ -38,19 +39,17 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
 
   const _titleStyle = [styles.title, { color: titleColor }, titleStyle]
   const _subTitleStyle = [styles.subTitle, { color: subTitleColor }, subTitleStyle]
-  const _containerStyle = [styles.titleContainer, containerStyle]
+  const _containerStyle = [styles.titleContainer, containerStyle, showBackButton? {marginTop: normalize(10)}: {} ]
 
   return (
     <View style={_containerStyle}>
-      
       {showBackButton && (
         <TouchableWithoutFeedback
           onPress={() => navigation.goBack()}
         >
-          <FontAwesome name="long-arrow-left" size={normalize(24)} style={{ paddingVertical: normalize(10) }}  />
+          <FontAwesome name="long-arrow-left" size={normalize(14)} style={{ paddingVertical: normalize(10), color: subTitleColor }}  />
         </TouchableWithoutFeedback>
       )}
-      
       <Text style={_titleStyle}>{title}</Text>
       <Text style={_subTitleStyle}>{subTitle}</Text>
     </View>

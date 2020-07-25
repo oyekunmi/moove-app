@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(10),
     paddingHorizontal: normalize(15),
     marginBottom: normalize(10),
+    position: 'relative',
   },
   label: {
     fontFamily: 'Roboto_700Bold',

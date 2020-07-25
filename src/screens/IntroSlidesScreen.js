@@ -78,7 +78,7 @@ const slides = [
   }
 ];
 
-export default function IntroSliders() {
+export default function IntroSlidersScreen() {
   const dispatch = useDispatch()
 
   const onDone = async () => {

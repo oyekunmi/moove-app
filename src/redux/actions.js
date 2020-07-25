@@ -1,23 +1,23 @@
 import { 
   APP_LOADED, SIGN_IN, SIGN_OUT, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN, 
-  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, PACKAGE_INFO_CHANGED 
+  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, PACKAGE_INFO_CHANGED,
+  TRIP_CANCEL_REQUEST,
 } from "./actionTypes";
 
 export const restoreToken = (token, introduced) => ({
   type: RESTORE_TOKEN,
   token: token,
   showIntro: !introduced
-});
+})
 
 export const signIn = content => ({
   type: SIGN_IN,
   token: 'dummy-auth-token'
-});
+})
 
 export const signOut = () => ({
   type: SIGN_OUT,
-});
-
+})
 
 export const appLoaded = (userToken) => ({
   type: APP_LOADED,
@@ -46,4 +46,8 @@ export const changeDestinationAddress = (value) => ({
 export const changePackageInfo = (value) => ({
   type: PACKAGE_INFO_CHANGED,
   value
+})
+
+export const cancelTripRequest = () => ({
+  type: TRIP_CANCEL_REQUEST,
 })
