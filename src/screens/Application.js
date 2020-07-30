@@ -20,6 +20,7 @@ import PackageDescriptionScreen from './PackageDescriptionScreen';
 import MooveVerificationScreen from './MooveVerificationScreen';
 import PaymentMethodScreen from './PaymentMethodScreen';
 import ActiveMooveDetailsScreen from './ActiveMooveDetailsScreen';
+import CreditCardPaymentMethodScreen from './CreditCardPaymentMethodScreen';
 import TrackActiveMooveScreen from './TrackActiveMooveScreen';
 
 const Stack = createStackNavigator();
@@ -36,7 +37,7 @@ export default function Application() {
       try {
         await AsyncStorage.removeItem('introduced');
         await AsyncStorage.removeItem('userToken');
-        
+
         userToken = await AsyncStorage.getItem('userToken');
         introduced = await AsyncStorage.getItem('introduced');
       } catch (e) {
@@ -80,6 +81,7 @@ export default function Application() {
           <Stack.Screen name="PackageDescription" component={PackageDescriptionScreen} />
           <Stack.Screen name="MooveVerification" component={MooveVerificationScreen} />
           <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
+          <Stack.Screen name="CreditCardPayment" component={CreditCardPaymentMethodScreen} />
           <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
           <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
         </>

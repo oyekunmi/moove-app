@@ -1,14 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Keyboard, Text, StatusBar, ScrollView } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { cancelTripRequest } from '../redux/actions';
-import AddressField from '../components/AddressField';
-import PlainButton from '../components/PlainButton';
+import { View, StyleSheet, StatusBar, ScrollView } from 'react-native';
+import { useSelector } from 'react-redux';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
-import currency from '../currency';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 
 const styles = StyleSheet.create({
   container: {
@@ -74,17 +69,12 @@ const styles = StyleSheet.create({
   },
 })
 
-export default function PaymentMethodScreen({ navigation }) {
+export default function CreditCardPaymentMethodScreen({ navigation }) {
   const trip = useSelector(state => state.trip)
 
   const onContinue = () => {
-    navigation.navigate("CreditCardPayment")
+    navigation.navigate("ActiveMooveDetails")
   }
-
-  var radio_props = [
-    { label: 'CASH', value: 0 },
-    { label: 'VISA/MASTERCARD', value: 1 }
-  ];
 
   StatusBar.setBarStyle("light-content");
   StatusBar.setBackgroundColor("#132535");
@@ -95,36 +85,13 @@ export default function PaymentMethodScreen({ navigation }) {
           showBackButton={true}
           statusBarStyle="light-content"
           fontIcon={{name: 'long-arrow-left', color: "#ffffff", size: 14 }}
-          title={"pay for your moove"}
+          title={"make card payment"}
           headerOptionHandler={() => navigation.goBack()}
-          orderId="MV100002"
-          subTitle={"Please make payment for moove"}
+          subTitle={"Enter your card Details"}
           subTitleStyle={{ fontSize: normalize(22) }}
           containerStyle={{ paddingHorizontal: normalize(18),}} />
 
         <View style={styles.content}>
-
-          <View style={styles.costContainer}>
-            <Text style={styles.costValue}>{currency(trip.cost)}</Text>
-          </View>
-
-          <View style={styles.paymentContainer}>
-            <Text style={styles.costLabel}>Choose payment method</Text>
-            <RadioForm
-              radio_props={radio_props}
-              initial={0}
-              formHorizontal={false}
-              labelHorizontal={true}
-              buttonColor={"#132535"}
-              selectedButtonColor={'#CE0303'}
-              animation={true}
-              buttonSize={10}
-              labelColor='#FFF'
-              selectedLabelColor='#FFF'
-              onPress={(value) => { }}
-              radioStyle={styles.radioButton}
-            />
-          </View>
 
           <RedButton title="Proceed" buttonStyle={styles.button} onPress={onContinue} />
 
