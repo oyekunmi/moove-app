@@ -2,6 +2,7 @@ import React from 'react';
 import AddressField from './AddressField';
 import { useSelector } from 'react-redux';
 import { StyleSheet } from 'react-native';
+import { normalize } from '../normalizeFont';
 
 const styles = StyleSheet.create({
   label: {
@@ -12,6 +13,7 @@ const styles = StyleSheet.create({
   },
   container:{
     backgroundColor: "#1E3040",
+    height: normalize(71),
   },
 })
 
@@ -20,7 +22,7 @@ export default function SourceAddress(props) {
   const useDarkContent = props.theme === "dark-content";
 
   let labelStyle = [styles.label, useDarkContent ? {color: "#000"}: {}]
-  let containerStyle = [styles.container, useDarkContent? {backgroundColor: "#e6e6e6"}: {}]
+  let containerStyle = [styles.container, useDarkContent? {backgroundColor: "#efefef"}: {}]
   let inputStyle = [styles.input, useDarkContent? {color: "#000"}: {}]
 
   if(props.theme){
@@ -31,6 +33,7 @@ export default function SourceAddress(props) {
     <AddressField
       defaultValue={trip.source}
       label="Pickup location"
+      isEditable={true}
       editable={props.editable??false}
       labelStyle={labelStyle}
       inputStyle={inputStyle}

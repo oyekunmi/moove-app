@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     marginVertical: normalize(20),
   },
   paymentContainer: {
-    justifyContent: "center", 
+    justifyContent: "center",
     flexGrow:1
   },
   costLabel: {
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   costValue: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(32),
+    fontSize: normalize(44),
 
   },
   button: {
@@ -94,7 +94,9 @@ export default function PaymentMethodScreen({ navigation }) {
         <Title
           showBackButton={true}
           statusBarStyle="light-content"
+          fontIcon={{name: 'long-arrow-left', color: "#ffffff", size: 14 }}
           title={"pay for your moove"}
+          orderId="MV100002"
           subTitle={"Please make payment for moove"}
           subTitleStyle={{ fontSize: normalize(22) }}
           containerStyle={{ paddingHorizontal: normalize(18),}} />
@@ -102,7 +104,6 @@ export default function PaymentMethodScreen({ navigation }) {
         <View style={styles.content}>
 
           <View style={styles.costContainer}>
-            <Text style={{color: "#7AC043"}}> MV100002 </Text>
             <Text style={styles.costValue}>{currency(trip.cost)}</Text>
           </View>
 
@@ -116,6 +117,7 @@ export default function PaymentMethodScreen({ navigation }) {
               buttonColor={"#132535"}
               selectedButtonColor={'#CE0303'}
               animation={true}
+              buttonSize={10}
               labelColor='#FFF'
               selectedLabelColor='#FFF'
               onPress={(value) => { }}

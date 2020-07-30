@@ -43,11 +43,12 @@ const styles = StyleSheet.create({
   costLabel: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
+    fontSize: normalize(16)
   },
   costValue: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(32),
+    fontSize: normalize(44),
   },
   button: {
     marginBottom: normalize(10),
@@ -58,6 +59,8 @@ const styles = StyleSheet.create({
   cancelButtonStyle: {
     fontFamily: 'Roboto_700Bold',
     color: "#FFF",
+    fontSize: normalize(16),
+    lineHeight: normalize(19)
   },
 })
 
@@ -105,6 +108,8 @@ export default function MooveVerificationScreen({ navigation }) {
           showBackButton={true}
           statusBarStyle="light-content"
           title={"verify your request"}
+          fontIcon={{name: 'long-arrow-left', color: "#ffffff", size: 14 }}
+          headerOptionHandler={() => navigation.goBack()}
           subTitle={"Are the details below correct?"}
           subTitleStyle={{ fontSize: normalize(22) }}
           containerStyle={{ paddingHorizontal: normalize(18), }} />
@@ -119,25 +124,24 @@ export default function MooveVerificationScreen({ navigation }) {
             label="Delivery item(s) description"
             editable={false}
             multiline={true}
-            // numberOfLines={3}
             textAlignVertical="top"
             labelStyle={{ color: "#FFF" }}
-            inputStyle={{ color: "#D1D1D1" }}
+            inputStyle={{ color: "#D1D1D1", paddingTop: normalize(5) }}
             containerStyle={{ backgroundColor: "#1E3040" }}
           />
 
           <View style={styles.costContainer}>
             <Text style={styles.costLabel}>Your delivery cost</Text>
             <Text style={styles.costValue}>{currency(trip.cost)}</Text>
-          </View> 
- 
-          <RedButton   
+          </View>
+
+          <RedButton
             title="Yes! start moove"
             buttonStyle={styles.button}
             onPress={onContinue} />
 
           <PlainButton
-            title="Cancel moove"
+            title="Cancel/Reset Moove"
             titleStyle={styles.cancelButtonStyle}
             buttonStyle={styles.button}
             onPress={onCancelTripRequest} />
