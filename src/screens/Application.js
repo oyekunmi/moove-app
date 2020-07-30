@@ -20,6 +20,7 @@ import MooveVerificationScreen from './MooveVerificationScreen';
 import PaymentMethodScreen from './PaymentMethodScreen';
 import ActiveMooveDetailsScreen from './ActiveMooveDetailsScreen';
 import TrackActiveMooveScreen from './TrackActiveMooveScreen';
+import SignupScreen from './SignupScreen';
 
 const Stack = createStackNavigator();
 
@@ -80,10 +81,12 @@ export default function Application() {
           <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
           <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
           <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
+          
         </>
         :
         <>
           <Stack.Screen name="SignIn" component={LoginScreen} />
+          <Stack.Screen name="SignupScreen" component = {SignupScreen}/>
         </>
       }
     </Stack.Navigator>
