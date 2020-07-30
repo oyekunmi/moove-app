@@ -7,8 +7,9 @@ import RedButton from '../components/RedButton';
 import Link from '../components/Link';
 import Title from '../components/Title';
 import { ScrollView } from 'react-native-gesture-handler';
+import SignupScreen from './SignupScreen';
 
-export default function LoginScreen() {
+export default function LoginScreen({navigation}) {
 
   const dispatch = useDispatch()
 
@@ -70,8 +71,8 @@ export default function LoginScreen() {
     <ScrollView style={styles.container}>
       
       <Title
-          title="welcome"
-          subTitle="Let’s get you signed in"
+          title="user sign up"
+          subTitle="Let’s get you signed in."
         />
 
       <Image source={require('./../../assets/logo.png')} style={styles.image} />
@@ -104,7 +105,8 @@ export default function LoginScreen() {
 
         <View style={styles.links}>
           <Link linkStyle={styles.link}>Forgot Password ?</Link>
-          <Link linkStyle={styles.link}>New User? Sign Up</Link>
+           <Button title="New User? Sign Up"
+          onPress={() => {navigation.push("SignupScreen")}}/>
           <Link linkStyle={styles.link}>Help ?</Link>
         </View>
       </View>
