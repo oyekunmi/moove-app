@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, StatusBar, ScrollView } from 'react-native';
+import { View, StyleSheet, StatusBar, ScrollView, Text,TextInput } from 'react-native';
 import { useSelector } from 'react-redux';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
@@ -7,70 +7,38 @@ import Title from '../components/Title';
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: '#132535',
+    paddingHorizontal: normalize(18),
   },
   content: {
-    paddingHorizontal: normalize(18),
-    paddingVertical: normalize(10),
-    flexGrow: 1,
-  },
-  packageContainer: {
-  },
-  label: {
-    marginVertical: normalize(10),
-    paddingHorizontal: normalize(15),
-    fontFamily: 'Roboto_700Bold',
-    color: "#FFF",
-  },
-  packageInput: {
-    backgroundColor: "#e6e6e6",
-    borderRadius: normalize(20),
-    textAlignVertical: "top",
-    paddingVertical: normalize(10),
-    paddingHorizontal: normalize(15),
-  },
-  costContainer: {
-    alignItems: "center",
-    marginVertical: normalize(20),
-  },
-  paymentContainer: {
     justifyContent: "center",
-    flexGrow:1
   },
-  costLabel: {
-    color: "#908F8F",
-    fontFamily: 'Roboto_700Bold',
-    marginVertical: normalize(10),
+  contentInputContainer: {
+    marginVertical: normalize(5),
   },
-  costValue: {
-    color: "#FFF",
-    fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(44),
-
+  contentLabel: {
+    color: '#F1F1F1',
+    fontFamily: 'Roboto_400Regular',
+    fontSize: normalize(14),
+    marginVertical: normalize(5),
   },
-  button: {
-    marginBottom: normalize(10),
-    marginTop: normalize(5),
-    alignSelf: "center",
-    width: '100%',
+  contentInput: {
+    backgroundColor: '#E3E3EC',
+    borderRadius: normalize(20),
+    height: normalize(40),
+    fontSize: normalize(14),
+    paddingHorizontal: normalize(10),
+    marginVertical: normalize(5),
   },
-  cancelButtonStyle: {
-    fontFamily: 'Roboto_700Bold',
-    color: "#FFF",
-  },
-
-  radioButton: {
-    borderRadius: normalize(50),
-    backgroundColor: "#253A4D",
-    color: "#FFF",
-    padding: normalize(10),
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-  },
+  dateAndCvv: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginBottom: 'auto'
+  }
 })
 
 export default function CreditCardPaymentMethodScreen({ navigation }) {
-  const trip = useSelector(state => state.trip)
 
   const onContinue = () => {
     navigation.navigate("ActiveMooveDetails")
@@ -87,9 +55,42 @@ export default function CreditCardPaymentMethodScreen({ navigation }) {
           fontIcon={{name: 'long-arrow-left', color: "#ffffff", size: 14 }}
           title={"make card payment"}
           headerOptionHandler={() => navigation.goBack()}
-          subTitle={"Enter your card Details"}
+          subTitle={"Enter your card details"}
           subTitleStyle={{ fontSize: normalize(22) }}
           containerStyle={{ paddingHorizontal: normalize(18),}} />
+
+         <View style={{...styles.contentInputContainer, marginTop: normalize(40) }}>
+            <Text style={styles.contentLabel}>Card Number</Text>
+            <TextInput
+              style={styles.contentInput}
+              placeholder="XXXX XXXX XXXX XXXX"
+            />
+          </View>
+
+          <View style={styles.contentInputContainer}>
+            <Text style={styles.contentLabel}>Card holder's full name</Text>
+            <TextInput
+              style={styles.contentInput}
+              placeholder="E.g Ayo Musa Okoro"
+            />
+          </View>
+
+          <View style={styles.dateAndCvv}>
+            <View style={{...styles.contentInputContainer, width: '30%', marginRight: normalize(30)}}>
+              <Text style={styles.contentLabel}>Expiry Date</Text>
+              <TextInput
+                style={styles.contentInput}
+                placeholder="MM/YY"
+              />
+            </View>
+              <View style={{...styles.contentInputContainer, width: '30%' }}>
+                <Text style={styles.contentLabel}>CVV</Text>
+                <TextInput
+                  style={styles.contentInput}
+                  placeholder="XXX"
+                />
+              </View>
+          </View>
 
         <View style={styles.content}>
 

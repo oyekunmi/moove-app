@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#CE0303',
+    marginBottom: normalize(10)
   }
 })
 
