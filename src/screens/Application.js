@@ -22,6 +22,7 @@ import PaymentMethodScreen from './PaymentMethodScreen';
 import ActiveMooveDetailsScreen from './ActiveMooveDetailsScreen';
 import CreditCardPaymentMethodScreen from './CreditCardPaymentMethodScreen';
 import TrackActiveMooveScreen from './TrackActiveMooveScreen';
+import BiometricsScreen from './BiometricsScreen';
 import SignupScreen from './SignupScreen';
 
 const Stack = createStackNavigator();
@@ -85,12 +86,13 @@ export default function Application() {
           <Stack.Screen name="CreditCardPayment" component={CreditCardPaymentMethodScreen} />
           <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
           <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
-          
+
         </>
         :
         <>
           <Stack.Screen name="SignIn" component={LoginScreen} />
           <Stack.Screen name="SignupScreen" component = {SignupScreen}/>
+          <Stack.Screen name="Biometrics" component={BiometricsScreen} />
         </>
       }
     </Stack.Navigator>
