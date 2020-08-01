@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Text, StatusBar, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux'; 
+import { useSelector } from 'react-redux';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
@@ -38,18 +38,19 @@ const styles = StyleSheet.create({
     marginVertical: normalize(20),
   },
   packageContainer: {
-    justifyContent: "center", 
+    justifyContent: "center",
     flexGrow:1
   },
   costLabel: {
     color: "#908F8F",
-    fontFamily: 'Roboto_700Bold',
-    // marginVertical: normalize(5),
+    fontFamily: 'Roboto_900Black',
+    fontSize: normalize(13),
+    lineHeight: normalize(15)
   },
   costValue: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(32),
+    fontSize: normalize(44),
 
   },
   button: {
@@ -71,6 +72,32 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     justifyContent: "space-between",
   },
+  locationDetails: {
+    height: normalize(146),
+    marginBottom: normalize(7),
+    borderRadius: normalize(15),
+    display: 'flex',
+    justifyContent: 'space-between',
+    backgroundColor: '#1E3040'
+  },
+  pickUpandDelivery: {
+    height: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    paddingHorizontal: normalize(14)
+  },
+  pickupAndLocationLabel: {
+    fontSize: normalize(14),
+    fontFamily: 'Roboto_500Medium',
+    color: '#DADADA',
+    marginBottom: normalize(10)
+  },
+  pickUpAndLocationDetails: {
+    fontSize: normalize(13),
+    color: '#D1D1D1',
+    fontFamily: 'Roboto_400Regular',
+    lineHeight: normalize(15)
+  }
 })
 
 export default function ActiveMooveDetailsScreen({ navigation }) {
@@ -79,11 +106,6 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
   const onContinue = () => {
     navigation.navigate("TrackActiveMoove")
   }
-
-  var radio_props = [
-    { label: 'CASH', value: 0 },
-    { label: 'VISA/MASTERCARD', value: 1 }
-  ];
 
   StatusBar.setBarStyle("light-content");
   StatusBar.setBackgroundColor("#132535");
@@ -94,6 +116,13 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
           showBackButton={true}
           statusBarStyle="light-content"
           title={"active moove"}
+          orderId={"Moove - MV100002"}
+          fontIcon={{
+						name: 'long-arrow-left',
+						color: '#ffffff',
+						size: 14,
+					}}
+					headerOptionHandler={() => navigation.goBack()}
           subTitle={"Your moove champion is enroute for pickup"}
           subTitleStyle={{ fontSize: normalize(22) }}
           containerStyle={{ paddingHorizontal: normalize(18) }} />
@@ -101,30 +130,36 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
         <View style={styles.content}>
 
           <View style={styles.costContainer}>
-            <Text style={styles.costLabel}> Bayo Dejo </Text>
-            <Text style={styles.costValue}>08022233344</Text>
-            <Text style={styles.costLabel }>Tap to call</Text>
+            <Text style={styles.costLabel}>Champion: {"John Boye"} </Text>
+            <Text style={styles.costValue}>{"08022233344"}</Text>
+            <Text style={styles.costLabel }>Tap to call or text</Text>
           </View>
 
           <View style={styles.packageContainer}>
 
-          <SourceAddress />
+          <View style={styles.locationDetails}>
+            <View style={styles.pickUpandDelivery}>
+              <Text style={styles.pickupAndLocationLabel}>Pick-up Location</Text>
+              <Text style={styles.pickUpAndLocationDetails}>Alhaji Masha street, Surulere, Lagos</Text>
+            </View>
+            <View style={styles.pickUpandDelivery}>
+            <Text style={styles.pickupAndLocationLabel} >Delivery Location</Text>
+              <Text style={styles.pickUpAndLocationDetails}>43 Saka Tinubu Street, Victoria Island, Lagos</Text>
+            </View>
+          </View>
 
-          <DeliveryAddress />
-          
           <AddressField
             defaultValue={trip.package}
-            label="Delivery item(s) description"
+            label="Delivery item(s) Description"
             editable={false}
             multiline={true}
-            // numberOfLines={5}
             textAlignVertical="top"
-            labelStyle={{ color: "#FFF" }}
+            labelStyle={{ color: "#FFF", marginBottom: normalize(10) }}
             inputStyle={{ color: "#D1D1D1" }}
-            containerStyle={{ backgroundColor: "#1E3040" }}
+            containerStyle={{ backgroundColor: "#1E3040", height: normalize(71) }}
           />
         </View>
-          <RedButton title="Track moove" buttonStyle={styles.button} onPress={onContinue} />
+          <RedButton title="Track Moove Request" buttonStyle={styles.button} onPress={onContinue} />
 
         </View>
 
