@@ -7,7 +7,12 @@ import RedButton from '../components/RedButton';
 // import Link from '../components/Link';
 import { Link } from '@react-navigation/native';
 import Title from '../components/Title';
+<<<<<<< HEAD
 import { ScrollView } from 'react-native-gesture-handler';
+=======
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import SignupScreen from './SignupScreen';
+>>>>>>> master
 
 export default function LoginScreen({navigation}) {
 
@@ -15,6 +20,10 @@ export default function LoginScreen({navigation}) {
 
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
+
+  const gotoBiometrics = () => {
+    navigation.navigate("Biometrics");
+  }
 
   const styles = StyleSheet.create({
     container: {
@@ -25,12 +34,9 @@ export default function LoginScreen({navigation}) {
       width: normalize(150),
       height: normalize(80),
       resizeMode: 'contain',
-      // backgroundColor: "red",
-      // flex: 1,
       marginVertical: normalize(20),
     },
     content: {
-      // flex: 4,
       justifyContent: "center",
     },
     contentInputContainer: {
@@ -61,6 +67,8 @@ export default function LoginScreen({navigation}) {
     link: {
       marginVertical: normalize(5),
       fontSize: normalize(14),
+      color: '#181818',
+      fontFamily: 'Roboto_900Black',
     },
   })
 
@@ -70,10 +78,18 @@ export default function LoginScreen({navigation}) {
   return (
 
     <ScrollView style={styles.container}>
-      
+
       <Title
-          title="user sign up"
-          subTitle="Let’s get you signed in."
+          title="welcome"
+          subTitle="Let’s get you signed in"
+          fontIcon={{
+						name: 'long-arrow-left',
+						color: '#132535',
+						size: 14,
+					}}
+					headerOptionHandler={() => navigation.goBack()}
+          subTitleStyle={{ fontSize: normalize(22) }}
+          containerStyle={{ paddingHorizontal: normalize(18) }}
         />
 
       <Image source={require('./../../assets/logo.png')} style={styles.image} />
@@ -105,8 +121,16 @@ export default function LoginScreen({navigation}) {
         </View>
 
         <View style={styles.links}>
-          <Link linkStyle={styles.link}>Forgot Password ?</Link>
-          <Link linkStyle={styles.link} to="/SignupScreen">New User ? Sign Up</Link>
+          <View style={{display: 'flex', flexDirection: 'row', marginBottom: normalize(10)}}>
+            <TouchableOpacity>
+              <Text style={styles.link}>Forgot Password</Text>
+            </TouchableOpacity><Text style={{...styles.link, paddingHorizontal: normalize(5)}}>|</Text>
+            <TouchableOpacity onPress={gotoBiometrics}>
+              <Text style={styles.link}>Use Biometrics</Text>
+            </TouchableOpacity>
+          </View>
+           <Button title="New User? Sign Up"
+          onPress={() => {navigation.push("SignupScreen")}}/>
           <Link linkStyle={styles.link}>Help ?</Link>
         </View>
       </View>

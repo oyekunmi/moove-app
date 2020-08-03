@@ -11,14 +11,13 @@ import DeliveryAddress from '../components/DeliveryAddress';
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: "red",
+    backgroundColor: "#ffffff",
   },
   content: {
     paddingHorizontal: normalize(18),
     paddingVertical: normalize(10),
-    // backgroundColor: '#132535',
     flexGrow: 1,
-  
+
   },
   packageContainer: {
   },
@@ -26,14 +25,14 @@ const styles = StyleSheet.create({
     marginVertical: normalize(10),
     paddingHorizontal: normalize(15),
     fontFamily: 'Roboto_700Bold',
-    // color: "#FFF",
   },
   packageInput: {
-    backgroundColor: "#e6e6e6",
+    backgroundColor: "#efefef",
     borderRadius: normalize(20),
     textAlignVertical: "top",
     paddingVertical: normalize(10),
     paddingHorizontal: normalize(15),
+    height: normalize(145),
   },
   button: {
     marginBottom: normalize(10),
@@ -41,12 +40,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: '100%',
   },
-  // button: {
-  //   position: 'absolute',
-  //   left: normalize(18),
-  //   right: normalize(18),
-  //   bottom: normalize(10),
-  // },
 })
 
 export default function PackageDescriptionScreen({ navigation }) {
@@ -83,7 +76,7 @@ export default function PackageDescriptionScreen({ navigation }) {
 
   StatusBar.setBackgroundColor("#ffffff");
   StatusBar.setBarStyle("dark-content");
-  
+
   console.log("here");
 
   return (
@@ -93,8 +86,10 @@ export default function PackageDescriptionScreen({ navigation }) {
         <Title
           showBackButton={true}
           title={"package description"}
+          fontIcon={{name: 'long-arrow-left', color: "#000000", size: 14 }}
+          headerOptionHandler={() => navigation.goBack()}
           subTitle={"One more step. Enter your package description"}
-          subTitleStyle={{ fontSize: normalize(22) }}
+          subTitleStyle={{ fontSize: normalize(21),lineHeight: normalize(25), width: normalize(240) }}
           containerStyle={{ paddingHorizontal: normalize(18),}} />
 
         <View style={styles.content}>
@@ -103,7 +98,7 @@ export default function PackageDescriptionScreen({ navigation }) {
           <DeliveryAddress theme="dark-content" />
 
           <View style={styles.packageContainer}>
-            <Text style={styles.packageLabel}>Package Description</Text>
+            <Text style={styles.packageLabel}>Delivery Item Description</Text>
             <TextInput
               multiline={true}
               numberOfLines={3}

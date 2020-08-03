@@ -20,7 +20,7 @@ export default function DeliveryAddress(props) {
   const useDarkContent = props.theme === "dark-content";
 
   let labelStyle = [styles.label, useDarkContent ? {color: "#000"}: {}]
-  let containerStyle = [styles.container, useDarkContent? {backgroundColor: "#e6e6e6"}: {}]
+  let containerStyle = [styles.container, useDarkContent? {backgroundColor: "#efefef"}: {}]
   let inputStyle = [styles.input, useDarkContent? {color: "#000"}: {}]
 
   if(props.theme){
@@ -31,6 +31,7 @@ export default function DeliveryAddress(props) {
     <AddressField
       defaultValue={trip.destination}
       label="Delivery address"
+      isEditable={true}
       editable={props.editable??false}
       labelStyle={labelStyle}
       inputStyle={inputStyle}

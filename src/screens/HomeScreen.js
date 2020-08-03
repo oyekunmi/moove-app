@@ -3,6 +3,8 @@ import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar } from 'react-native';
+import { FontAwesome } from '@expo/vector-icons';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
@@ -29,7 +31,21 @@ const styles = StyleSheet.create({
     right: normalize(18),
     bottom: normalize(10),
   },
+  searchFont: {
+    paddingVertical: normalize(10),
+    color: '#CCCCCC',
+    marginRight: normalize(15),
+    position: 'absolute',
+    zIndex: 100,
+    left: normalize(17),
+    top: normalize(8)
+  }
 });
+
+const toggleDrawerHandler = () => {
+  // The drawer should be toggled here
+  console.log('Drawer handler');
+}
 
 function HomeScreen({ navigation }) {
 
@@ -39,7 +55,7 @@ function HomeScreen({ navigation }) {
 
   const onContinue = () => {
     if (!trip.destination) {
-      return; 
+      return;
     }
     navigation.navigate('PackageDescription')
   }
@@ -93,51 +109,89 @@ function HomeScreen({ navigation }) {
   StatusBar.setBackgroundColor("#fff");
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps='always'>
       <Title
         title={"start a moove"}
-        subTitle={"Your moove champion is a click away"}
+        fontIcon={{name: "bars", color: "#DADADA", size: 20}}
+        headerOptionHandler={toggleDrawerHandler}
+        subTitle={"Your moove champion is one click away"}
         subTitleStyle={{ fontSize: normalize(26) }}
-        containerStyle={{ paddingHorizontal: normalize(18), }} />
+        containerStyle={{ paddingHorizontal: normalize(18)}} />
 
       {(!trip || !trip.sourceCoord) ? <ActivityIndicator style={styles.spinner} />
-        : 
+        :
         <>
           <View style={styles.content}>
 
             <AddressField
               value={trip.source}
-              label="Pickup location"
+              label="You are Here:"
+              isEditable={true}
+              containerStyle={{ height: normalize(71) }}
               onChangeText={text => dispatch(changeSourceAddress(text))} />
 
-            <AddressField
-              value={trip.destination}
-              label="Delivery Address"
-              onChangeText={text => dispatch(changeDestinationAddress(text))}
+            <View>
+              <FontAwesome name='search' size={normalize(14)} style={styles.searchFont}  />
+             <GooglePlacesAutocomplete
+              placeholder='enter delivery address'
+              minLength={2}
+              onPress={(data, details = null) => {
+                // 'details' is provided when fetchDetails = true
+              }}
+              styles={{
+                textInputContainer: {
+                  backgroundColor: 'rgba(0,0,0,0)',
+                  marginBottom: normalize(10),
+                  borderTopWidth: 0,
+                  borderBottomWidth: 0,
+                },
+                description: {
+                  fontFamily: 'Roboto_400Regular',
+                },
+                textInput: {
+                  backgroundColor: "#EFEFEF",
+                  paddingLeft: normalize(30),
+                  height: normalize(37),
+                  width: normalize(296),
+                  color: '#545252',
+                  fontSize: 16,
+                  borderRadius: normalize(50),
+                  fontFamily: 'Roboto_400Regular'
+                },
+              }}
+              query={{
+                key: 'AIzaSyDl2ismTJL7qQveLJM9UlL-Ai6ixpQXQdw',
+                language: 'en',
+              }}
+              fetchDetails={true}
+              nearbyPlacesAPI="GooglePlacesSearch"
+              debounce={200}
             />
+            </View>
 
           </View>
+          <View style={{ height: '40%'}}>
+            <MapView style={styles.map}
+              initialRegion={{
+                latitude: trip.sourceCoord.latitude,
+                longitude: trip.sourceCoord.longitude,
+                latitudeDelta: 0.015,
+                longitudeDelta: 0.015,
+              }} >
+              <Marker
+                coordinate={trip.sourceCoord}
+                title="My location"
+                description="My location 2"
+              />
 
-          <MapView style={styles.map}
-            initialRegion={{
-              latitude: trip.sourceCoord.latitude,
-              longitude: trip.sourceCoord.longitude,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.015,
-            }} >
-            <Marker
-              coordinate={trip.sourceCoord}
-              title="My location"
-              description="My location 2"
-            />
-
-          </MapView>
+            </MapView>
+          </View>
         </>
       }
 
       {!isKeyboardVisible &&
         <RedButton
-          title="Request a moove"
+          title="Request a Moove"
           buttonStyle={styles.button}
           onPress={onContinue} />
       }
