@@ -125,8 +125,7 @@ export default function LoginScreen({navigation}) {
               <Text style={styles.link}>Use Biometrics</Text>
             </TouchableOpacity>
           </View>
-           <Button title="New User? Sign Up"
-          onPress={() => {navigation.push("SignupScreen")}}/>
+          <Link linkStyle={styles.link} to="/SignupScreen">New User? Sign Up</Link>
           <Link linkStyle={styles.link}>Help ?</Link>
         </View>
       </View>
