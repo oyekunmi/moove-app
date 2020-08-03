@@ -54,9 +54,7 @@ export default function LoginScreen({navigation}) {
     lastButton: {
       marginVertical: normalize(20),
     },
-    signinButton: {
-      backgroundColor: '#FFFFFF'
-    },
+  
     links: {
       alignItems: "center",
     },
