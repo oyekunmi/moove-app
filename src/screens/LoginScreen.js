@@ -4,7 +4,8 @@ import { useDispatch } from 'react-redux';
 import { signIn } from '../redux/actions';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
-import Link from '../components/Link';
+// import Link from '../components/Link';
+import { Link } from '@react-navigation/native';
 import Title from '../components/Title';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import SignupScreen from './SignupScreen';
@@ -55,6 +56,7 @@ export default function LoginScreen({navigation}) {
     lastButton: {
       marginVertical: normalize(20),
     },
+  
     links: {
       alignItems: "center",
     },
