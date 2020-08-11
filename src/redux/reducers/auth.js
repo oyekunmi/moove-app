@@ -1,4 +1,4 @@
-import { RESTORE_TOKEN, SIGN_IN, SIGN_OUT, HIDE_INTRO, SHOW_INTRO } from "../actionTypes";
+import { RESTORE_TOKEN, SIGN_IN, SIGN_UP, SIGN_OUT, HIDE_INTRO, SHOW_INTRO } from "../actionTypes";
 
 const defaultState =     {
   isLoading: true,
@@ -22,6 +22,8 @@ export default (state = defaultState, action) => {
         isSignout: false,
         userToken: action.token,
       };
+    case SIGN_UP:
+        return {...state, userToken: action.token}
     case SIGN_OUT:
       return {
         ...state,

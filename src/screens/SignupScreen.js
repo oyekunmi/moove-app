@@ -1,21 +1,62 @@
-import * as React from 'react';
-import { View, TextInput, Button, StyleSheet, StatusBar, Text, Image, CheckBox } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, Image, CheckBox, Alert } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
-import Link from '../components/Link';
-import Title from '../components/Title';
 import { ScrollView } from 'react-native-gesture-handler';
+import Title from '../components/Title';
+import TextField from '../components/TextInput';
+import { signUp } from '../redux/actions';
+import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
+import { userSignUp } from '../utils/helpers/api';
 
 
-export default function SignupScreen() {
+export default function SignupScreen({ navigation }) {
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [errorBag, setError] = useState({});
+    const [isBtnDisabled, setBtnDisabled] = useState(true);
+    const formFields = ['firstname', 'lastname', 'email', 'password', 'confirmPassword', 'phone'];
 
-    const [firstname, setFirstname] = React.useState('');
-    const [lastname, setLastname] = React.useState('');
-    const [phone, setPhone] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [confirmPassword, setConfrimPassword] = React.useState('');
+    const dispatch = useDispatch();
+
+    const userSignUpHandler = async () => {
+        try {
+           const token = await userSignUp(firstname, lastname, email, phone, password, confirmPassword);
+           resetDetails();
+           dispatch(signUp(token));
+
+        } catch(e) {
+           return Alert.alert('Opss', 'please ensure you have network connection and you credentials are correct', null, { cancelable: true })
+        }
+
+        navigation.navigate('Home');
+    }
+
+    const resetDetails = () => {
+        const fieldHandlers = [setFirstname, setLastname, setPhone, setEmail, setPassword, setConfirmPassword];
+
+        for (let handler of fieldHandlers) {
+            handler('');
+        }
+    }
+
+    const isFormValid = (formErrorBag, fields) => {
+        let isValid = false;
+        const errorBagValues = Object.values(formErrorBag);
+        if(errorBagValues.length === fields.length) {
+            isValid = errorBagValues.every((value) => value === undefined);
+        }
+        setBtnDisabled(!isValid);
+    }
+
+    useEffect(() => {
+       isFormValid(errorBag,formFields);
+    },[errorBag, isBtnDisabled]);
 
     const styles = StyleSheet.create({
         container: {
@@ -36,7 +77,6 @@ export default function SignupScreen() {
             color: '#FFFFFF',
         },
         content: {
-            // flex: 4,
             justifyContent: "center",
         },
         contentInputContainer: {
@@ -70,7 +110,6 @@ export default function SignupScreen() {
             flexDirection: "row",
             justifyContent: "center",
             paddingVertical: normalize(10)
-           
         },
         link: {
             marginVertical: normalize(5),
@@ -92,8 +131,13 @@ export default function SignupScreen() {
     })
     return (
         <ScrollView style={styles.container}>
-            <Text style={styles.title}>user sign up</Text>
-            <Text style={styles.subTitle} >Let’s get you signed up with just a few details.</Text>
+            <Title
+                title="user sign up"
+                statusBarStyle="light-content"
+                subTitle="Let’s get you signed up with just a few details"
+                subTitleStyle={{ fontSize: normalize(22) }}
+                containerStyle={{ paddingHorizontal: normalize(18) }}
+            />
 
             <View style={styles.content}>
 
@@ -101,72 +145,85 @@ export default function SignupScreen() {
 
                     <View style={styles.contentInputContainer}>
 
-                        <TextInput
+                        <TextField
                             placeholder='Firstname'
                             style={styles.contentInput}
                             value={firstname}
                             onChangeText={setFirstname}
+                            onBlur={() => {checkErrorHandler('firstName', firstname, setError)}}
+                            error={errorBag['firstName']}
                         />
 
                     </View>
-                    <View style={styles.contentInputContainer}>
-                        <TextInput
+                     <View style={styles.contentInputContainer}>
+                        <TextField
                             placeholder='Lastname'
                             style={styles.contentInput}
                             value={lastname}
                             onChangeText={setLastname}
+                            onBlur={() => {checkErrorHandler('lastName', lastname, setError)}}
+                            error={errorBag['lastName']}
                         />
 
                     </View>
                     <View style={styles.contentInputContainer}>
                         <Image style={styles.icon} source={require('./../../assets/phone-vector.png')} />
-                        <TextInput
+                        <TextField
                             placeholder='Phone - 23480XXXXXXX'
                             style={styles.contentIconInput}
                             value={phone}
                             onChangeText={setPhone}
+                            onBlur={() => {checkErrorHandler('phone', phone, setError)}}
+                            error={errorBag['phone']}
                         />
                     </View>
                     <View style={styles.contentInputContainer}>
                         <Image style={styles.icon} source={require('./../../assets/email-vector.png')} />
-                        <TextInput
+                        <TextField
                             placeholder='Email Address'
                             style={styles.contentIconInput}
                             value={email}
                             onChangeText={setEmail}
+                            onBlur={() => {checkErrorHandler('email', email, setError)}}
+                            error={errorBag['email']}
                         />
                     </View>
 
                     <View style={styles.contentInputContainer}>
                         <Image style={styles.icon} source={require('./../../assets/lock-vector.png')} />
-                        <TextInput
+                        <TextField
                             placeholder='Password'
                             style={styles.contentIconInput}
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry
+                            onBlur={() => {checkErrorHandler('password', password, setError)}}
+                            error={errorBag['password']}
                         />
                     </View>
                     <View style={styles.contentInputContainer}>
                         <Image style={styles.icon} source={require('./../../assets/lock-vector.png')} />
-                        <TextInput
+                        <TextField
                             placeholder='Confirm Password'
                             style={styles.contentIconInput}
                             value={confirmPassword}
-                            onChangeText={setConfrimPassword}
+                            onChangeText={setConfirmPassword}
                             secureTextEntry
+                            onBlur={() => {checkErrorHandler('confirmPassword', {'password': password, 'confirmPassword': confirmPassword }, setError)}}
+                            error={errorBag['confirmPassword']}
                         />
                     </View>
-                    
+
                     <View style={styles.links}>
-                    <CheckBox ></CheckBox>
+                    <CheckBox></CheckBox>
                     <Text style={styles.text}>I Agree To the Terms</Text>
-                        
+
                     </View>
                     <RedButton
                         title="Sign Me Up"
+                        disabled={isBtnDisabled}
                         buttonStyle={styles.lastButton}
-                        onPress={() => dispatch(signIn({ username, password }))}>
+                        onPress={userSignUpHandler}>
                     </RedButton>
 
                 </View>

@@ -1,21 +1,60 @@
-import * as React from 'react';
-import { View, TextInput, Button, StyleSheet, StatusBar, Text, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Alert, View, StyleSheet, StatusBar, Text, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
+import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { signIn } from '../redux/actions';
+import { userSignIn } from '../utils/helpers/api';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
-// import Link from '../components/Link';
 import { Link } from '@react-navigation/native';
 import Title from '../components/Title';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import SignupScreen from './SignupScreen';
+import TextField from '../components/TextInput';
 
 export default function LoginScreen({navigation}) {
 
   const dispatch = useDispatch()
 
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorBag, setError] = useState({});
+  const [isBtnDisabled, setBtnDisabled] = useState(true);
+  const formFields = ['phone', 'password'];
+
+  const resetDetails = () => {
+    const fieldHandlers = [setPhone, setPassword];
+
+    for (let handler of fieldHandlers) {
+      handler('');
+    }
+  }
+
+  const isFormValid = (formErrorBag, fields) => {
+    let isValid = false;
+    const errorBagValues = Object.values(formErrorBag);
+    if(errorBagValues.length === fields.length) {
+        isValid = errorBagValues.every((value) => value === undefined);
+    }
+    setBtnDisabled(!isValid);
+  }
+
+  const loginUserHandler = async () => {
+    try {
+      const token = await userSignIn(phone, password);
+      resetDetails();
+      dispatch(signIn(token));
+
+    } catch(e) {
+        return Alert.alert('Opss', 'please ensure you have network connection and you credentials are correct', null, { cancelable: true });
+    }
+
+    navigation.navigate('Home');
+  }
+
+   useEffect(() => {
+    isFormValid(errorBag,formFields);
+   },[errorBag, isBtnDisabled]);
+
 
   const gotoBiometrics = () => {
     navigation.navigate("Biometrics");
@@ -95,22 +134,26 @@ export default function LoginScreen({navigation}) {
         <View style={styles.form}>
 
           <View style={styles.contentInputContainer}>
-            <Text style={styles.contentLabel}>Username</Text>
-            <TextInput
+            <Text style={styles.contentLabel}>Phone Number</Text>
+            <TextField
               style={styles.contentInput}
-              value={username}
-              onChangeText={setUsername}
+              value={phone}
+              onChangeText={setPhone}
+              onBlur={() => checkErrorHandler('phone', phone, setError) }
+              error={errorBag['phone']}
             />
 
           </View>
 
           <View style={styles.contentInputContainer}>
             <Text style={styles.contentLabel}>Password</Text>
-            <TextInput
+            <TextField
               style={styles.contentInput}
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              onBlur={() => checkErrorHandler('password', password, setError)}
+              error={errorBag['password']}
             />
           </View>
 
@@ -118,7 +161,7 @@ export default function LoginScreen({navigation}) {
 
         <View style={styles.links}>
           <View style={{display: 'flex', flexDirection: 'row', marginBottom: normalize(10)}}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.navigate('ForgotPassword')}}>
               <Text style={styles.link}>Forgot Password</Text>
             </TouchableOpacity><Text style={{...styles.link, paddingHorizontal: normalize(5)}}>|</Text>
             <TouchableOpacity onPress={gotoBiometrics}>
@@ -133,7 +176,8 @@ export default function LoginScreen({navigation}) {
       <RedButton
         title="Sign in"
         buttonStyle={styles.lastButton}
-        onPress={() => dispatch(signIn({ username, password }))}>
+        disabled={isBtnDisabled}
+        onPress={loginUserHandler}>
       </RedButton>
 
     </ScrollView>

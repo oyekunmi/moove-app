@@ -1,5 +1,5 @@
-import { 
-  APP_LOADED, SIGN_IN, SIGN_OUT, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN, 
+import {
+  APP_LOADED, SIGN_IN, SIGN_OUT, SIGN_UP, IS_SIGNUP_BUTTON_ACTIVE, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN,
   SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, PACKAGE_INFO_CHANGED,
   TRIP_CANCEL_REQUEST,
 } from "./actionTypes";
@@ -10,10 +10,24 @@ export const restoreToken = (token, introduced) => ({
   showIntro: !introduced
 })
 
-export const signIn = content => ({
+export const signIn = token => ({
   type: SIGN_IN,
-  token: 'dummy-auth-token'
+  token
 })
+
+export const checkSubmitButton = (isValid) => {
+  return {
+    type: IS_SIGNUP_BUTTON_ACTIVE,
+    payload: { value: isValid }
+  }
+}
+
+export const signUp = (token) => {
+  return {
+    type: SIGN_UP,
+    token
+  }
+}
 
 export const signOut = () => ({
   type: SIGN_OUT,
