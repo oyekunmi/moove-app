@@ -5,7 +5,7 @@ import Title from '../components/Title';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import RedButton from '../components/RedButton';
 
-export default function ForgotPasswordScreen({navigation}) {
+export default function ForgotPasswordScreen({ navigation }) {
 
   const styles = StyleSheet.create({
     container: {
@@ -61,14 +61,18 @@ export default function ForgotPasswordScreen({navigation}) {
       paddingHorizontal: normalize(90),
       marginVertical: normalize(9),
 
-  },
+    },
     icon: {
       padding: 10,
       marginVertical: 27,
       marginHorizontal: 80,
       position: 'absolute',
       zIndex: 2
-  },
+    },
+    lastButton: {
+      
+      marginVertical: normalize(70),
+    },
   })
 
   StatusBar.setBarStyle('dark-content');
@@ -79,11 +83,11 @@ export default function ForgotPasswordScreen({navigation}) {
     <ScrollView style={styles.container}>
 
       <Title
-          title="forgot password "
-          subTitle="Oops! You’re only human everyone forgets"
-          subTitleStyle={{ fontSize: normalize(22) }}
-          containerStyle={{ paddingHorizontal: normalize(18) }}
-        />
+        title="forgot password "
+        subTitle="Oops! You’re only human, everyone forgets"
+        subTitleStyle={{ fontSize: normalize(21) }}
+        containerStyle={{ paddingHorizontal: normalize(18) }}
+      />
 
 
       <View style={styles.content}>
@@ -99,13 +103,18 @@ export default function ForgotPasswordScreen({navigation}) {
 
         <View>
           <View style={styles.contentInputContainer}>
-          <Image style={styles.icon} source={require('./../../assets/email-vector.png')} />
+            <Image style={styles.icon} source={require('./../../assets/email-vector.png')} />
             <TextInput
               style={styles.contentIconInput}
               placeholder='Email Address'
             />
           </View>
         </View>
+        <RedButton
+          title="Reset My Password"
+          buttonStyle={styles.lastButton}
+         >
+        </RedButton>
 
       </View>
 
