@@ -22,10 +22,12 @@ const AppButton = ({
   children,
   rippleColor,
   style,
-  background
+  background,
+  disabled
 }) => {
     return (
       <TouchableNativeFeedback
+        disabled={disabled}
         onLongPress={onLongPress}
         onLayout={onLayout}
         onPress={onPress}

@@ -24,6 +24,7 @@ const RedButton = ({
   buttonStyle,
   background,
   title,
+  disabled
 }) => {
 
 
@@ -31,6 +32,7 @@ const RedButton = ({
       <AppButton
         onLongPress={onLongPress}
         onLayout={onLayout}
+        disabled={disabled}
         onPress={onPress}
         rippleColor={rippleColor}
         background={background}

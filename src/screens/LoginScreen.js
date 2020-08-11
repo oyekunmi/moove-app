@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { signIn } from '../redux/actions';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
-import Link from '../components/Link';
+import { Link } from '@react-navigation/native';
 import Title from '../components/Title';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import SignupScreen from './SignupScreen';
@@ -116,15 +116,14 @@ export default function LoginScreen({navigation}) {
 
         <View style={styles.links}>
           <View style={{display: 'flex', flexDirection: 'row', marginBottom: normalize(10)}}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => { navigation.navigate('ForgotPassword')}}>
               <Text style={styles.link}>Forgot Password</Text>
             </TouchableOpacity><Text style={{...styles.link, paddingHorizontal: normalize(5)}}>|</Text>
             <TouchableOpacity onPress={gotoBiometrics}>
               <Text style={styles.link}>Use Biometrics</Text>
             </TouchableOpacity>
           </View>
-           <Button title="New User? Sign Up"
-          onPress={() => {navigation.push("SignupScreen")}}/>
+          <Link linkStyle={styles.link} to="/SignupScreen">New User? Sign Up</Link>
           <Link linkStyle={styles.link}>Help ?</Link>
         </View>
       </View>
