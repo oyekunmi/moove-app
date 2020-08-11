@@ -95,6 +95,7 @@ export default function LoginScreen({navigation}) {
     lastButton: {
       marginVertical: normalize(20),
     },
+  
     links: {
       alignItems: "center",
     },

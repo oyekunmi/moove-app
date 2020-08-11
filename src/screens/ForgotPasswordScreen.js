@@ -5,7 +5,7 @@ import Title from '../components/Title';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import RedButton from '../components/RedButton';
 
-export default function ForgotPasswordScreen({navigation}) {
+export default function ForgotPasswordScreen({ navigation }) {
 
   const styles = StyleSheet.create({
     container: {
@@ -36,7 +36,7 @@ export default function ForgotPasswordScreen({navigation}) {
       marginBottom: normalize(10)
     },
     forgotPasswordText: {
-      fontSize: normalize(18),
+      fontSize: normalize(15),
       color: '#2F2D2D',
       fontFamily: 'Roboto_400Regular',
       lineHeight: normalize(21),
@@ -53,6 +53,26 @@ export default function ForgotPasswordScreen({navigation}) {
       marginVertical: normalize(5),
 
     },
+    contentIconInput: {
+      backgroundColor: '#E3E3EC',
+      borderRadius: normalize(20),
+      height: normalize(40),
+      fontSize: normalize(14),
+      paddingHorizontal: normalize(90),
+      marginVertical: normalize(9),
+
+    },
+    icon: {
+      padding: 10,
+      marginVertical: 27,
+      marginHorizontal: 80,
+      position: 'absolute',
+      zIndex: 2
+    },
+    lastButton: {
+      
+      marginVertical: normalize(70),
+    },
   })
 
   StatusBar.setBarStyle('dark-content');
@@ -63,11 +83,11 @@ export default function ForgotPasswordScreen({navigation}) {
     <ScrollView style={styles.container}>
 
       <Title
-          title="forgot password "
-          subTitle="Oops! You’re only human everyone forgets"
-          subTitleStyle={{ fontSize: normalize(22) }}
-          containerStyle={{ paddingHorizontal: normalize(18) }}
-        />
+        title="forgot password "
+        subTitle="Oops! You’re only human, everyone forgets"
+        subTitleStyle={{ fontSize: normalize(21) }}
+        containerStyle={{ paddingHorizontal: normalize(18) }}
+      />
 
 
       <View style={styles.content}>
@@ -83,11 +103,18 @@ export default function ForgotPasswordScreen({navigation}) {
 
         <View>
           <View style={styles.contentInputContainer}>
+            <Image style={styles.icon} source={require('./../../assets/email-vector.png')} />
             <TextInput
-              style={styles.contentInput}
+              style={styles.contentIconInput}
+              placeholder='Email Address'
             />
           </View>
         </View>
+        <RedButton
+          title="Reset My Password"
+          buttonStyle={styles.lastButton}
+         >
+        </RedButton>
 
       </View>
 
