@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Title from '../components/Title';
 import TextField from '../components/TextInput';
 import { signUp } from '../redux/actions';
-import validate from '../utils/helpers/validation_wrapper';
+import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { userSignUp } from '../utils/helpers/api';
 
 
@@ -57,10 +57,6 @@ export default function SignupScreen({ navigation }) {
     useEffect(() => {
        isFormValid(errorBag,formFields);
     },[errorBag, isBtnDisabled]);
-
-   const checkErrorHandler = (field, value, errorHandler) => {
-       errorHandler((prevState) => ({ ...prevState, [field]: validate(field, value) }))
-   }
 
     const styles = StyleSheet.create({
         container: {

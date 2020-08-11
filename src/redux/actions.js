@@ -10,9 +10,9 @@ export const restoreToken = (token, introduced) => ({
   showIntro: !introduced
 })
 
-export const signIn = content => ({
+export const signIn = token => ({
   type: SIGN_IN,
-  token: 'dummy-auth-token'
+  token
 })
 
 export const checkSubmitButton = (isValid) => {

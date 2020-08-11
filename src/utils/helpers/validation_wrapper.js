@@ -1,30 +1,30 @@
 import validation from 'validate.js';
 
-export default validate = (fieldName, value) => {
+const validate = (fieldName, value) => {
 	var constraints = {
 		firstName: {
-			presence: { allowEmpty: false },
+			presence: { allowEmpty: false, message: 'cannot be blank' },
 			length: {
 				minimum: 3,
 				message: 'needs to have 3 letters or more',
 			},
 		},
 		lastName: {
-			presence: { allowEmpty: false },
+			presence: { allowEmpty: false, message: 'cannot be blank' },
 			length: {
 				minimum: 3,
 				message: 'needs to have 3 letters or more',
 			},
 		},
 		email: {
-			presence: { allowEmpty: false },
+			presence: { allowEmpty: false, message: 'cannot be blank' },
 			format: {
 				pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 				message: '^Please enter a valid email address',
 			},
 		},
 		password: {
-			presence: { allowEmpty: false },
+			presence: { allowEmpty: false, message: 'cannot be blank' },
 			length: {
 				minimum: 6,
 				message: '^Invalid Password',
@@ -35,7 +35,7 @@ export default validate = (fieldName, value) => {
 			equality: 'password',
 		},
 		phone: {
-			presence: { allowEmpty: false },
+			presence: { allowEmpty: false, message: 'cannot be blank' },
 			numericality: true,
 			length: {
 				minimum: 11,
@@ -55,9 +55,16 @@ export default validate = (fieldName, value) => {
 
 	fieldName === 'confirmPassword'
 		? (result = validation(formValues[fieldName], formFields))
-		: result = validation(formValues, formFields);
+		: (result = validation(formValues, formFields));
 
 	if (result) return result[fieldName][0];
 
 	return result;
+};
+
+export const checkErrorHandler = (field, value, errorHandler) => {
+	errorHandler((prevState) => ({
+		...prevState,
+		[field]: validate(field, value),
+	}));
 };

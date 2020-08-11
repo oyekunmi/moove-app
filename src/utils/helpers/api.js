@@ -18,7 +18,18 @@ export const userSignUp = async (
 		last_name: lastname,
 	});
 
-    const { access_token } = response.data.data.token;
+	const { access_token } = response.data.data.token;
 
-    return access_token;
+	return access_token;
+};
+
+export const userSignIn = async (phone, password) => {
+	const response = axios.post(`${baseURL}/auth/login`, {
+		phone_number: phone,
+		password: password,
+	});
+
+	const { access_token } = (await response).data.data.token;
+
+	return access_token;
 };
