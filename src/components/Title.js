@@ -48,7 +48,7 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
         </TouchableWithoutFeedback>
       )}
       <Text style={_titleStyle}>{title}</Text>
-      <Text style={_subTitleStyle}>{subTitle}:{orderId && <Text style={{ color: "#7AC043", borderWidth: 1, borderStyle: 'solid', borderColor: 'red' }}> {orderId}</Text>}</Text>
+      <Text style={_subTitleStyle}>{subTitle} {orderId && <Text style={{ color: "#7AC043", borderWidth: 1, borderStyle: 'solid', borderColor: 'red' }}> {orderId}</Text>}</Text>
     </View>
   );
 

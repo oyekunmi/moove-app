@@ -9,7 +9,7 @@ import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
 import AddressField from '../components/AddressField';
-import { changeDestinationAddress, changeSourceAddress } from '../redux/actions';
+import {  changeSourceAddress } from '../redux/actions';
 
 const styles = StyleSheet.create({
   container: {
