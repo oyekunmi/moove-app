@@ -1,11 +1,54 @@
-import * as React from 'react';
-import { View, StyleSheet, StatusBar, Image, Text, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, StatusBar, Image, Text, Alert } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
-import { ScrollView} from 'react-native-gesture-handler';
 import RedButton from '../components/RedButton';
+import TextField from '../components/TextInput';
+import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
+import { resetPassword } from '../utils/helpers/api'
 
 export default function ForgotPasswordScreen({ navigation }) {
+
+  const [email, setEmail] = useState('');
+  const [errorBag, setError] = useState({});
+  const [isBtnDisabled, setBtnDisabled] = useState(true);
+  const formFields = ['email'];
+
+  const resetDetails = () => {
+      const fieldHandlers = [setEmail];
+
+      for (let handler of fieldHandlers) {
+          handler('');
+      }
+  }
+
+    const isFormValid = (formErrorBag, fields) => {
+        let isValid = false;
+        const errorBagValues = Object.values(formErrorBag);
+        if(errorBagValues.length === fields.length) {
+            isValid = errorBagValues.every((value) => value === undefined);
+        }
+        setBtnDisabled(!isValid);
+    }
+
+    useEffect(() => {
+       isFormValid(errorBag,formFields);
+    },[errorBag, isBtnDisabled]);
+
+    const resetEmailHandler = async () => {
+      setBtnDisabled(true);
+      try {
+        await resetPassword(email);
+        resetDetails();
+        navigation.navigate('SignIn');
+
+      } catch(error) {
+        const { message } = error.response.data;
+        Alert.alert('Invalid credentials', `${message}`, null, { cancelable: true });
+      }
+    }
 
   const styles = StyleSheet.create({
     container: {
@@ -16,7 +59,7 @@ export default function ForgotPasswordScreen({ navigation }) {
       justifyContent: "center",
     },
     lastButton: {
-      marginVertical: normalize(70),    
+      marginVertical: normalize(70),
     },
     lockLogo: {
       width: normalize(141),
@@ -98,27 +141,25 @@ export default function ForgotPasswordScreen({ navigation }) {
         <View>
           <View style={styles.contentInputContainer}>
             <Image style={styles.icon} source={require('./../../assets/email-vector.png')} />
-            <TextInput
+            <TextField
               style={styles.contentIconInput}
               placeholder='Email Address'
+              value={email}
+              onChangeText={setEmail}
+              onBlur={() => { checkErrorHandler('email', email, setError)}}
+              error={errorBag['email']}
             />
           </View>
         </View>
         <RedButton
           title="Reset My Password"
           buttonStyle={styles.lastButton}
+          disabled={isBtnDisabled}
+          onPress={resetEmailHandler}
          >
         </RedButton>
 
       </View>
-
-      {/* <View style={{display: 'flex', alignItems: 'center'}}>
-        <RedButton
-          title="Login with Email"
-          buttonStyle={styles.lastButton}
-          onPress={() => {navigation.navigate('SignIn')}}>
-        </RedButton>
-      </View> */}
 
     </ScrollView>
   );

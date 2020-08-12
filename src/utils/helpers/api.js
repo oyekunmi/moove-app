@@ -33,3 +33,7 @@ export const userSignIn = async (phone, password) => {
 
 	return access_token;
 };
+
+export const resetPassword = async (email) => {
+	return axios.post(`${baseURL}/auth/password/email`, {email});
+}
