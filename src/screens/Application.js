@@ -25,6 +25,7 @@ import TrackActiveMooveScreen from './TrackActiveMooveScreen';
 import BiometricsScreen from './BiometricsScreen';
 import SignupScreen from './SignupScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
+import PasswordResetScreen from './PasswordResetScreen';
 
 const Stack = createStackNavigator();
 
@@ -94,6 +95,7 @@ export default function Application() {
           <Stack.Screen name="SignIn" component={LoginScreen} />
           <Stack.Screen name="SignupScreen" component = {SignupScreen}/>
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+          <Stack.Screen name= "PasswordResetScreen" component= {PasswordResetScreen}/>
           <Stack.Screen name="Biometrics" component={BiometricsScreen} />
         </>
       }
