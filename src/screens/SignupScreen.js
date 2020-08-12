@@ -33,8 +33,8 @@ export default function SignupScreen({ navigation }) {
 
            navigation.navigate('Home');
         } catch(error) {
-            const { message } = error.response.data;
-            Alert.alert('An error has occurred', `${message}`, null, { cancelable: true });
+            const errorMessage = Object.values(error.response.data.errors)[0][0];
+            Alert.alert('An error has occurred', `${errorMessage}`, null, { cancelable: true });
         }
 
     }
