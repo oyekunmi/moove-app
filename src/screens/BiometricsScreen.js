@@ -1,5 +1,8 @@
-import * as React from 'react';
+import React, {useEffect} from 'react';
+import { useDispatch } from 'react-redux';
 import { View, StyleSheet, StatusBar, Image, Text } from 'react-native';
+import * as LocalAuthentication from 'expo-local-authentication';
+import {signIn } from '../redux/actions';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
@@ -7,58 +10,19 @@ import RedButton from '../components/RedButton';
 
 export default function BiometricsScreen({navigation}) {
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingHorizontal: normalize(18),
-    },
-    image: {
-      width: normalize(120),
-      height: normalize(50),
-      resizeMode: 'contain',
-      marginVertical: normalize(15),
-    },
-    content: {
-      justifyContent: "center",
-    },
-    lastButton: {
-      marginVertical: normalize(20),
-      width: '80%',
-      borderRadius: normalize(20)
-    },
-    biometric: {
-      width: normalize(64),
-      height: normalize(81)
-    },
-    biometricsContainer: {
-      display: 'flex',
-      alignItems: 'center',
-      marginTop: normalize(30)
-    },
-    bioOverview: {
-      marginTop: normalize(25),
-      marginBottom: normalize(20)
-    },
-    bioLabel: {
-      fontSize: normalize(18),
-      fontFamily: 'Roboto_400Regular',
-      color: '#2F2D2D',
-      lineHeight: normalize(21),
-      textAlign: 'center'
-    },
-    newUserSignUp: {
-      display: 'flex',
-      flexDirection: 'row',
-      justifyContent: 'center',
-      marginVertical: normalize(20)
-    },
-    newUserSignUpText: {
-      fontSize: normalize(14),
-      color: '#181818',
-      fontFamily: 'Roboto_900Black',
-      paddingRight: normalize(5)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    biometricLogin();
+  },[]);
+
+  const biometricLogin = async () => {
+    const { success } = await LocalAuthentication.authenticateAsync({promptMessage: 'Scanning'});
+    if (success) {
+      dispatch(signIn('user_signed-in^using|biometrics'));
+      navigation.navigate('Home');
     }
-  })
+  }
 
   StatusBar.setBarStyle('dark-content');
   StatusBar.setTranslucent(false);
@@ -117,3 +81,56 @@ export default function BiometricsScreen({navigation}) {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: normalize(18),
+  },
+  image: {
+    width: normalize(120),
+    height: normalize(50),
+    resizeMode: 'contain',
+    marginVertical: normalize(15),
+  },
+  content: {
+    justifyContent: "center",
+  },
+  lastButton: {
+    marginVertical: normalize(20),
+    width: '80%',
+    borderRadius: normalize(20)
+  },
+  biometric: {
+    width: normalize(64),
+    height: normalize(81)
+  },
+  biometricsContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: normalize(30)
+  },
+  bioOverview: {
+    marginTop: normalize(25),
+    marginBottom: normalize(20)
+  },
+  bioLabel: {
+    fontSize: normalize(18),
+    fontFamily: 'Roboto_400Regular',
+    color: '#2F2D2D',
+    lineHeight: normalize(21),
+    textAlign: 'center'
+  },
+  newUserSignUp: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginVertical: normalize(20)
+  },
+  newUserSignUpText: {
+    fontSize: normalize(14),
+    color: '#181818',
+    fontFamily: 'Roboto_900Black',
+    paddingRight: normalize(5)
+  }
+})

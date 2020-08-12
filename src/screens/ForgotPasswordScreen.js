@@ -16,9 +16,7 @@ export default function ForgotPasswordScreen({ navigation }) {
       justifyContent: "center",
     },
     lastButton: {
-      marginVertical: normalize(20),
-      width: '80%',
-      borderRadius: normalize(20)
+      marginVertical: normalize(70),    
     },
     lockLogo: {
       width: normalize(141),
@@ -68,10 +66,6 @@ export default function ForgotPasswordScreen({ navigation }) {
       marginHorizontal: 80,
       position: 'absolute',
       zIndex: 2
-    },
-    lastButton: {
-      
-      marginVertical: normalize(70),
     },
   })
 
