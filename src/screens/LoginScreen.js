@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, View, StyleSheet, StatusBar, Text, Image } from 'react-native';
 import { useDispatch } from 'react-redux';
+import * as LocalAuthentication from 'expo-local-authentication';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { signIn } from '../redux/actions';
 import { userSignIn } from '../utils/helpers/api';
@@ -13,13 +14,30 @@ import TextField from '../components/TextInput';
 
 export default function LoginScreen({navigation}) {
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errorBag, setError] = useState({});
   const [isBtnDisabled, setBtnDisabled] = useState(true);
+  const [hasFingerPrintScanner, setHasFingerPrintScanner] = useState(false);
+  const [hasEnrolledFingerPrint, setHasEnrolledFingerPrint] = useState(false);
+  const [canLoginUsingFingerPrint, setCanLoginUsingFingerPrint] = useState(false);
   const formFields = ['phone', 'password'];
+
+  useEffect(() => {
+    biometricCapability();
+  },[hasFingerPrintScanner, hasEnrolledFingerPrint]);
+
+  const biometricCapability = async () => {
+    const [supportedAuth] = await LocalAuthentication.supportedAuthenticationTypesAsync();
+    setHasFingerPrintScanner(supportedAuth === 1);
+
+    const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+    setHasEnrolledFingerPrint(isEnrolled);
+
+    setCanLoginUsingFingerPrint(hasFingerPrintScanner && hasEnrolledFingerPrint);
+  }
 
   const resetDetails = () => {
     const fieldHandlers = [setPhone, setPassword];
@@ -95,7 +113,7 @@ export default function LoginScreen({navigation}) {
     lastButton: {
       marginVertical: normalize(20),
     },
-  
+
     links: {
       alignItems: "center",
     },
@@ -163,10 +181,11 @@ export default function LoginScreen({navigation}) {
           <View style={{display: 'flex', flexDirection: 'row', marginBottom: normalize(10)}}>
             <TouchableOpacity onPress={() => { navigation.navigate('ForgotPassword')}}>
               <Text style={styles.link}>Forgot Password</Text>
-            </TouchableOpacity><Text style={{...styles.link, paddingHorizontal: normalize(5)}}>|</Text>
-            <TouchableOpacity onPress={gotoBiometrics}>
-              <Text style={styles.link}>Use Biometrics</Text>
             </TouchableOpacity>
+            { canLoginUsingFingerPrint && <Text style={{...styles.link, paddingHorizontal: normalize(5)}}>|</Text>}
+            {canLoginUsingFingerPrint && <TouchableOpacity onPress={gotoBiometrics}>
+              <Text style={styles.link}>Use Biometrics</Text>
+            </TouchableOpacity>}
           </View>
           <Link linkStyle={styles.link} to="/SignupScreen">New User? Sign Up</Link>
           <Link linkStyle={styles.link}>Help ?</Link>

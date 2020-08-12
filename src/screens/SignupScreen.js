@@ -25,6 +25,7 @@ export default function SignupScreen({ navigation }) {
     const dispatch = useDispatch();
 
     const userSignUpHandler = async () => {
+        setBtnDisabled(true);
         try {
            const token = await userSignUp(firstname, lastname, email, phone, password, confirmPassword);
            resetDetails();
