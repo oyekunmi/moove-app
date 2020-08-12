@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
-import { AsyncStorage, Button, Text, TextInput, View, StatusBar } from 'react-native';
+import React from 'react'
+import { AsyncStorage, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { signIn, appLoaded, showIntro, restoreToken, hideIntro } from '../redux/actions';
+import {  restoreToken} from '../redux/actions';
 import { AppLoading } from 'expo';
 import {
   useFonts,
@@ -26,6 +26,9 @@ import BiometricsScreen from './BiometricsScreen';
 import SignupScreen from './SignupScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
 import PasswordResetScreen from './PasswordResetScreen';
+import PasswordUpdateSuccessfulScreen from './PasswordUpdateSuccessfulScreen';
+import RegistrationVerifySuccessfulScreen from './RegistrationVerifySuccessfulScreen';
+import AddCardSuccessfulScreen from './AddCardSuccessfulScreen';
 
 const Stack = createStackNavigator();
 
@@ -88,6 +91,7 @@ export default function Application() {
           <Stack.Screen name="CreditCardPayment" component={CreditCardPaymentMethodScreen} />
           <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
           <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
+          <Stack.Screen name= "AddCardCardSuccess" component={AddCardSuccessfulScreen}/>
 
         </>
         :
@@ -97,6 +101,8 @@ export default function Application() {
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
           <Stack.Screen name= "PasswordResetScreen" component= {PasswordResetScreen}/>
           <Stack.Screen name="Biometrics" component={BiometricsScreen} />
+          <Stack.Screen name="PasswordUpdateSuccess" component={PasswordUpdateSuccessfulScreen} />
+          <Stack.Screen name="RegistrationVerifySuccess" component={RegistrationVerifySuccessfulScreen} />
         </>
       }
     </Stack.Navigator>

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, StatusBar, Image, Text, TextInput } from 'react-native';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView} from 'react-native-gesture-handler';
 import RedButton from '../components/RedButton';
 
 export default function ForgotPasswordScreen({ navigation }) {

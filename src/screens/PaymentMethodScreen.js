@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, Keyboard, Text, StatusBar, ScrollView } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { cancelTripRequest } from '../redux/actions';
-import AddressField from '../components/AddressField';
+import { View, StyleSheet,  Text, StatusBar, ScrollView } from 'react-native';
+import {  useSelector } from 'react-redux';
+// import { cancelTripRequest } from '../redux/actions';
+// import AddressField from '../components/AddressField';
 import PlainButton from '../components/PlainButton';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
