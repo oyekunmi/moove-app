@@ -31,11 +31,12 @@ export default function SignupScreen({ navigation }) {
            resetDetails();
            dispatch(signUp(token));
 
-        } catch(e) {
-           return Alert.alert('Opss', 'please ensure you have network connection and you credentials are correct', null, { cancelable: true })
+           navigation.navigate('Home');
+        } catch(error) {
+            const errorMessage = Object.values(error.response.data.errors)[0][0];
+            Alert.alert('An error has occurred', `${errorMessage}`, null, { cancelable: true });
         }
 
-        navigation.navigate('Home');
     }
 
     const resetDetails = () => {
