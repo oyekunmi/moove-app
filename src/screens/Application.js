@@ -1,7 +1,7 @@
 import React from 'react'
 import { AsyncStorage, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import {  restoreToken} from '../redux/actions';
+import { restoreToken } from '../redux/actions';
 import { AppLoading } from 'expo';
 import {
   useFonts,
@@ -11,9 +11,9 @@ import {
   Roboto_500Medium
 } from '@expo-google-fonts/roboto';
 import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import HistoryScreen from './/HistoryScreen';
-import HomeScreen from './HomeScreen';
 import LoginScreen from './LoginScreen';
 import IntroSlidersScreen from './IntroSlidesScreen';
 import PackageDescriptionScreen from './PackageDescriptionScreen';
@@ -29,12 +29,14 @@ import PasswordResetScreen from './PasswordResetScreen';
 import PasswordUpdateSuccessfulScreen from './PasswordUpdateSuccessfulScreen';
 import RegistrationVerifySuccessfulScreen from './RegistrationVerifySuccessfulScreen';
 import AddCardSuccessfulScreen from './AddCardSuccessfulScreen';
+import HomeDrawerScreen from './HomeDrawerScreen';
 
 const Stack = createStackNavigator();
 
+
 export default function Application() {
   const dispatch = useDispatch();
-  const state = useSelector(state=>state.auth)
+  const state = useSelector(state => state.auth)
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -79,33 +81,35 @@ export default function Application() {
   console.log(state.userToken)
   return (
     <>
-    <StatusBar translucent backgroundColor="transparent" />
-    <Stack.Navigator headerMode="none">
-      {state.userToken != null && state.userToken != undefined ?
-        <>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="History" component={HistoryScreen} />
-          <Stack.Screen name="PackageDescription" component={PackageDescriptionScreen} />
-          <Stack.Screen name="MooveVerification" component={MooveVerificationScreen} />
-          <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
-          <Stack.Screen name="CreditCardPayment" component={CreditCardPaymentMethodScreen} />
-          <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
-          <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
-          <Stack.Screen name= "AddCardCardSuccess" component={AddCardSuccessfulScreen}/>
+      <StatusBar translucent backgroundColor="transparent" />
+      <Stack.Navigator headerMode="none">
+        {state.userToken != null && state.userToken != undefined ?
+          <>
+            <Stack.Screen name="Home" component={HomeDrawerScreen} />
+            <Stack.Screen name="History" component={HomeDrawerScreen} />
+            <Stack.Screen name = "Wallet" component = {HomeDrawerScreen}/>
+            <Stack.Screen name="PackageDescription" component={PackageDescriptionScreen} />
+            <Stack.Screen name="MooveVerification" component={MooveVerificationScreen} />
+            <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
+            <Stack.Screen name="CreditCardPayment" component={CreditCardPaymentMethodScreen} />
+            <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
+            <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
+            <Stack.Screen name="AddCardCardSuccess" component={AddCardSuccessfulScreen} />
 
-        </>
-        :
-        <>
-          <Stack.Screen name="SignIn" component={LoginScreen} />
-          <Stack.Screen name="SignupScreen" component = {SignupScreen}/>
-          <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
-          <Stack.Screen name= "PasswordResetScreen" component= {PasswordResetScreen}/>
-          <Stack.Screen name="Biometrics" component={BiometricsScreen} />
-          <Stack.Screen name="PasswordUpdateSuccess" component={PasswordUpdateSuccessfulScreen} />
-          <Stack.Screen name="RegistrationVerifySuccess" component={RegistrationVerifySuccessfulScreen} />
-        </>
-      }
-    </Stack.Navigator>
+
+          </>
+          :
+          <>
+            <Stack.Screen name="SignIn" component={LoginScreen} />
+            <Stack.Screen name="SignupScreen" component={SignupScreen} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+            <Stack.Screen name="PasswordResetScreen" component={PasswordResetScreen} />
+            <Stack.Screen name="Biometrics" component={BiometricsScreen} />
+            <Stack.Screen name="PasswordUpdateSuccess" component={PasswordUpdateSuccessfulScreen} />
+            <Stack.Screen name="RegistrationVerifySuccess" component={RegistrationVerifySuccessfulScreen} />
+          </>
+        }
+      </Stack.Navigator>
     </>
   )
 }
