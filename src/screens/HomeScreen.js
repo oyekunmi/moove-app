@@ -42,16 +42,19 @@ const styles = StyleSheet.create({
   }
 });
 
-const toggleDrawerHandler = () => {
-  // The drawer should be toggled here
-  console.log('Drawer handler');
-}
+
 
 function HomeScreen({ navigation }) {
 
   const dispatch = useDispatch()
   const trip = useSelector(state => state.trip)
   const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+
+  const toggleDrawerHandler = () => {
+    // The drawer should be toggled here
+    navigation.openDrawer();
+    // console.log('Drawer handler');
+  }
 
   const onContinue = () => {
     if (!trip.destination) {
