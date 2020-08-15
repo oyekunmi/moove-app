@@ -3,11 +3,10 @@ import { Alert, View, StyleSheet, StatusBar, Text, Image, PixelRatio } from 'rea
 import { useDispatch } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
-import { signIn } from '../redux/actions';
+import { signIn, isAppLoading } from '../redux/actions';
 import { userSignIn } from '../utils/helpers/api';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
-import { Link } from '@react-navigation/native';
 import Title from '../components/Title';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import TextField from '../components/TextInput';
@@ -57,6 +56,7 @@ export default function LoginScreen({navigation}) {
   }
 
   const loginUserHandler = async () => {
+    dispatch(isAppLoading(true));
     try {
       const { access_token: token, phoneNo, name } = await userSignIn(phone, password);
       resetDetails();
@@ -68,7 +68,7 @@ export default function LoginScreen({navigation}) {
       const { message } = error.response.data;
       Alert.alert('An error has occurred', message, null, { cancelable: true });
     }
-
+    dispatch(isAppLoading(false));
   }
 
    useEffect(() => {

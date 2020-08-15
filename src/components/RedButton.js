@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, Text} from 'react-native';
+import { useSelector } from 'react-redux';
+import { StyleSheet, View, Text, Image} from 'react-native';
 import AppButton from './Button';
 import { normalize } from '../normalizeFont';
 
@@ -28,6 +29,7 @@ const RedButton = ({
   disabled
 }) => {
 
+  const commonState = useSelector((state) => state.common)
 
     return (
       <AppButton
@@ -39,7 +41,7 @@ const RedButton = ({
         background={background}
         style={[styles.button, buttonStyle]}
       >
-          <Text style={[styles.text, textStyle]}>{title}</Text>
+          { commonState.isLoading === true ? <Image source={require('../../assets/loading_light.png')} /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
       </AppButton>
     )
 }

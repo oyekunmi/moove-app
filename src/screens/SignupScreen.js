@@ -6,7 +6,7 @@ import RedButton from '../components/RedButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import Title from '../components/Title';
 import TextField from '../components/TextInput';
-import { signUp } from '../redux/actions';
+import { signUp, isAppLoading } from '../redux/actions';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { userSignUp } from '../utils/helpers/api';
 
@@ -26,6 +26,7 @@ export default function SignupScreen({ navigation }) {
     const dispatch = useDispatch();
 
     const userSignUpHandler = async () => {
+        dispatch(isAppLoading(true));
         setBtnDisabled(true);
         try {
            const token = await userSignUp(firstname, lastname, email, phone, password, confirmPassword);
@@ -37,7 +38,7 @@ export default function SignupScreen({ navigation }) {
             const errorMessage = Object.values(error.response.data.errors)[0][0];
             Alert.alert('An error has occurred', `${errorMessage}`, null, { cancelable: true });
         }
-
+        dispatch(isAppLoading(false));
     }
 
     const resetDetails = () => {

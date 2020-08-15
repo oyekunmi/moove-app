@@ -1,7 +1,7 @@
 import {
   APP_LOADED, SIGN_IN, SIGN_OUT, SIGN_UP, IS_SIGNUP_BUTTON_ACTIVE, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN,
   SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, PACKAGE_INFO_CHANGED,
-  TRIP_CANCEL_REQUEST,
+  TRIP_CANCEL_REQUEST, IS_LOADING
 } from "./actionTypes";
 
 export const restoreToken = (token, introduced) => ({
@@ -32,6 +32,11 @@ export const signUp = (token, name, phone) => {
     phone
   }
 }
+
+export const isAppLoading = (value) => ({
+  type: IS_LOADING,
+  isLoading: value
+})
 
 export const signOut = () => ({
   type: SIGN_OUT,
