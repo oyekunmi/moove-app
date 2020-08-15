@@ -93,7 +93,6 @@ export default function LoginScreen({navigation}) {
           fontIcon='arrow_back'
 					headerOptionHandler={() => navigation.goBack()}
           subTitleStyle={{ fontSize: normalize(22) }}
-          containerStyle={{ paddingHorizontal: normalize(18) }}
         />
 
       <Image source={require('./../../assets/logo.png')} style={styles.image} />
@@ -103,9 +102,8 @@ export default function LoginScreen({navigation}) {
         <View style={styles.form}>
 
           <View style={styles.contentInputContainer}>
-            <Text style={styles.contentLabel}>Phone Number</Text>
             <TextField
-              style={styles.contentInput}
+              label="Phone Number"
               value={phone}
               onChangeText={setPhone}
               onBlur={() => checkErrorHandler('phone', phone, setError) }
@@ -115,9 +113,8 @@ export default function LoginScreen({navigation}) {
           </View>
 
           <View style={styles.contentInputContainer}>
-            <Text style={styles.contentLabel}>Password</Text>
             <TextField
-              style={styles.contentInput}
+              label="Password"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
@@ -172,21 +169,7 @@ const styles = StyleSheet.create({
     contentInputContainer: {
       marginVertical: normalize(5),
     },
-    contentLabel: {
-      color: '#545252',
-      fontFamily: 'Roboto_400Regular',
-      fontSize: normalize(11),
-      marginVertical: normalize(7),
-      marginLeft: normalize(14)
-    },
-    contentInput: {
-      backgroundColor: '#E5E5E5',
-      borderRadius: normalize(20),
-      height: normalize(40),
-      fontSize: normalize(14),
-      paddingHorizontal: normalize(10),
 
-    },
     lastButton: {
       marginVertical: normalize(20),
     },

@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const styles = StyleSheet.create({
   titleContainer: {
     paddingBottom: normalize(16),
-    marginTop: normalize(10)
+    marginTop: normalize(10),
   },
   title: {
     fontSize: normalize(13),
@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
     marginTop: normalize(10),
     fontFamily: 'Roboto_900Black',
     color: '#181818',
-    width: normalize(267),
   },
   arrowBack: {
     width: normalize(14),
@@ -42,15 +41,13 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
 
   return (
     <View style={_containerStyle}>
-      {(
-        <TouchableOpacity
-          onPress={() => headerOptionHandler()}
-        >
-       { fontIcon === 'arrow_back' ? (<View style={styles.arrowBack}>
-          <Image source={require('./../../assets/arrow_back.png')}  />
-        </View>): null}
+        <TouchableOpacity onPress={() => headerOptionHandler()}>
+          {fontIcon === 'arrow_back' ? (<View style={styles.arrowBack}>
+            <Image source={require('./../../assets/arrow_back.png')}  />
+          </View>): (<View style={styles.arrowBack}>
+            <Image source={require('./../../assets/arrow_back_light.png')}  />
+          </View>)}
         </TouchableOpacity>
-      )}
       <Text style={_titleStyle}>{title}</Text>
       <Text style={_subTitleStyle}>{subTitle} {orderId && <Text style={{ color: "#7AC043", borderWidth: 1, borderStyle: 'solid', borderColor: 'red' }}> {orderId}</Text>}</Text>
     </View>
