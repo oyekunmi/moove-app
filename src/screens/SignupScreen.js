@@ -29,7 +29,7 @@ export default function SignupScreen({ navigation }) {
         try {
            const token = await userSignUp(firstname, lastname, email, phone, password, confirmPassword);
            resetDetails();
-           dispatch(signUp(token));
+           dispatch(signUp(token, `${firstname} ${lastname}`, phone));
 
            navigation.navigate('Home');
         } catch(error) {

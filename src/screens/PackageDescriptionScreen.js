@@ -1,9 +1,8 @@
-import React from 'react';
-import { View, StyleSheet, Keyboard, Text, StatusBar, Button, TextInput, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Keyboard, Text, StatusBar, TextInput, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { normalize } from '../normalizeFont';
 import { changePackageInfo } from '../redux/actions';
-// import AddressField from '../components/AddressField';
 import RedButton from '../components/RedButton';
 import Title from '../components/Title';
 import SourceAddress from '../components/SourceAddress';
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
 export default function PackageDescriptionScreen({ navigation }) {
   const dispatch = useDispatch()
   const trip = useSelector(state => state.trip)
-  const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const onContinue = () => {
     if (!trip.package) {
@@ -54,7 +53,7 @@ export default function PackageDescriptionScreen({ navigation }) {
     navigation.navigate('MooveVerification')
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => {
@@ -76,8 +75,6 @@ export default function PackageDescriptionScreen({ navigation }) {
 
   StatusBar.setBackgroundColor("#ffffff");
   StatusBar.setBarStyle("dark-content");
-
-  console.log("here");
 
   return (
     <>

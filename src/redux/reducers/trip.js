@@ -3,12 +3,12 @@ import {
 } from "../actionTypes";
 
 const defaultState = {
-  source: 'Villa 26, 44B Street, Al Wasl, Dubai, UAE',
-  destination: 'Villa 26, 44B Street, Al Wasl, Dubai, UAE',
+  source: '',
+  destination: '',
   sourceCoord: null,
-  destinationCord: null,  
-  package: '5 Boxes of Akara',
-  cost: 1530,
+  destinationCord: null,
+  package: '',
+  cost: 0,
 }
 
 export default (state = defaultState, action) => {
@@ -17,7 +17,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         source: action.value,
-        sourceCoord: action.coord ?? state.sourceCoord
+        sourceCoord: action.coord
       };
     case DESTINATION_ADDRESS_CHANGED:
       return {
@@ -33,7 +33,7 @@ export default (state = defaultState, action) => {
     case SIGN_OUT:
       return defaultState;
     default:
-    
+
       return state;
   }
 }

@@ -10,9 +10,11 @@ export const restoreToken = (token, introduced) => ({
   showIntro: !introduced
 })
 
-export const signIn = token => ({
+export const signIn = (token, name, phone) => ({
   type: SIGN_IN,
-  token
+  token,
+  name,
+  phone
 })
 
 export const checkSubmitButton = (isValid) => {
@@ -22,10 +24,12 @@ export const checkSubmitButton = (isValid) => {
   }
 }
 
-export const signUp = (token) => {
+export const signUp = (token, name, phone) => {
   return {
     type: SIGN_UP,
-    token
+    token,
+    name,
+    phone
   }
 }
 

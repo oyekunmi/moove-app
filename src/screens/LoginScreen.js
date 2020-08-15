@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, StyleSheet, StatusBar, Text, Image } from 'react-native';
+import { Alert, View, StyleSheet, StatusBar, Text, Image, PixelRatio } from 'react-native';
 import { useDispatch } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
@@ -58,15 +58,17 @@ export default function LoginScreen({navigation}) {
 
   const loginUserHandler = async () => {
     try {
-      const token = await userSignIn(phone, password);
+      const { access_token: token, phoneNo, name } = await userSignIn(phone, password);
       resetDetails();
-      dispatch(signIn(token));
+      dispatch(signIn(token, name, phoneNo));
 
-    } catch(e) {
-        return Alert.alert('Opss', 'please ensure you have network connection and you credentials are correct', null, { cancelable: true });
+      navigation.navigate('Home');
+
+    } catch(error) {
+      const { message } = error.response.data;
+      Alert.alert('An error has occurred', message, null, { cancelable: true });
     }
 
-    navigation.navigate('Home');
   }
 
    useEffect(() => {
@@ -78,53 +80,6 @@ export default function LoginScreen({navigation}) {
     navigation.navigate("Biometrics");
   }
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingHorizontal: normalize(18),
-    },
-    image: {
-      width: normalize(150),
-      height: normalize(80),
-      resizeMode: 'contain',
-      marginVertical: normalize(20),
-    },
-    content: {
-      justifyContent: "center",
-    },
-    contentInputContainer: {
-      marginVertical: normalize(5),
-    },
-    contentLabel: {
-      color: '#545252',
-      fontFamily: 'Roboto_400Regular',
-      fontSize: normalize(14),
-      marginVertical: normalize(5),
-    },
-    contentInput: {
-      backgroundColor: '#E3E3EC',
-      borderRadius: normalize(20),
-      height: normalize(40),
-      fontSize: normalize(14),
-      paddingHorizontal: normalize(10),
-      marginVertical: normalize(5),
-
-    },
-    lastButton: {
-      marginVertical: normalize(20),
-    },
-
-    links: {
-      alignItems: "center",
-    },
-    link: {
-      marginVertical: normalize(5),
-      fontSize: normalize(14),
-      color: '#181818',
-      fontFamily: 'Roboto_900Black',
-    },
-  })
-
   StatusBar.setBarStyle('dark-content');
   StatusBar.setTranslucent(false);
   StatusBar.setBackgroundColor("#Fff");
@@ -135,11 +90,7 @@ export default function LoginScreen({navigation}) {
       <Title
           title="welcome"
           subTitle="Let’s get you signed in"
-          fontIcon={{
-						name: 'long-arrow-left',
-						color: '#132535',
-						size: 14,
-					}}
+          fontIcon='arrow_back'
 					headerOptionHandler={() => navigation.goBack()}
           subTitleStyle={{ fontSize: normalize(22) }}
           containerStyle={{ paddingHorizontal: normalize(18) }}
@@ -187,13 +138,13 @@ export default function LoginScreen({navigation}) {
               <Text style={styles.link}>Use Biometrics</Text>
             </TouchableOpacity>}
           </View>
-          <Link linkStyle={styles.link} to="/SignupScreen">New User? Sign Up</Link>
-          <Link linkStyle={styles.link}>Help ?</Link>
+          <TouchableOpacity style={styles.helpAndSignUp} onPress={() => navigation.navigate('SignupScreen')}><Text style={styles.helpAndSignUpText}>New User? Sign Up</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.helpAndSignUp}><Text style={styles.helpAndSignUpText}>help?</Text></TouchableOpacity>
         </View>
       </View>
 
       <RedButton
-        title="Sign in"
+        title="Sign In"
         buttonStyle={styles.lastButton}
         disabled={isBtnDisabled}
         onPress={loginUserHandler}>
@@ -202,3 +153,59 @@ export default function LoginScreen({navigation}) {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingHorizontal: normalize(18),
+      backgroundColor: '#EFEFEF'
+    },
+    image: {
+      width: normalize(90),
+      height: normalize(70),
+      resizeMode: 'contain',
+      marginBottom: normalize(10)
+    },
+    content: {
+      justifyContent: "center",
+    },
+    contentInputContainer: {
+      marginVertical: normalize(5),
+    },
+    contentLabel: {
+      color: '#545252',
+      fontFamily: 'Roboto_400Regular',
+      fontSize: normalize(11),
+      marginVertical: normalize(7),
+      marginLeft: normalize(14)
+    },
+    contentInput: {
+      backgroundColor: '#E5E5E5',
+      borderRadius: normalize(20),
+      height: normalize(40),
+      fontSize: normalize(14),
+      paddingHorizontal: normalize(10),
+
+    },
+    lastButton: {
+      marginVertical: normalize(20),
+    },
+
+    links: {
+      alignItems: "center",
+      fontFamily: 'Roboto_400Regular',
+    },
+    link: {
+      marginTop: normalize(24),
+      marginBottom: normalize(10),
+      fontSize: normalize(11),
+      color: '#181818',
+      fontFamily: 'Roboto_900Black',
+    },
+    helpAndSignUp: {
+      marginBottom: normalize(8)
+    },
+    helpAndSignUpText: {
+      fontFamily: 'Roboto_900Black',
+    }
+  })

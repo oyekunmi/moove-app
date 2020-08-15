@@ -1,8 +1,8 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar } from 'react-native';
+import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Title from '../components/Title';
@@ -10,19 +10,18 @@ import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
 import AddressField from '../components/AddressField';
 import {  changeSourceAddress } from '../redux/actions';
+import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 
 const styles = StyleSheet.create({
-  container: {
-  },
   map: {
-    flexGrow: 1,
+    height: normalize(230)
   },
   spinner: {
     flexGrow: 1,
     alignSelf: "center",
     justifyContent: "center",
   },
-  content: {
+  p18: {
     paddingHorizontal: normalize(18),
   },
   button: {
@@ -37,8 +36,8 @@ const styles = StyleSheet.create({
     marginRight: normalize(15),
     position: 'absolute',
     zIndex: 100,
-    left: normalize(17),
-    top: normalize(8)
+    left: normalize(35),
+    top: normalize(8),
   }
 });
 
@@ -48,7 +47,11 @@ function HomeScreen({ navigation }) {
 
   const dispatch = useDispatch()
   const trip = useSelector(state => state.trip)
-  const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+  const [sourceAddress, setSourceAddress] = useState('');
+  const [destinationAddress, setDestinationAddress] = useState('')
+  const [sourceCord, setSourceCord] = useState({});
+  const [destinationCord, setDestinationCord] = useState({});
 
   const toggleDrawerHandler = () => {
     // The drawer should be toggled here
@@ -60,10 +63,11 @@ function HomeScreen({ navigation }) {
     if (!trip.destination) {
       return;
     }
-    navigation.navigate('PackageDescription')
+
+    navigation.navigate('PackageDescription');
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
 
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -84,29 +88,30 @@ function HomeScreen({ navigation }) {
     };
   }, []);
 
-  React.useEffect(() => {
+  const getLocation = async () => {
+    const { status } = await Location.requestPermissionsAsync();
 
-    let getLocation = (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission to access location was denied');
-      }
-      console.log("getting location");
-
-      Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High }).then(locationData => {
-        Location.reverseGeocodeAsync({ latitude: locationData.coords.latitude, longitude: locationData.coords.longitude }).then(locationAddress => {
-          const geoAddress1 = locationAddress[0];
-          dispatch(changeSourceAddress(`${geoAddress1.name}, ${geoAddress1.street}, ${geoAddress1.city}, ${geoAddress1.country}`, locationData.coords));
-        })
-      });
-    });
-
-    if (!trip || !trip.source || !trip.sourceCoord) {
-      getLocation();
+    if (status !== 'granted') {
+      Alert.alert('An error has occurred','Permission to access location was denied', null, { cancelable: true });
     }
 
-  }, [trip]);
+    const { coords: { latitude, longitude }} = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
 
+    const [ { name, street, city, country} ] = await Location.reverseGeocodeAsync({ latitude, longitude });
+
+    const sourceAddress = `${name}, ${street}, ${city}, ${country}`;
+    const sourceCord = { longitude, latitude };
+
+    setSourceAddress(sourceAddress);
+    setSourceCord(sourceCord);
+
+    dispatch(changeSourceAddress( sourceAddress, sourceCord));
+
+  }
+
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   StatusBar.setBarStyle("dark-content");
   StatusBar.setBackgroundColor("#fff");
@@ -123,73 +128,81 @@ function HomeScreen({ navigation }) {
 
       {(!trip || !trip.sourceCoord) ? <ActivityIndicator style={styles.spinner} />
         :
-        <>
           <View style={styles.content}>
+            <View style={styles.p18}>
+              <AddressField
+                value={sourceAddress}
+                label="You are Here:"
+                containerStyle={{ height: normalize(71) }}
+                onChangeText={setSourceAddress} />
 
-            <AddressField
-              value={trip.source}
-              label="You are Here:"
-              isEditable={true}
-              containerStyle={{ height: normalize(71) }}
-              onChangeText={text => dispatch(changeSourceAddress(text))} />
-
-            <View>
-              <FontAwesome name='search' size={normalize(14)} style={styles.searchFont}  />
-             <GooglePlacesAutocomplete
-              placeholder='enter delivery address'
-              minLength={2}
-              onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-              }}
-              styles={{
-                textInputContainer: {
-                  backgroundColor: 'rgba(0,0,0,0)',
-                  marginBottom: normalize(10),
-                  borderTopWidth: 0,
-                  borderBottomWidth: 0,
-                },
-                description: {
-                  fontFamily: 'Roboto_400Regular',
-                },
-                textInput: {
-                  backgroundColor: "#EFEFEF",
-                  paddingLeft: normalize(30),
-                  height: normalize(37),
-                  width: normalize(296),
-                  color: '#545252',
-                  fontSize: 16,
-                  borderRadius: normalize(50),
-                  fontFamily: 'Roboto_400Regular'
-                },
-              }}
-              query={{
-                key: 'AIzaSyDl2ismTJL7qQveLJM9UlL-Ai6ixpQXQdw',
-                language: 'en',
-              }}
-              fetchDetails={true}
-              nearbyPlacesAPI="GooglePlacesSearch"
-              debounce={200}
-            />
             </View>
 
-          </View>
-          <View style={{ height: '40%'}}>
-            <MapView style={styles.map}
-              initialRegion={{
-                latitude: trip.sourceCoord.latitude,
-                longitude: trip.sourceCoord.longitude,
-                latitudeDelta: 0.015,
-                longitudeDelta: 0.015,
-              }} >
-              <Marker
-                coordinate={trip.sourceCoord}
-                title="My location"
-                description="My location 2"
-              />
+            <View>
 
-            </MapView>
+              <View style={styles.p18}>
+                <FontAwesome name='search' size={normalize(14)} style={styles.searchFont}  />
+                <GooglePlacesAutocomplete
+                  placeholder='enter delivery address'
+                  minLength={2}
+                  onPress={(data, details = null) => {
+                    // 'details' is provided when fetchDetails = true
+                  }}
+                  styles={{
+                    listView: {
+                      backgroundColor: '#EFEFEF',
+                      position: 'absolute',
+                      top: '100%',
+                      zIndex: 500
+                    },
+                    textInputContainer: {
+                      backgroundColor:'#fff',
+                      marginBottom: normalize(10),
+                      borderTopWidth: 0,
+                      borderBottomWidth: 0,
+                    },
+                    description: {
+                      fontFamily: 'Roboto_400Regular',
+                    },
+                    textInput: {
+                      backgroundColor: "#EFEFEF",
+                      paddingLeft: normalize(30),
+                      height: normalize(37),
+                      width: normalize(296),
+                      color: '#545252',
+                      fontSize: 16,
+                      borderRadius: normalize(50),
+                      fontFamily: 'Roboto_400Regular'
+                    },
+                  }}
+                  query={{
+                    key: `${GOOGLE_PLACES_API_KEY}`,
+                    language: 'en',
+                  }}
+                  fetchDetails={true}
+                  nearbyPlacesAPI="GooglePlacesSearch"
+                  debounce={200}
+                />
+              </View>
+              <View>
+              <MapView style={styles.map}
+                initialRegion={{
+                  latitude: trip.sourceCoord.latitude,
+                  longitude: trip.sourceCoord.longitude,
+                  latitudeDelta: 0.015,
+                  longitudeDelta: 0.015,
+                }} >
+                <Marker
+                  coordinate={trip.sourceCoord}
+                  title="My location"
+                  description="My location 2"
+                />
+
+              </MapView>
+            </View>
           </View>
-        </>
+
+        </View>
       }
 
       {!isKeyboardVisible &&

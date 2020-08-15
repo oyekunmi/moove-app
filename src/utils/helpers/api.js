@@ -24,14 +24,25 @@ export const userSignUp = async (
 };
 
 export const userSignIn = async (phone, password) => {
-	const response = axios.post(`${baseURL}/auth/login`, {
+	const response = await axios.post(`${baseURL}/auth/login`, {
 		phone_number: phone,
 		password: password,
 	});
 
-	const { access_token } = (await response).data.data.token;
+	const {
+		token: { access_token },
+		user: {
+			phone_number,
+			profile: { first_name, last_name}
+		},
+	} = response.data.data;
 
-	return access_token;
+
+	return {
+		access_token,
+		name: `${first_name} ${last_name}`,
+		phoneNo: phone_number,
+	};
 };
 
 export const resetPassword = async (email) => {

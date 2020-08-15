@@ -1,5 +1,5 @@
-import React, { Children } from 'react'
-import {TouchableNativeFeedback, StyleSheet, View, Text} from 'react-native';
+import React from 'react';
+import { StyleSheet, View, Text} from 'react-native';
 import AppButton from './Button';
 import { normalize } from '../normalizeFont';
 
@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(18),
+    textTransform: 'capitalize',
   },
   button: {
     backgroundColor: '#CE0303',

@@ -1,17 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, Button, TouchableWithoutFeedback } from "react-native";
-import { FontAwesome } from '@expo/vector-icons';
+import { View, Text, StyleSheet, Image } from "react-native";
 import { normalize } from "../normalizeFont";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   titleContainer: {
-    paddingBottom: normalize(20),
-  },
-  backIcon: {
-    color: "#000",
-    padding: 0,
-    marginBottom: normalize(10),
-    width: normalize(50),
+    paddingBottom: normalize(16),
+    marginTop: normalize(10)
   },
   title: {
     fontSize: normalize(13),
@@ -22,11 +17,18 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: normalize(21),
     lineHeight: normalize(25),
-    marginTop: 15,
+    marginTop: normalize(10),
     fontFamily: 'Roboto_900Black',
-    color: '#000000',
+    color: '#181818',
     width: normalize(267),
   },
+  arrowBack: {
+    width: normalize(14),
+    height: normalize(14),
+    display: 'flex',
+    justifyContent: 'center',
+    marginBottom: normalize(10),
+  }
 });
 
 export default function Title({ subTitle, subTitleStyle, title, titleStyle, containerStyle, statusBarStyle, fontIcon, headerOptionHandler,orderId }) {
@@ -36,16 +38,18 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
 
   const _titleStyle = [styles.title, { color: titleColor }, titleStyle]
   const _subTitleStyle = [styles.subTitle, { color: subTitleColor }, subTitleStyle]
-  const _containerStyle = [styles.titleContainer, containerStyle, fontIcon? {marginTop: normalize(10)}: {} ]
+  const _containerStyle = [styles.titleContainer, containerStyle ]
 
   return (
     <View style={_containerStyle}>
       {(
-        <TouchableWithoutFeedback
+        <TouchableOpacity
           onPress={() => headerOptionHandler()}
         >
-          <FontAwesome name={fontIcon ? fontIcon.name:''} size={fontIcon ? normalize(fontIcon.size) : normalize(14)} style={{ paddingVertical: normalize(10), color: fontIcon ? fontIcon.color : subTitleColor }}  />
-        </TouchableWithoutFeedback>
+       { fontIcon === 'arrow_back' ? (<View style={styles.arrowBack}>
+          <Image source={require('./../../assets/arrow_back.png')}  />
+        </View>): null}
+        </TouchableOpacity>
       )}
       <Text style={_titleStyle}>{title}</Text>
       <Text style={_subTitleStyle}>{subTitle} {orderId && <Text style={{ color: "#7AC043", borderWidth: 1, borderStyle: 'solid', borderColor: 'red' }}> {orderId}</Text>}</Text>
