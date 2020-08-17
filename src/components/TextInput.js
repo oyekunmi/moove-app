@@ -5,10 +5,10 @@ import { normalize } from '../normalizeFont';
 const TextField = props => {
   return (
     <View style={{ marginBottom: normalize(8)}}>
-      {props.iconSource && <Image style={styles.icon} source={props.iconSource} /> }
+      {props.iconSource && <Image style={[styles.icon, props.fieldIconPosition && {left: `${props.fieldIconPosition}%`} ]} source={props.iconSource} /> }
 
       {props.label && <Text style={styles.contentLabel}>{props.label}</Text>}
-      <TextInput {...props } style={[styles.contentInput, props.iconSource && {paddingLeft: normalize(38)} , props.marginBottom && { marginBottom: props.marginBottom}]} />
+      <TextInput {...props } style={[styles.contentInput, props.iconSource && {paddingLeft: normalize(+props.placeholderPaddingLeft) ||normalize(38)} , props.marginBottom && { marginBottom: props.marginBottom}]} />
       { props.error && <Text style={styles.error}>{props.error}</Text> }
     </View>
   )}

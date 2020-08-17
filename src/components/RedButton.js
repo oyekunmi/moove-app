@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#FFFFFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(18),
+    fontSize: normalize(13),
     textTransform: 'capitalize',
   },
   button: {

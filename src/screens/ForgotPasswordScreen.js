@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, Image, Text, Alert } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { normalize } from '../normalizeFont';
@@ -7,9 +8,12 @@ import Title from '../components/Title';
 import RedButton from '../components/RedButton';
 import TextField from '../components/TextInput';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
-import { resetPassword } from '../utils/helpers/api'
+import { resetPassword } from '../utils/helpers/api';
+import { isAppLoading } from '../redux/actions';
 
 export default function ForgotPasswordScreen({ navigation }) {
+
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState('');
   const [errorBag, setError] = useState({});
@@ -38,6 +42,7 @@ export default function ForgotPasswordScreen({ navigation }) {
     },[errorBag, isBtnDisabled]);
 
     const resetEmailHandler = async () => {
+      dispatch(isAppLoading(true));
       setBtnDisabled(true);
       try {
         await resetPassword(email);
@@ -48,6 +53,7 @@ export default function ForgotPasswordScreen({ navigation }) {
         const { message } = error.response.data;
         Alert.alert('Invalid credentials', `${message}`, null, { cancelable: true });
       }
+      dispatch(isAppLoading(false));
     }
 
   const styles = StyleSheet.create({
@@ -59,31 +65,30 @@ export default function ForgotPasswordScreen({ navigation }) {
       justifyContent: "center",
     },
     lastButton: {
-      marginVertical: normalize(70),
+      marginVertical: normalize(100),
     },
     lockLogo: {
-      width: normalize(141),
-      height: normalize(141),
+      width: normalize(115),
+      height: normalize(115),
       resizeMode: 'contain',
     },
     lockLogoContainer: {
       display: 'flex',
       alignItems: 'center',
-      marginTop: normalize(30)
+      marginTop: normalize(30),
+      marginBottom: normalize(10),
     },
     forgotPasswordGuideLine: {
       display: 'flex',
       alignItems: 'center',
-      marginBottom: normalize(10)
+      marginBottom: normalize(15),
+      color: '#2F2D2D',
     },
     forgotPasswordText: {
-      fontSize: normalize(15),
+      fontSize: normalize(14),
       color: '#2F2D2D',
       fontFamily: 'Roboto_400Regular',
       lineHeight: normalize(21),
-    },
-    contentInputContainer: {
-      marginVertical: normalize(5),
     },
     contentInput: {
       backgroundColor: '#E3E3EC',
@@ -121,9 +126,8 @@ export default function ForgotPasswordScreen({ navigation }) {
 
       <Title
         title="forgot password "
-        subTitle="Oops! You’re only human, everyone forgets"
+        subTitle="Oops! You’re only human everyone forgets"
         subTitleStyle={{ fontSize: normalize(21) }}
-        containerStyle={{ paddingHorizontal: normalize(18) }}
       />
 
 
@@ -140,9 +144,11 @@ export default function ForgotPasswordScreen({ navigation }) {
 
         <View>
           <View style={styles.contentInputContainer}>
-            <Image style={styles.icon} source={require('./../../assets/email-vector.png')} />
+
             <TextField
-              style={styles.contentIconInput}
+              iconSource={require('./../../assets/email-vector.png')}
+              fieldIconPosition='25'
+              placeholderPaddingLeft='100'
               placeholder='Email Address'
               value={email}
               onChangeText={setEmail}

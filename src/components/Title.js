@@ -42,9 +42,10 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
   return (
     <View style={_containerStyle}>
         <TouchableOpacity onPress={() => headerOptionHandler()}>
-          {fontIcon === 'arrow_back' ? (<View style={styles.arrowBack}>
+          {fontIcon === 'arrow_back' && (<View style={styles.arrowBack}>
             <Image source={require('./../../assets/arrow_back.png')}  />
-          </View>): (<View style={styles.arrowBack}>
+          </View>)}
+          {fontIcon === 'arrow_back_light' && (<View style={styles.arrowBack}>
             <Image source={require('./../../assets/arrow_back_light.png')}  />
           </View>)}
         </TouchableOpacity>
