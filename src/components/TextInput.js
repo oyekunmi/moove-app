@@ -9,7 +9,7 @@ const TextField = props => {
       <View style={{ marginBottom: normalize(8)}}>
         {props.iconSource && <Image style={[styles.icon, props.fieldIconPosition && {left: `${props.fieldIconPosition}%`} ]} source={props.iconSource} /> }
 
-        <TextInput {...props } style={[styles.contentInput, props.iconSource && {paddingLeft: normalize(+props.placeholderPaddingLeft) ||normalize(38)} , props.marginBottom && { marginBottom: props.marginBottom}, {backgroundColor: props.inputBackgroundColor ? `${props.inputBackgroundColor}`:'#E5E5E5'}]} />
+        <TextInput {...props } style={[styles.contentInput, props.iconSource && {paddingLeft: normalize(+props.placeholderPaddingLeft) ||normalize(38)} , props.marginBottom && { marginBottom: props.marginBottom}, {backgroundColor: props.inputBackgroundColor ? `${props.inputBackgroundColor}`:'#EFEFEF'}]} />
         { props.error && <Text style={{...styles.error, color: props.errorTextColor || '#CE0303' }}>{props.error}</Text> }
       </View>
     </>

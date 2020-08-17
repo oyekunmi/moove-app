@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: normalize(18),
-      backgroundColor: '#EFEFEF'
+      backgroundColor: '#ffffff'
     },
     image: {
       width: normalize(90),

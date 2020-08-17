@@ -60,6 +60,7 @@ export default function ForgotPasswordScreen({ navigation }) {
     container: {
       flex: 1,
       paddingHorizontal: normalize(18),
+      backgroundColor: '#ffffff'
     },
     content: {
       justifyContent: "space-between",
