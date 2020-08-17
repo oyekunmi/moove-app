@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const slides = [ 
+const slides = [
   {
     key: '1',
     title: 'Deliveries shouldn’t be a pain',
@@ -70,7 +70,7 @@ const slides = [
     title: 'moovelogic offers',
     subTitle: 'superfast food delivery \nto your doorstep',
     text: 'get your food orders steaming hot \njust like it’s from the pot',
-    image: require('./../../assets/intro3.png'), 
+    image: require('./../../assets/intro3.png'),
     statusBarStyle: 'light-content',
     backgroundColor: '#CE0303',
     textStyle: styles.text,
@@ -111,19 +111,19 @@ export default function IntroSlidersScreen() {
           <Image source={item.image} style={styles.image} />
           <Text style={item.textStyle}>{item.text}</Text>
         </View>
-       
+
       </View>
     );
   }
 
-  return ( 
+  return (
     <>
     <StatusBar translucent backgroundColor="transparent" barStyle="dark-content"/>
     <AppIntroSlider
       activeDotStyle={styles.activeDotStyle}
       dotStyle={styles.dotStyle}
       showNextButton={false}
-      renderItem={_renderItem} 
+      renderItem={_renderItem}
       data={slides}
       onSlideChange={_onSlideChange}
       onDone={onDone} />

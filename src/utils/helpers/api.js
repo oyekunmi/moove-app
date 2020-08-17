@@ -45,6 +45,10 @@ export const userSignIn = async (phone, password) => {
 	};
 };
 
-export const resetPassword = async (email) => {
+export const forgotPassword = async (email) => {
 	return axios.post(`${baseURL}/auth/password/email`, {email});
+}
+
+export const resetNewPassword = async (email, newPassword, confirmNewPassword) => {
+	await axios.post(`${baseURL}/auth/password/reset`, {email, 'new_password': newPassword, 'new_password_confirmation': confirmNewPassword });
 }

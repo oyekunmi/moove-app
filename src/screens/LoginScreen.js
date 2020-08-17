@@ -85,7 +85,7 @@ export default function LoginScreen({navigation}) {
   StatusBar.setBackgroundColor("#Fff");
   return (
 
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 
       <Title
           title="welcome"
@@ -98,7 +98,7 @@ export default function LoginScreen({navigation}) {
       <Image source={require('./../../assets/logo.png')} style={styles.image} />
 
       <View style={styles.content}>
-
+    <View>
         <View style={styles.form}>
 
           <View style={styles.contentInputContainer}>
@@ -138,14 +138,15 @@ export default function LoginScreen({navigation}) {
           <TouchableOpacity style={styles.helpAndSignUp} onPress={() => navigation.navigate('SignupScreen')}><Text style={styles.helpAndSignUpText}>New User? Sign Up</Text></TouchableOpacity>
           <TouchableOpacity style={styles.helpAndSignUp}><Text style={styles.helpAndSignUpText}>help?</Text></TouchableOpacity>
         </View>
+        </View>
+        <RedButton
+          title="Sign In"
+          buttonStyle={styles.lastButton}
+          disabled={isBtnDisabled}
+          onPress={loginUserHandler}>
+        </RedButton>
       </View>
 
-      <RedButton
-        title="Sign In"
-        buttonStyle={styles.lastButton}
-        disabled={isBtnDisabled}
-        onPress={loginUserHandler}>
-      </RedButton>
 
     </ScrollView>
   );
@@ -164,14 +165,15 @@ const styles = StyleSheet.create({
       marginBottom: normalize(10)
     },
     content: {
-      justifyContent: "center",
+      justifyContent: "space-between",
+      flex: 2,
     },
     contentInputContainer: {
       marginVertical: normalize(5),
     },
 
     lastButton: {
-      marginVertical: normalize(20),
+      marginBottom: normalize(10),
     },
 
     links: {

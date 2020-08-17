@@ -8,7 +8,7 @@ import Title from '../components/Title';
 import RedButton from '../components/RedButton';
 import TextField from '../components/TextInput';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
-import { resetPassword } from '../utils/helpers/api';
+import { forgotPassword } from '../utils/helpers/api';
 import { isAppLoading } from '../redux/actions';
 
 export default function ForgotPasswordScreen({ navigation }) {
@@ -41,13 +41,13 @@ export default function ForgotPasswordScreen({ navigation }) {
        isFormValid(errorBag,formFields);
     },[errorBag, isBtnDisabled]);
 
-    const resetEmailHandler = async () => {
+    const resetPasswordHandler = async () => {
       dispatch(isAppLoading(true));
       setBtnDisabled(true);
       try {
-        await resetPassword(email);
+        await forgotPassword(email);
         resetDetails();
-        navigation.navigate('SignIn');
+        navigation.navigate('PasswordResetScreen');
 
       } catch(error) {
         const { message } = error.response.data;
@@ -62,10 +62,11 @@ export default function ForgotPasswordScreen({ navigation }) {
       paddingHorizontal: normalize(18),
     },
     content: {
-      justifyContent: "center",
+      justifyContent: "space-between",
+      flex: 2,
     },
     lastButton: {
-      marginVertical: normalize(100),
+      marginBottom: normalize(10)
     },
     lockLogo: {
       width: normalize(115),
@@ -122,7 +123,7 @@ export default function ForgotPasswordScreen({ navigation }) {
   StatusBar.setBackgroundColor("#Fff");
   return (
 
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 
       <Title
         title="forgot password "
@@ -132,7 +133,7 @@ export default function ForgotPasswordScreen({ navigation }) {
 
 
       <View style={styles.content}>
-
+    <View>
         <View style={styles.lockLogoContainer}>
           <Image source={require('./../../assets/forgotpass.png')} style={styles.lockLogo} />
         </View>
@@ -157,11 +158,12 @@ export default function ForgotPasswordScreen({ navigation }) {
             />
           </View>
         </View>
+      </View>
         <RedButton
           title="Reset My Password"
           buttonStyle={styles.lastButton}
           disabled={isBtnDisabled}
-          onPress={resetEmailHandler}
+          onPress={resetPasswordHandler}
          >
         </RedButton>
 

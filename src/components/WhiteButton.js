@@ -1,5 +1,6 @@
-import React, { Children } from 'react'
-import {TouchableNativeFeedback, StyleSheet, View, Text} from 'react-native';
+import React from 'react'
+import { StyleSheet, Text, Image } from 'react-native';
+import { useSelector } from 'react-redux';
 import AppButton from './Button';
 import { normalize } from '../normalizeFont';
 
@@ -7,12 +8,12 @@ const styles = StyleSheet.create({
   text: {
     color: "#CE0303",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(18),
+    fontSize: normalize(13),
   },
   button: {
     backgroundColor: '#FFFFFF',
   }
-})
+});
 
 const GreenButton = ({
   onPress,
@@ -23,19 +24,22 @@ const GreenButton = ({
   buttonStyle,
   background,
   title,
+  disabled
 }) => {
 
+    const commonState = useSelector((state) => state.common);
 
     return (
       <AppButton
         onLongPress={onLongPress}
         onLayout={onLayout}
+        disabled={disabled}
         onPress={onPress}
         rippleColor={rippleColor}
         background={background}
         style={[styles.button, buttonStyle]}
       >
-          <Text style={[styles.text, textStyle]}>{title}</Text>
+        { commonState.isLoading === true ? <Image source={require('../../assets/loading_dark.png')} /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
       </AppButton>
     )
 }

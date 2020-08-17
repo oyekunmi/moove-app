@@ -29,7 +29,7 @@ const RedButton = ({
   disabled
 }) => {
 
-  const commonState = useSelector((state) => state.common)
+  const commonState = useSelector((state) => state.common);
 
     return (
       <AppButton

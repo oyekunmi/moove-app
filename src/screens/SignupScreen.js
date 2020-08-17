@@ -187,7 +187,7 @@ export default function SignupScreen({ navigation }) {
                             secureTextEntry
                             onBlur={() => {
                                 checkErrorHandler('password', password, setError);
-                                checkErrorHandler('confirmPassword', {'password': password, 'confirmPassword': confirmPassword }, setError);
+                                if(confirmPassword !== '') checkErrorHandler('confirmPassword', {'password': password, 'confirmPassword': confirmPassword }, setError);
                             }}
                             error={errorBag['password']}
                         />
@@ -200,8 +200,8 @@ export default function SignupScreen({ navigation }) {
                             onChangeText={setConfirmPassword}
                             secureTextEntry
                             onBlur={() => {
-                                checkErrorHandler('confirmPassword', {'password': password, 'confirmPassword': confirmPassword }, setError);
-                                checkErrorHandler('password', password, setError);
+                                 checkErrorHandler('confirmPassword', {'password': password, 'confirmPassword': confirmPassword }, setError);
+                                if(password !== '') checkErrorHandler('password', password, setError);
                             }}
                             error={errorBag['confirmPassword']}
                         />

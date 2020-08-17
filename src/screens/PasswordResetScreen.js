@@ -1,113 +1,197 @@
-import React from 'react';
-import { View, StyleSheet, Text, Image, TextInput } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Image, Alert } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
+
 import { normalize } from '../normalizeFont';
 import WhiteButton from '../components/WhiteButton';
-import { ScrollView } from 'react-native-gesture-handler';
 import Title from '../components/Title';
+import TextField from '../components/TextInput';
+import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
+import { resetNewPassword } from '../utils/helpers/api';
+import { isAppLoading } from '../redux/actions';
 
+export default function PasswordResetScreen({ navigation }) {
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [confirmPassword, setConfirmPassword] = useState('');
+	const [errorBag, setError] = useState({});
+	const [isBtnDisabled, setBtnDisabled] = useState(true);
+	const formFields = ['email', 'password', 'confirmPassword'];
 
-export default function PasswordResetScreen() {
+	const dispatch = useDispatch();
 
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            backgroundColor: '#CE0303',
-            paddingHorizontal: normalize(18),
+	const resetForgottenPasswordHandler = async () => {
+		dispatch(isAppLoading(true));
+		setBtnDisabled(true);
+		try {
+			await resetNewPassword(email, password, confirmPassword);
+			resetDetails();
 
-        },
-        lockLogoContainer: {
-            display: 'flex',
-            alignItems: 'center',
-            marginTop: normalize(30)
-        },
-        lockLogo: {
-            width: normalize(141),
-            height: normalize(141),
-            resizeMode: 'contain',
-        },
-        contentInputContainer: {
-            marginVertical: normalize(5),
-        },
-        contentIconInput: {
-            backgroundColor: '#E3E3EC',
-            borderRadius: normalize(20),
-            height: normalize(40),
-            fontSize: normalize(14),
-            paddingHorizontal: normalize(40),
-            marginVertical: normalize(9),
+			navigation.navigate('SuccessScreen', {
+				title: 'password reset',
+				subTitle: 'Password Updated',
+			});
+		} catch (error) {
+			const errorMessage = Object.values(
+				error.response.data.errors,
+			)[0][0];
+			Alert.alert('An error has occurred', `${errorMessage}`, null, {
+				cancelable: true,
+			});
+		}
 
-        },
-        icon: {
-            padding: 10,
-            marginVertical: 48,
-            marginHorizontal: 20,
-            position: 'absolute',
-            zIndex: 2
-        },
-        lastButton: {
-            marginVertical: normalize(70),
-            marginBottom: normalize(5),
-            
-        },
-        inputLabel: {
-            color : "#F1F1F1",
-        }
+		dispatch(isAppLoading(false));
+	};
 
-    })
+	const resetDetails = () => {
+		const fieldHandlers = [setEmail, setPassword, setConfirmPassword];
 
-    return (
-        <ScrollView style={styles.container}>
-            <Title
-                title="password reset"
-                statusBarStyle="light-content"
-                subTitle="enter a secure password"
-                subTitleStyle={{ fontSize: normalize(22) }}
-                containerStyle={{ paddingHorizontal: normalize(18) }}
-            />
+		for (let handler of fieldHandlers) {
+			handler('');
+		}
+	};
 
-            <View style={styles.content}>
+	const isFormValid = (formErrorBag, fields) => {
+		let isValid = false;
+		const errorBagValues = Object.values(formErrorBag);
+		if (errorBagValues.length === fields.length) {
+			isValid = errorBagValues.every((value) => value === undefined);
+		}
+		setBtnDisabled(!isValid);
+	};
 
-                <View style={styles.lockLogoContainer}>
-                    <Image source={require('./../../assets/forgotpass.png')} style={styles.lockLogo} />
-                </View>
+	useEffect(() => {
+		isFormValid(errorBag, formFields);
+	}, [errorBag, isBtnDisabled]);
 
-                <View>
-                    <View style={styles.contentInputContainer}>
-                        <Text style = {styles.inputLabel}>Email</Text>
-                        <Image style={styles.icon} source={require('./../../assets/email-vector.png')} />
-                        <TextInput
-                            style={styles.contentIconInput}
-                        />
-                    </View>
-                    <View style={styles.contentInputContainer}>
-                        <Text style = {styles.inputLabel}>New Password</Text>
-                        <Image style={styles.icon} source={require('./../../assets/lock-vector.png')} />
-                        <TextInput
-                            style={styles.contentIconInput}
-                        />
-                    </View>
-                    <View style={styles.contentInputContainer}>
-                        <Text style = {styles.inputLabel}>Confirm Password </Text>
-                        <Image style={styles.icon} source={require('./../../assets/lock-vector.png')} />
-                        <TextInput
-                            style={styles.contentIconInput}
-                        />
-                    </View>
+	return (
+		<ScrollView style={styles.container}>
+			<Title
+				title='password reset'
+				statusBarStyle='light-content'
+				subTitle='enter a secure password'
+				fontIcon='arrow_back_light'
+				subTitleStyle={{ fontSize: normalize(22) }}
+				headerOptionHandler={() => navigation.goBack()}
+			/>
 
-                </View>
-                <WhiteButton
-                    title="Update Password"
-                    buttonStyle={styles.lastButton}
-                >
-                </WhiteButton>
+			<View style={styles.content} contentContainerStyle={{ flexGrow: 1 }}>
+				<View style={styles.lockLogoContainer}>
+					<Image
+						source={require('./../../assets/forgotpass.png')}
+						style={styles.lockLogo}
+					/>
+				</View>
 
-            </View>
-
-        </ScrollView>
-    )
-
-
-
-
-
+				<View>
+					<View style={styles.contentInputContainer}>
+						<TextField
+							label='Email'
+							labelColor='#F1F1F1'
+							errorTextColor='#F1F1F1'
+							style={styles.contentIconInput}
+							iconSource={require('./../../assets/email-vector.png')}
+							inputBackgroundColor='#E07A7A'
+							value={email}
+							onChangeText={setEmail}
+							onBlur={() => {
+								checkErrorHandler('email', email, setError);
+							}}
+							error={errorBag['email']}
+						/>
+					</View>
+					<View style={styles.contentInputContainer}>
+						<TextField
+							label='New Password'
+							labelColor='#F1F1F1'
+							errorTextColor='#F1F1F1'
+							style={styles.contentIconInput}
+							iconSource={require('./../../assets/lock-vector.png')}
+							inputBackgroundColor='#E07A7A'
+							value={password}
+							onChangeText={setPassword}
+							secureTextEntry
+							onBlur={() => {
+								checkErrorHandler(
+									'password',
+									password,
+									setError,
+								);
+								if(confirmPassword !== '') checkErrorHandler(
+									'confirmPassword',
+									{
+										password: password,
+										confirmPassword: confirmPassword,
+									},
+									setError,
+								);
+							}}
+							error={errorBag['password']}
+						/>
+					</View>
+					<View style={styles.contentInputContainer}>
+						<TextField
+							label='Confirm Password'
+							labelColor='#F1F1F1'
+							errorTextColor='#F1F1F1'
+							style={styles.contentIconInput}
+							iconSource={require('./../../assets/lock-vector.png')}
+							inputBackgroundColor='#E07A7A'
+							value={confirmPassword}
+							onChangeText={setConfirmPassword}
+							secureTextEntry
+							onBlur={() => {
+								if(password !== '') checkErrorHandler(
+									'password',
+									password,
+									setError,
+								);
+								checkErrorHandler(
+									'confirmPassword',
+									{
+										password: password,
+										confirmPassword: confirmPassword,
+									},
+									setError,
+								);
+							}}
+							error={errorBag['confirmPassword']}
+						/>
+					</View>
+				</View>
+				<WhiteButton
+					title='Update Password'
+					disabled={isBtnDisabled}
+					buttonStyle={styles.lastButton}
+					onPress={resetForgottenPasswordHandler}></WhiteButton>
+			</View>
+		</ScrollView>
+	);
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: '#CE0303',
+		paddingHorizontal: normalize(18),
+	},
+	contentInputContainer: {
+		marginVertical: normalize(5),
+	},
+	lastButton: {
+		marginVertical: normalize(70),
+		marginBottom: normalize(5),
+	},
+	lockLogo: {
+		width: normalize(115),
+		height: normalize(115),
+		resizeMode: 'contain',
+	},
+	lockLogoContainer: {
+		display: 'flex',
+		alignItems: 'center',
+		marginTop: normalize(30),
+		marginBottom: normalize(10),
+	},
+});
