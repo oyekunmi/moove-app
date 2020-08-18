@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(14)
   },
   dotStyle: {
-    width: normalize(30), 
+    width: normalize(30),
     backgroundColor: '#E5E0E0'
   },
   activeDotStyle: {

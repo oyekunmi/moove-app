@@ -1,7 +1,7 @@
 import React from 'react'
 import { AsyncStorage, StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { restoreToken } from '../redux/actions';
+import { restoreToken, signIn } from '../redux/actions';
 import { AppLoading } from 'expo';
 import {
   useFonts,
@@ -42,14 +42,15 @@ export default function Application() {
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken, introduced;
+      let introduced, token, name, phoneNo;
 
       try {
-        await AsyncStorage.removeItem('introduced');
-        await AsyncStorage.removeItem('userToken');
-
-        userToken = await AsyncStorage.getItem('userToken');
         introduced = await AsyncStorage.getItem('introduced');
+        const userDetails = await AsyncStorage.getItem('userDetails');
+        ({ token, name, phoneNo } = JSON.parse(userDetails));
+
+        dispatch(signIn(token, name, phoneNo));
+
       } catch (e) {
         // Restoring token failed
       }
@@ -58,12 +59,11 @@ export default function Application() {
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      dispatch(restoreToken(userToken, introduced));
+      dispatch(restoreToken(token, introduced));
     };
 
     bootstrapAsync();
   }, []);
-
 
   let [fontsLoaded] = useFonts({
     Roboto_900Black,

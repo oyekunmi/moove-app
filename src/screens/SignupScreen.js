@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Image, CheckBox, Alert } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import Title from '../components/Title';
 import TextField from '../components/TextInput';
-import { signUp, isAppLoading } from '../redux/actions';
+import { signIn, isAppLoading, isBtnDisabled } from '../redux/actions';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { userSignUp } from '../utils/helpers/api';
 
@@ -20,25 +20,29 @@ export default function SignupScreen({ navigation }) {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [errorBag, setError] = useState({});
-    const [isBtnDisabled, setBtnDisabled] = useState(true);
     const formFields = ['firstname', 'lastname', 'email', 'password', 'confirmPassword', 'phone'];
 
     const dispatch = useDispatch();
+    const common = useSelector(state => state.common);
 
     const userSignUpHandler = async () => {
         dispatch(isAppLoading(true));
-        setBtnDisabled(true);
+        dispatch(isBtnDisabled(true));
         try {
            const token = await userSignUp(firstname, lastname, email, phone, password, confirmPassword);
            resetDetails();
-           dispatch(signUp(token, `${firstname} ${lastname}`, phone));
+
+           const name = `${firstname} ${lastname}`;
+           dispatch(signUp(token, name, phone));
+
+            await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phoneNo}));
 
            navigation.navigate('Home');
         } catch(error) {
             const errorMessage = Object.values(error.response.data.errors)[0][0];
             Alert.alert('An error has occurred', `${errorMessage}`, null, { cancelable: true });
         }
-        dispatch(isAppLoading(false));
+        dispatch(isBtnDisabled(true));
     }
 
     const resetDetails = () => {
@@ -55,7 +59,7 @@ export default function SignupScreen({ navigation }) {
         if(errorBagValues.length === fields.length) {
             isValid = errorBagValues.every((value) => value === undefined);
         }
-        setBtnDisabled(!isValid);
+        dispatch(isBtnDisabled(!isValid));
     }
 
     useEffect(() => {
@@ -104,6 +108,7 @@ export default function SignupScreen({ navigation }) {
             alignItems: "center",
             flexDirection: "row",
             justifyContent: "center",
+            marginBottom: normalize(10)
         },
         link: {
             marginVertical: normalize(5),
@@ -115,7 +120,7 @@ export default function SignupScreen({ navigation }) {
             fontFamily: 'Roboto_400Regular',
         },
         lastButton: {
-          marginVertical: normalize(20),
+            marginBottom: normalize(10)
         },
 
     })
@@ -218,7 +223,7 @@ export default function SignupScreen({ navigation }) {
                     </View>
                     <RedButton
                         title="Sign Me Up"
-                        disabled={isBtnDisabled}
+                        disabled={common.isBtnDisabled}
                         buttonStyle={styles.lastButton}
                         onPress={userSignUpHandler}>
                     </RedButton>

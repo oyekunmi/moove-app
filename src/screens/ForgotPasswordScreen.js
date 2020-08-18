@@ -127,9 +127,11 @@ export default function ForgotPasswordScreen({ navigation }) {
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 
       <Title
-        title="forgot password "
+        title="forgot password"
+        fontIcon="arrow_back"
         subTitle="Oops! You’re only human everyone forgets"
         subTitleStyle={{ fontSize: normalize(21) }}
+        headerOptionHandler={() => { navigation.goBack() }}
       />
 
 

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, View, StyleSheet, StatusBar, Text, Image, PixelRatio } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { Alert, View, StyleSheet, StatusBar, Text, Image, AsyncStorage } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
-import { signIn, isAppLoading } from '../redux/actions';
+import { signIn, isAppLoading, isBtnDisabled } from '../redux/actions';
 import { userSignIn } from '../utils/helpers/api';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
@@ -14,11 +14,11 @@ import TextField from '../components/TextInput';
 export default function LoginScreen({navigation}) {
 
   const dispatch = useDispatch();
+  const common = useSelector(state => state.common);
 
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errorBag, setError] = useState({});
-  const [isBtnDisabled, setBtnDisabled] = useState(true);
   const [hasFingerPrintScanner, setHasFingerPrintScanner] = useState(false);
   const [hasEnrolledFingerPrint, setHasEnrolledFingerPrint] = useState(false);
   const [canLoginUsingFingerPrint, setCanLoginUsingFingerPrint] = useState(false);
@@ -50,17 +50,21 @@ export default function LoginScreen({navigation}) {
     let isValid = false;
     const errorBagValues = Object.values(formErrorBag);
     if(errorBagValues.length === fields.length) {
-        isValid = errorBagValues.every((value) => value === undefined);
+      isValid = errorBagValues.every((value) => value === undefined);
     }
-    setBtnDisabled(!isValid);
+    dispatch(isBtnDisabled(!isValid));
   }
 
   const loginUserHandler = async () => {
+    dispatch(isBtnDisabled(true));
     dispatch(isAppLoading(true));
     try {
       const { access_token: token, phoneNo, name } = await userSignIn(phone, password);
       resetDetails();
+
       dispatch(signIn(token, name, phoneNo));
+
+      await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phoneNo}));
 
       navigation.navigate('Home');
 
@@ -90,7 +94,6 @@ export default function LoginScreen({navigation}) {
       <Title
           title="welcome"
           subTitle="Let’s get you signed in"
-          fontIcon='arrow_back'
 					headerOptionHandler={() => navigation.goBack()}
           subTitleStyle={{ fontSize: normalize(22) }}
         />
@@ -142,7 +145,7 @@ export default function LoginScreen({navigation}) {
         <RedButton
           title="Sign In"
           buttonStyle={styles.lastButton}
-          disabled={isBtnDisabled}
+          disabled={common.isBtnDisabled}
           onPress={loginUserHandler}>
         </RedButton>
       </View>
@@ -178,7 +181,6 @@ const styles = StyleSheet.create({
 
     links: {
       alignItems: "center",
-      fontFamily: 'Roboto_400Regular',
     },
     link: {
       marginTop: normalize(24),
@@ -186,11 +188,13 @@ const styles = StyleSheet.create({
       fontSize: normalize(11),
       color: '#181818',
       fontFamily: 'Roboto_900Black',
+      fontWeight: 'bold'
     },
     helpAndSignUp: {
       marginBottom: normalize(8)
     },
     helpAndSignUpText: {
       fontFamily: 'Roboto_900Black',
+      fontWeight: 'bold',
     }
   })

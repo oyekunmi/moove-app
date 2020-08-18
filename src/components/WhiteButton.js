@@ -39,7 +39,7 @@ const GreenButton = ({
         background={background}
         style={[styles.button, buttonStyle]}
       >
-        { commonState.isLoading === true ? <Image source={require('../../assets/loading_dark.png')} /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
+        { commonState.isLoading === true ? <ActivityIndicator size="small" color="#CE0303" /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
       </AppButton>
     )
 }

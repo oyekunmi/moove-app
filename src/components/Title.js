@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     lineHeight: normalize(25),
     marginTop: normalize(10),
     fontFamily: 'Roboto_900Black',
+    fontWeight: 'bold',
     color: '#181818',
   },
   arrowBack: {

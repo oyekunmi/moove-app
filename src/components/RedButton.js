@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { StyleSheet, View, Text, Image} from 'react-native';
+import { StyleSheet, View, Text, Image, ActivityIndicator} from 'react-native';
 import AppButton from './Button';
 import { normalize } from '../normalizeFont';
 
@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#FFFFFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(13),
+    fontSize: normalize(18),
     textTransform: 'capitalize',
   },
   button: {
@@ -41,7 +41,7 @@ const RedButton = ({
         background={background}
         style={[styles.button, buttonStyle]}
       >
-          { commonState.isLoading === true ? <Image source={require('../../assets/loading_light.png')} /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
+          { commonState.isLoading === true ? <ActivityIndicator size="large" color="#FFFFFF" /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
       </AppButton>
     )
 }
