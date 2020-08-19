@@ -6,7 +6,7 @@ import RedButton from '../components/RedButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import Title from '../components/Title';
 import TextField from '../components/TextInput';
-import { signIn, isAppLoading, isBtnDisabled } from '../redux/actions';
+import { signUp, isAppLoading, isBtnDisabled } from '../redux/actions';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { userSignUp } from '../utils/helpers/api';
 
@@ -35,14 +35,18 @@ export default function SignupScreen({ navigation }) {
            const name = `${firstname} ${lastname}`;
            dispatch(signUp(token, name, phone));
 
-            await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phoneNo}));
+
+           dispatch(isAppLoading(false));
+           await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phoneNo}));
+
 
            navigation.navigate('Home');
+
         } catch(error) {
+            dispatch(isAppLoading(false));
             const errorMessage = Object.values(error.response.data.errors)[0][0];
             Alert.alert('An error has occurred', `${errorMessage}`, null, { cancelable: true });
         }
-        dispatch(isBtnDisabled(true));
     }
 
     const resetDetails = () => {
@@ -64,7 +68,7 @@ export default function SignupScreen({ navigation }) {
 
     useEffect(() => {
        isFormValid(errorBag,formFields);
-    },[errorBag, isBtnDisabled]);
+    },[errorBag]);
 
     const styles = StyleSheet.create({
         container: {
@@ -85,7 +89,8 @@ export default function SignupScreen({ navigation }) {
             color: '#FFFFFF',
         },
         content: {
-            justifyContent: "center",
+            justifyContent: "space-between",
+            flex: 2,
         },
         contentInputContainer: {
             marginVertical: normalize(5),
@@ -125,19 +130,21 @@ export default function SignupScreen({ navigation }) {
 
     })
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
             <Title
                 title="user sign up"
                 fontIcon="arrow_back_light"
                 statusBarStyle="light-content"
                 subTitle="Let’s get you signed up with just a few details"
                 subTitleStyle={{ fontSize: normalize(22) }}
-				headerOptionHandler={() => navigation.goBack()}
+				headerOptionHandler={() => {
+                    setError({})
+                    navigation.goBack() }}
             />
 
             <View style={styles.content}>
 
-                <View style={styles.form}>
+                <View>
 
                     <View style={styles.contentInputContainer}>
 
@@ -221,14 +228,14 @@ export default function SignupScreen({ navigation }) {
                     <Text style={styles.agreeToTermsLabel}>I Agree To the Terms</Text>
 
                     </View>
-                    <RedButton
-                        title="Sign Me Up"
-                        disabled={common.isBtnDisabled}
-                        buttonStyle={styles.lastButton}
-                        onPress={userSignUpHandler}>
-                    </RedButton>
 
                 </View>
+                <RedButton
+                    title="Sign Me Up"
+                    disabled={common.isBtnDisabled}
+                    buttonStyle={styles.lastButton}
+                    onPress={userSignUpHandler}>
+                </RedButton>
             </View>
 
         </ScrollView>

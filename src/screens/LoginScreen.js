@@ -66,18 +66,20 @@ export default function LoginScreen({navigation}) {
 
       await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phoneNo}));
 
+      dispatch(isAppLoading(false));
+
       navigation.navigate('Home');
 
     } catch(error) {
+      dispatch(isAppLoading(false));
       const { message } = error.response.data;
       Alert.alert('An error has occurred', message, null, { cancelable: true });
     }
-    dispatch(isAppLoading(false));
   }
 
    useEffect(() => {
     isFormValid(errorBag,formFields);
-   },[errorBag, isBtnDisabled]);
+   },[errorBag]);
 
 
   const gotoBiometrics = () => {
@@ -130,7 +132,10 @@ export default function LoginScreen({navigation}) {
 
         <View style={styles.links}>
           <View style={{display: 'flex', flexDirection: 'row', marginBottom: normalize(10)}}>
-            <TouchableOpacity onPress={() => { navigation.navigate('ForgotPassword')}}>
+            <TouchableOpacity onPress={() => {
+              setError({})
+              navigation.navigate('ForgotPassword')
+              }}>
               <Text style={styles.link}>Forgot Password</Text>
             </TouchableOpacity>
             { canLoginUsingFingerPrint && <Text style={{...styles.link, paddingHorizontal: normalize(5)}}>|</Text>}
@@ -138,7 +143,9 @@ export default function LoginScreen({navigation}) {
               <Text style={styles.link}>Use Biometrics</Text>
             </TouchableOpacity>}
           </View>
-          <TouchableOpacity style={styles.helpAndSignUp} onPress={() => navigation.navigate('SignupScreen')}><Text style={styles.helpAndSignUpText}>New User? Sign Up</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.helpAndSignUp} onPress={() =>{
+            setError({})
+            navigation.navigate('SignupScreen')}}><Text style={styles.helpAndSignUpText}>New User? Sign Up</Text></TouchableOpacity>
           <TouchableOpacity style={styles.helpAndSignUp}><Text style={styles.helpAndSignUpText}>help?</Text></TouchableOpacity>
         </View>
         </View>

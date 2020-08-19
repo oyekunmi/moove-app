@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, StatusBar, Image, Text, Alert } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { normalize } from '../normalizeFont';
@@ -9,15 +9,15 @@ import RedButton from '../components/RedButton';
 import TextField from '../components/TextInput';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { forgotPassword } from '../utils/helpers/api';
-import { isAppLoading } from '../redux/actions';
+import { isAppLoading, isBtnDisabled } from '../redux/actions';
 
 export default function ForgotPasswordScreen({ navigation }) {
 
   const dispatch = useDispatch();
+  const common = useSelector(state => state.common);
 
   const [email, setEmail] = useState('');
   const [errorBag, setError] = useState({});
-  const [isBtnDisabled, setBtnDisabled] = useState(true);
   const formFields = ['email'];
 
   const resetDetails = () => {
@@ -34,16 +34,16 @@ export default function ForgotPasswordScreen({ navigation }) {
         if(errorBagValues.length === fields.length) {
             isValid = errorBagValues.every((value) => value === undefined);
         }
-        setBtnDisabled(!isValid);
+        dispatch(isBtnDisabled(!isValid));
     }
 
     useEffect(() => {
        isFormValid(errorBag,formFields);
-    },[errorBag, isBtnDisabled]);
+    },[errorBag]);
 
     const resetPasswordHandler = async () => {
       dispatch(isAppLoading(true));
-      setBtnDisabled(true);
+      dispatch(isBtnDisabled(true));
       try {
         await forgotPassword(email);
         resetDetails();
@@ -54,6 +54,7 @@ export default function ForgotPasswordScreen({ navigation }) {
         Alert.alert('Invalid credentials', `${message}`, null, { cancelable: true });
       }
       dispatch(isAppLoading(false));
+      dispatch(isBtnDisabled(true));
     }
 
   const styles = StyleSheet.create({
@@ -131,7 +132,9 @@ export default function ForgotPasswordScreen({ navigation }) {
         fontIcon="arrow_back"
         subTitle="Oops! You’re only human everyone forgets"
         subTitleStyle={{ fontSize: normalize(21) }}
-        headerOptionHandler={() => { navigation.goBack() }}
+        headerOptionHandler={() => {
+          setError({})
+          navigation.goBack() }}
       />
 
 
@@ -165,7 +168,7 @@ export default function ForgotPasswordScreen({ navigation }) {
         <RedButton
           title="Reset My Password"
           buttonStyle={styles.lastButton}
-          disabled={isBtnDisabled}
+          disabled={common.isBtnDisabled}
           onPress={resetPasswordHandler}
          >
         </RedButton>

@@ -28,6 +28,7 @@ import ForgotPasswordScreen from './ForgotPasswordScreen';
 import PasswordResetScreen from './PasswordResetScreen';
 import PasswordUpdateSuccessfulScreen from './PasswordUpdateSuccessfulScreen';
 import RegistrationVerifySuccessfulScreen from './RegistrationVerifySuccessfulScreen';
+import RegistrationVerificationScreen from './RegistrationVerificationScreen';
 import AddCardSuccessfulScreen from './AddCardSuccessfulScreen';
 import SuccessScreen from './SuccessScreen';
 import HomeDrawerScreen from './HomeDrawerScreen';
@@ -45,6 +46,7 @@ export default function Application() {
       let introduced, token, name, phoneNo;
 
       try {
+        await AsyncStorage.removeItem('userDetails');
         introduced = await AsyncStorage.getItem('introduced');
         const userDetails = await AsyncStorage.getItem('userDetails');
         ({ token, name, phoneNo } = JSON.parse(userDetails));
@@ -86,8 +88,8 @@ export default function Application() {
       <Stack.Navigator headerMode="none">
         {state.userToken != null && state.userToken != undefined ?
           <>
-            <Stack.Screen name="Home" component={HomeDrawerScreen} />
             <Stack.Screen name="History" component={HomeDrawerScreen} />
+            <Stack.Screen name="Home" component={HomeDrawerScreen} />
             <Stack.Screen name = "Wallet" component = {HomeDrawerScreen}/>
             <Stack.Screen name="PackageDescription" component={PackageDescriptionScreen} />
             <Stack.Screen name="MooveVerification" component={MooveVerificationScreen} />
@@ -105,6 +107,7 @@ export default function Application() {
             <Stack.Screen name="SignupScreen" component={SignupScreen} />
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
             <Stack.Screen name="PasswordResetScreen" component={PasswordResetScreen} />
+            <Stack.Screen name="RegistrationVerification" component={RegistrationVerificationScreen} />
             <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
             <Stack.Screen name="Biometrics" component={BiometricsScreen} />
             <Stack.Screen name="PasswordUpdateSuccess" component={PasswordUpdateSuccessfulScreen} />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { normalize } from '../normalizeFont';
 import WhiteButton from '../components/WhiteButton';
@@ -9,30 +9,30 @@ import Title from '../components/Title';
 import TextField from '../components/TextInput';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { resetNewPassword } from '../utils/helpers/api';
-import { isAppLoading } from '../redux/actions';
+import { isAppLoading, isBtnDisabled } from '../redux/actions';
 
 export default function PasswordResetScreen({ navigation }) {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [errorBag, setError] = useState({});
-	const [isBtnDisabled, setBtnDisabled] = useState(true);
 	const formFields = ['email', 'password', 'confirmPassword'];
 
 	const dispatch = useDispatch();
+	const common = useSelector(state => state.common);
 
 	const resetForgottenPasswordHandler = async () => {
 		dispatch(isAppLoading(true));
-		setBtnDisabled(true);
+		dispatch(isBtnDisabled(true));
 		try {
 			await resetNewPassword(email, password, confirmPassword);
 			resetDetails();
 
-			navigation.navigate('SuccessScreen', {
-				title: 'password reset',
-				subTitle: 'Password Updated',
-			});
+			dispatch(isAppLoading(false));
+
+			navigation.navigate('RegistrationVerification', { email});
 		} catch (error) {
+			dispatch(isAppLoading(false));
 			const errorMessage = Object.values(
 				error.response.data.errors,
 			)[0][0];
@@ -41,7 +41,6 @@ export default function PasswordResetScreen({ navigation }) {
 			});
 		}
 
-		dispatch(isAppLoading(false));
 	};
 
 	const resetDetails = () => {
@@ -58,12 +57,12 @@ export default function PasswordResetScreen({ navigation }) {
 		if (errorBagValues.length === fields.length) {
 			isValid = errorBagValues.every((value) => value === undefined);
 		}
-		setBtnDisabled(!isValid);
+		dispatch(isBtnDisabled(!isValid));
 	};
 
 	useEffect(() => {
 		isFormValid(errorBag, formFields);
-	}, [errorBag, isBtnDisabled]);
+	}, [errorBag]);
 
 	return (
 		<ScrollView style={styles.container}>
@@ -73,7 +72,9 @@ export default function PasswordResetScreen({ navigation }) {
 				subTitle='enter a secure password'
 				fontIcon='arrow_back_light'
 				subTitleStyle={{ fontSize: normalize(22) }}
-				headerOptionHandler={() => navigation.goBack()}
+				headerOptionHandler={() =>{
+					setError({})
+					navigation.goBack()}}
 			/>
 
 			<View style={styles.content} contentContainerStyle={{ flexGrow: 1 }}>
@@ -162,7 +163,7 @@ export default function PasswordResetScreen({ navigation }) {
 				</View>
 				<WhiteButton
 					title='Update Password'
-					disabled={isBtnDisabled}
+					disabled={common.isBtnDisabled}
 					buttonStyle={styles.lastButton}
 					onPress={resetForgottenPasswordHandler}></WhiteButton>
 			</View>
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
 	},
 	lastButton: {
 		marginVertical: normalize(70),
-		marginBottom: normalize(5),
+		marginBottom: normalize(10),
 	},
 	lockLogo: {
 		width: normalize(115),
