@@ -1,4 +1,4 @@
-import React, { useState, useEffect,createRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 import { ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
@@ -75,9 +75,6 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		flex: 2,
 	},
-	contentInputContainer: {
-		marginVertical: normalize(5),
-	},
 	lastButton: {
 		marginBottom: normalize(10),
 	},
@@ -96,7 +93,7 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		alignItems: 'center',
 		color: '#2F2D2D',
-		marginBottom: normalize(25),
+		marginBottom: normalize(10),
 	},
 	otpCodeInstruction: {
 		fontSize: normalize(14),
@@ -131,9 +128,4 @@ const styles = StyleSheet.create({
 		fontSize: normalize(14),
 		paddingHorizontal: normalize(8)
 	},
-	// hiddenInput: {
-	// 	position: 'absolute',
-	// 	zIndex: -200,
-	// 	display: 'none'
-	// }
 });

@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { normalize } from "../normalizeFont";
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Entypo } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   titleContainer: {
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#181818',
   },
-  arrowBack: {
+  icon: {
     width: normalize(14),
     height: normalize(14),
     display: 'flex',
@@ -42,14 +43,19 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
 
   return (
     <View style={_containerStyle}>
+      <View style={{ width: normalize(24)}}>
         <TouchableOpacity onPress={() => headerOptionHandler()}>
-          {fontIcon === 'arrow_back' && (<View style={styles.arrowBack}>
+          {fontIcon === 'arrow_back' && (<View style={styles.icon}>
             <Image source={require('./../../assets/arrow_back.png')}  />
           </View>)}
-          {fontIcon === 'arrow_back_light' && (<View style={styles.arrowBack}>
+          {fontIcon === 'arrow_back_light' && (<View style={styles.icon}>
             <Image source={require('./../../assets/arrow_back_light.png')}  />
           </View>)}
+          {fontIcon === 'side_menu' && (<View style={styles.icon}>
+            <Entypo name="menu" size={24} color="#DADADA" />
+          </View>)}
         </TouchableOpacity>
+      </View>
       <Text style={_titleStyle}>{title}</Text>
       <Text style={_subTitleStyle}>{subTitle} {orderId && <Text style={{ color: "#7AC043", borderWidth: 1, borderStyle: 'solid', borderColor: 'red' }}> {orderId}</Text>}</Text>
     </View>

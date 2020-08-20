@@ -1,20 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
+import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert, KeyboardAvoidingView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
 import AddressField from '../components/AddressField';
-import {  changeSourceAddress } from '../redux/actions';
+import {  changeSourceAddress, changeDestinationAddress } from '../redux/actions';
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 
 const styles = StyleSheet.create({
   map: {
-    height: normalize(230)
+    height: '90%',
+    width: '100%',
+    // minHeight: normalize(230),
+    minHeight: normalize(230),
+  },
+  content: {
+    justifyContent: 'space-between',
+    flex: 2
   },
   spinner: {
     flexGrow: 1,
@@ -23,12 +30,6 @@ const styles = StyleSheet.create({
   },
   p18: {
     paddingHorizontal: normalize(18),
-  },
-  button: {
-    position: 'absolute',
-    left: normalize(18),
-    right: normalize(18),
-    bottom: normalize(10),
   },
   searchFont: {
     paddingVertical: normalize(10),
@@ -46,12 +47,12 @@ const styles = StyleSheet.create({
 function HomeScreen({ navigation }) {
 
   const dispatch = useDispatch()
-  const trip = useSelector(state => state.trip)
+  const mapRef = useRef();
+
+
+  const trip = useSelector(state => state.trip);
+
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-  const [sourceAddress, setSourceAddress] = useState('');
-  const [destinationAddress, setDestinationAddress] = useState('')
-  const [sourceCord, setSourceCord] = useState({});
-  const [destinationCord, setDestinationCord] = useState({});
 
   const toggleDrawerHandler = () => {
     // The drawer should be toggled here
@@ -60,7 +61,8 @@ function HomeScreen({ navigation }) {
   }
 
   const onContinue = () => {
-    if (!trip.destination) {
+    if (!trip.destination || !trip.source) {
+      Alert.alert('You are almost there','Please ensure that source and destination address are filled', null, { cancelable: true });
       return;
     }
 
@@ -99,19 +101,29 @@ function HomeScreen({ navigation }) {
 
     const [ { name, street, city, country} ] = await Location.reverseGeocodeAsync({ latitude, longitude });
 
-    const sourceAddress = `${name}, ${street}, ${city}, ${country}`;
+    const sourceAddress = `${name ?? ''}, ${street ?? ''}, ${city ?? ''}, ${country ?? ''}`;
     const sourceCord = { longitude, latitude };
-
-    setSourceAddress(sourceAddress);
-    setSourceCord(sourceCord);
 
     dispatch(changeSourceAddress( sourceAddress, sourceCord));
 
   }
 
-  useEffect(() => {
-    getLocation();
+   useEffect(() => {
+      getLocation();
   }, []);
+
+  const onMapLayout = () => {
+    if(trip.sourceCoord){
+      const { latitude } = trip.sourceCoord;
+      const { longitude } = trip.sourceCoord;
+      mapRef.current.animateToRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1
+      });
+    }
+  }
 
   StatusBar.setBarStyle("dark-content");
   StatusBar.setBackgroundColor("#fff");
@@ -120,22 +132,25 @@ function HomeScreen({ navigation }) {
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps='always'>
       <Title
         title={"start a moove"}
-        fontIcon={{name: "bars", color: "#DADADA", size: 20}}
+        fontIcon="side_menu"
         headerOptionHandler={toggleDrawerHandler}
         subTitle={"Your moove champion is one click away"}
-        subTitleStyle={{ fontSize: normalize(26) }}
-        containerStyle={{ paddingHorizontal: normalize(18)}} />
+        subTitleStyle={{ fontSize: normalize(22) }}
+        style={styles.p18}
+        containerStyle={styles.p18}
+      />
+
+      <View style={styles.content}>
 
       {(!trip || !trip.sourceCoord) ? <ActivityIndicator style={styles.spinner} />
         :
-          <View style={styles.content}>
+          <View>
             <View style={styles.p18}>
               <AddressField
-                value={sourceAddress}
+                value={trip.source}
                 label="You are Here:"
-                containerStyle={{ height: normalize(71) }}
-                onChangeText={setSourceAddress} />
-
+                event={changeSourceAddress}
+                containerStyle={{ height: normalize(71) }} />
             </View>
 
             <View>
@@ -146,8 +161,15 @@ function HomeScreen({ navigation }) {
                   placeholder='enter delivery address'
                   minLength={2}
                   onPress={(data, details = null) => {
+
                     // 'details' is provided when fetchDetails = true
+                    const { lat: latitude, lng: longitude } = details.geometry.location;
+
+                    const destinationAddress = data.description;
+
+                    dispatch(changeDestinationAddress(destinationAddress,{ latitude, longitude }));
                   }}
+                  getDefaultValue={() => trip.destination }
                   styles={{
                     listView: {
                       backgroundColor: '#EFEFEF',
@@ -157,9 +179,12 @@ function HomeScreen({ navigation }) {
                     },
                     textInputContainer: {
                       backgroundColor:'#fff',
-                      marginBottom: normalize(10),
+                      marginBottom: normalize(15),
                       borderTopWidth: 0,
                       borderBottomWidth: 0,
+                      // zIndex: -200,
+                      // position: 'absolute',
+                      width: '100%'
                     },
                     description: {
                       fontFamily: 'Roboto_400Regular',
@@ -186,6 +211,8 @@ function HomeScreen({ navigation }) {
               </View>
               <View>
               <MapView style={styles.map}
+                ref={mapRef}
+                onLayout={onMapLayout}
                 initialRegion={{
                   latitude: trip.sourceCoord.latitude,
                   longitude: trip.sourceCoord.longitude,
@@ -205,12 +232,15 @@ function HomeScreen({ navigation }) {
         </View>
       }
 
+      </View>
+    <View style={styles.p18}>
       {!isKeyboardVisible &&
         <RedButton
           title="Request a Moove"
           buttonStyle={styles.button}
           onPress={onContinue} />
       }
+    </View>
 
     </ScrollView>
   );

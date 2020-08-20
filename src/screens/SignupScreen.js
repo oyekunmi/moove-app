@@ -75,7 +75,6 @@ export default function SignupScreen({ navigation }) {
             flex: 1,
             backgroundColor: '#132535',
             paddingHorizontal: normalize(18),
-
         },
         title: {
             fontSize: normalize(14),

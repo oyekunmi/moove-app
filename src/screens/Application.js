@@ -46,7 +46,7 @@ export default function Application() {
       let introduced, token, name, phoneNo;
 
       try {
-        await AsyncStorage.removeItem('userDetails');
+        // await AsyncStorage.removeItem('userDetails');
         introduced = await AsyncStorage.getItem('introduced');
         const userDetails = await AsyncStorage.getItem('userDetails');
         ({ token, name, phoneNo } = JSON.parse(userDetails));

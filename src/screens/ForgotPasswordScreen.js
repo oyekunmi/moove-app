@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, StatusBar, Image, Text, Alert } from 'react-native';
+import { View, StyleSheet, StatusBar, Image, Text, Alert, KeyboardAvoidingView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -139,7 +139,8 @@ export default function ForgotPasswordScreen({ navigation }) {
 
 
       <View style={styles.content}>
-    <View>
+    <View >
+      <KeyboardAvoidingView behavior={'position'}>
         <View style={styles.lockLogoContainer}>
           <Image source={require('./../../assets/forgotpass.png')} style={styles.lockLogo} />
         </View>
@@ -164,6 +165,7 @@ export default function ForgotPasswordScreen({ navigation }) {
             />
           </View>
         </View>
+        </KeyboardAvoidingView>
       </View>
         <RedButton
           title="Reset My Password"

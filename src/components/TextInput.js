@@ -1,23 +1,22 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { View, TextInput, Text, StyleSheet, Image } from 'react-native';
 import { normalize } from '../normalizeFont';
 
-const TextField = props => {
+const TextField = forwardRef((props, ref) => {
   return (
     <>
       {props.label && <Text style={{...styles.contentLabel, color: props.labelColor ? `${props.labelColor}`: '#545252'}}>{props.label}</Text>}
       <View style={{ marginBottom: normalize(8)}}>
         {props.iconSource && <Image style={[styles.icon, props.fieldIconPosition && {left: `${props.fieldIconPosition}%`} ]} source={props.iconSource} /> }
 
-        <TextInput {...props } style={[styles.contentInput, props.iconSource && {paddingLeft: normalize(+props.placeholderPaddingLeft) ||normalize(38)} , props.marginBottom && { marginBottom: props.marginBottom}, {backgroundColor: props.inputBackgroundColor ? `${props.inputBackgroundColor}`:'#EFEFEF'}]} />
+        <TextInput {...props } ref={ref} style={[styles.contentInput, props.iconSource && {paddingLeft: normalize(+props.placeholderPaddingLeft) ||normalize(38)} , props.marginBottom && { marginBottom: props.marginBottom}, {backgroundColor: props.inputBackgroundColor ? `${props.inputBackgroundColor}`:'#EFEFEF'}]} />
         { props.error && <Text style={{...styles.error, color: props.errorTextColor || '#CE0303' }}>{props.error}</Text> }
       </View>
     </>
-  )}
+  )})
 
 const styles = StyleSheet.create({
   error: {
-    // color: 'red',
     fontSize: normalize(10),
     fontFamily: 'Roboto_400Regular',
     marginLeft: normalize(16),

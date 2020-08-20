@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Alert, View, StyleSheet, StatusBar, Text, Image, AsyncStorage } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
@@ -15,6 +15,8 @@ export default function LoginScreen({navigation}) {
 
   const dispatch = useDispatch();
   const common = useSelector(state => state.common);
+
+  const passwordInputEl = useRef();
 
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -113,12 +115,16 @@ export default function LoginScreen({navigation}) {
               onChangeText={setPhone}
               onBlur={() => checkErrorHandler('phone', phone, setError) }
               error={errorBag['phone']}
+              returnKeyType ="next"
+              onSubmitEditing={() => { passwordInputEl.current.focus() }}
+              blurOnSubmit={false}
             />
 
           </View>
 
           <View style={styles.contentInputContainer}>
             <TextField
+              ref={passwordInputEl}
               label="Password"
               value={password}
               onChangeText={setPassword}

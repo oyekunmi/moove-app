@@ -1,12 +1,12 @@
 import {
-  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, TRIP_CANCEL_REQUEST, PACKAGE_INFO_CHANGED, SIGN_OUT
+  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, TRIP_CANCEL_REQUEST, PACKAGE_INFO_CHANGED, SIGN_OUT, SOURCE_COORDINATES_FETCHED
 } from "../actionTypes";
 
 const defaultState = {
   source: '',
   destination: '',
   sourceCoord: null,
-  destinationCord: null,
+  destinationCoord: null,
   package: '',
   cost: 0,
 }
@@ -22,7 +22,13 @@ export default (state = defaultState, action) => {
     case DESTINATION_ADDRESS_CHANGED:
       return {
         ...state,
-        destination: action.value
+        destination: action.value,
+        destinationCoord: action.coord
+      };
+    case SOURCE_COORDINATES_FETCHED:
+      return {
+        ...state,
+        sourceCoord: action.location
       };
     case PACKAGE_INFO_CHANGED:
       return {
