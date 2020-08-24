@@ -12,7 +12,7 @@ import { userSignUp } from '../utils/helpers/api';
 
 
 export default function SignupScreen({ navigation }) {
-    const [toggleCheckBox, setToggleCheckBox] = useState(false)
+    const [ agreedToTerms, setAgreedToTerms ] = useState(false)
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
     const [phone, setPhone] = useState('');
@@ -26,8 +26,11 @@ export default function SignupScreen({ navigation }) {
     const common = useSelector(state => state.common);
 
     const userSignUpHandler = async () => {
-        dispatch(isAppLoading(true));
+        if(!agreedToTerms) {
+            return Alert.alert('Terms and condition applies', 'Please accept our terms and condition to proceed' , null, { cancelable: true });
+        }
         dispatch(isBtnDisabled(true));
+        dispatch(isAppLoading(true));
         try {
            const token = await userSignUp(firstname, lastname, email, phone, password, confirmPassword);
            resetDetails();
@@ -67,8 +70,8 @@ export default function SignupScreen({ navigation }) {
     }
 
     useEffect(() => {
-       isFormValid(errorBag,formFields);
-    },[errorBag]);
+        isFormValid(errorBag,formFields);
+    },[errorBag, agreedToTerms]);
 
     const styles = StyleSheet.create({
         container: {
@@ -221,8 +224,8 @@ export default function SignupScreen({ navigation }) {
                     <View style={styles.links}>
                     <CheckBox
                         tintColors={{ true: '#F15927', false: '#ffffff' }}
-                        value={toggleCheckBox}
-                        onValueChange={setToggleCheckBox}
+                        value={agreedToTerms}
+                        onValueChange={setAgreedToTerms}
                     ></CheckBox>
                     <Text style={styles.agreeToTermsLabel}>I Agree To the Terms</Text>
 

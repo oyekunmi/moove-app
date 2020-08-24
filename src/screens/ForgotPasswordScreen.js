@@ -47,7 +47,7 @@ export default function ForgotPasswordScreen({ navigation }) {
       try {
         await forgotPassword(email);
         resetDetails();
-        navigation.navigate('PasswordResetScreen');
+        navigation.navigate('RegistrationVerification', { email });
 
       } catch(error) {
         const { message } = error.response.data;

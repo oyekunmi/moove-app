@@ -11,12 +11,17 @@ import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { resetNewPassword } from '../utils/helpers/api';
 import { isAppLoading, isBtnDisabled } from '../redux/actions';
 
-export default function PasswordResetScreen({ navigation }) {
+export default function PasswordResetScreen({ navigation , route}) {
+
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [errorBag, setError] = useState({});
 	const formFields = ['email', 'password', 'confirmPassword'];
+
+	useEffect(() => {
+		setEmail(route.params.email);
+	}, [])
 
 	const dispatch = useDispatch();
 	const common = useSelector(state => state.common);
@@ -30,7 +35,7 @@ export default function PasswordResetScreen({ navigation }) {
 
 			dispatch(isAppLoading(false));
 
-			navigation.navigate('RegistrationVerification', { email});
+			navigation.navigate('SuccessScreen', { title: 'password reset', subTitle: 'Password Updated'});
 		} catch (error) {
 			dispatch(isAppLoading(false));
 			const errorMessage = Object.values(
@@ -94,6 +99,7 @@ export default function PasswordResetScreen({ navigation }) {
 							style={styles.contentIconInput}
 							iconSource={require('./../../assets/email-vector.png')}
 							inputBackgroundColor='#E07A7A'
+							autoFocus
 							value={email}
 							onChangeText={setEmail}
 							onBlur={() => {

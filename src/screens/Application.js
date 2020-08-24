@@ -46,7 +46,7 @@ export default function Application() {
       let introduced, token, name, phoneNo;
 
       try {
-        // await AsyncStorage.removeItem('userDetails');
+        await AsyncStorage.removeItem('userDetails');
         introduced = await AsyncStorage.getItem('introduced');
         const userDetails = await AsyncStorage.getItem('userDetails');
         ({ token, name, phoneNo } = JSON.parse(userDetails));
@@ -81,7 +81,7 @@ export default function Application() {
   if (state.showIntro) {
     return <IntroSlidersScreen />
   }
-  console.log(state.userToken)
+  // console.log(state.userToken)
   return (
     <>
       <StatusBar translucent backgroundColor="transparent" />

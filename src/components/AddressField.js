@@ -11,14 +11,12 @@ import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 const styles = StyleSheet.create({
 
   container: {
-    // backgroundColor: "#EFEFEF",
     borderRadius: normalize(20),
     paddingVertical: normalize(10),
     paddingHorizontal: normalize(15),
     marginBottom: normalize(10),
     position: 'relative',
     display: 'flex',
-    // justifyContent: 'center'
   },
   label: {
     fontFamily: 'Roboto_500Medium',
@@ -29,18 +27,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
     top: normalize(15),
     left: normalize(15)
-    // display: 'flex',
-    // flexDirection: 'row',
-    // justifyContent: 'space-between',
-    // alignItems: 'center'
-  },
-  input: {
-    color: '#545252',
-    fontFamily: 'Roboto_400Regular',
-    fontSize: normalize(13),
-    lineHeight: normalize(15),
-  },
-
+  }
 })
 
 const AddressField = (props) => {
@@ -53,17 +40,17 @@ const AddressField = (props) => {
       </View>
 
         <GooglePlacesAutocomplete
-          placeholder='enter source address'
+          placeholder={props.placeholder}
           minLength={2}
+          editable={props.editable ?? true}
           onPress={(data, details = null) => {
             // 'details' is provided when fetchDetails = true
-            // const { lat: latitude, lng: longitude } = details.geometry.location;
-            // dispatch(setSourceCoordinates({ latitude, longitude }))
+
             const { lat: latitude, lng: longitude } = details.geometry.location;
 
-            const sourceAddress = data.description;
+            const address = data.description;
 
-            dispatch(props.event( sourceAddress, { latitude, longitude }));
+            dispatch(props.event( address, { latitude, longitude }));
 
           }}
           getDefaultValue={() => props.value}
@@ -76,7 +63,7 @@ const AddressField = (props) => {
               zIndex: 500
             },
             textInputContainer: {
-              backgroundColor:'#EFEFEF',
+              backgroundColor: props.customStyle ? props.customStyle.backgroundColor : '#EFEFEF',
               borderTopWidth: 0,
               borderBottomWidth: 0,
               height: normalize(80),
@@ -84,15 +71,14 @@ const AddressField = (props) => {
               borderRadius: normalize(20),
               paddingHorizontal: normalize(10),
               marginBottom: normalize(6),
-              // position: 'absolute',
               width: '100%',
             },
             textInput: {
               alignSelf: 'flex-end',
               marginBottom: normalize(8),
-              backgroundColor: "#EFEFEF",
+              backgroundColor: props.customStyle ? props.backgroundColor : '#EFEFEF',
               height: normalize(37),
-              color: '#545252',
+              color: props.customStyle ? props.customStyle.color: '#545252',
               fontSize: normalize(13),
               paddingLeft: 0,
             },

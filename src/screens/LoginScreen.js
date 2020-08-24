@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Alert, View, StyleSheet, StatusBar, Text, Image, AsyncStorage } from 'react-native';
+import { Alert, View, StyleSheet, StatusBar, Text, Image, AsyncStorage, Linking } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
@@ -25,6 +25,40 @@ export default function LoginScreen({navigation}) {
   const [hasEnrolledFingerPrint, setHasEnrolledFingerPrint] = useState(false);
   const [canLoginUsingFingerPrint, setCanLoginUsingFingerPrint] = useState(false);
   const formFields = ['phone', 'password'];
+
+  useEffect(() => {
+
+    if (Platform.OS === 'android') {
+
+    Linking.getInitialURL().then(url => {
+      navigate(url);
+    });
+
+    } else {
+      Linking.addEventListener('url', handleOpenURL);
+    }
+
+
+    return () => {
+      Linking.removeEventListener('url', handleOpenURL);
+    }
+  }, []);
+
+  const handleOpenURL = (event) => {
+    this.navigate(event.url);
+  }
+
+  const navigate = (url) => { // E
+    const { navigate } = navigation;
+    const route = url.replace(/.*?:\/\//g, '');
+    // const id = route.match(/\/([^\/]+)\/?$/)[1];
+    // const routeName = route.split('/')[0];
+    console.log('ROUTE FOR FORGOT PASSWORD ------>', route);
+
+    // if (routeName === 'people') {
+    //   navigate('People', { id, name: 'chris' })
+    // };
+  }
 
   useEffect(() => {
     biometricCapability();

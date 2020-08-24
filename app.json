@@ -2,6 +2,7 @@
   "expo": {
     "name": "Moovelogic",
     "slug": "moove-app",
+    "scheme": "moovelogic",
     "platforms": [
       "android",
       "web"

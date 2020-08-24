@@ -59,7 +59,7 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 					title='Verify'
 					// disabled={common.isBtnDisabled}
 					buttonStyle={styles.lastButton}
-					onPress={() => { navigation.navigate('SuccessScreen', { title: 'password reset', subTitle: 'Password Updated'})}}></WhiteButton>
+					onPress={() => { navigation.navigate('PasswordResetScreen', { email })}}></WhiteButton>
 			</View>
 		</ScrollView>
 	);
