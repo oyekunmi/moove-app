@@ -103,7 +103,7 @@ export default function MooveVerificationScreen({ navigation }) {
   StatusBar.setBackgroundColor("#132535");
   return (
     <>
-      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='always'>
         <Title
           showBackButton={true}
           statusBarStyle="light-content"
@@ -116,18 +116,37 @@ export default function MooveVerificationScreen({ navigation }) {
 
         <View style={styles.content}>
 
-          <SourceAddress />
-          <DeliveryAddress />
+          {/* <SourceAddress />
+          <DeliveryAddress /> */}
+
+          <AddressField
+            value={trip.source}
+            label="Pick-up Location"
+            editable={false}
+            multiline={true}
+            customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
+            labelStyle={{ color: '#DADADA' }}
+            placeholder="enter source address"
+          />
+
+           <AddressField
+            value={trip.destination}
+            label="Delivery Location"
+            editable={false}
+            multiline={true}
+            customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
+            labelStyle={{ color: '#DADADA' }}
+            placeholder="enter destination address"
+          />
+
 
           <AddressField
             defaultValue={trip.package}
             label="Delivery item(s) description"
             editable={false}
             multiline={true}
-            textAlignVertical="top"
-            labelStyle={{ color: "#FFF" }}
-            inputStyle={{ color: "#D1D1D1", paddingTop: normalize(5) }}
-            containerStyle={{ backgroundColor: "#1E3040" }}
+            customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
+            labelStyle={{ color: '#DADADA' }}
           />
 
           <View style={styles.costContainer}>
@@ -136,7 +155,7 @@ export default function MooveVerificationScreen({ navigation }) {
           </View>
 
           <RedButton
-            title="Yes! start moove"
+            title="Yes! Start My Moovee"
             buttonStyle={styles.button}
             onPress={onContinue} />
 

@@ -52,7 +52,7 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
             <Image source={require('./../../assets/arrow_back_light.png')}  />
           </View>)}
           {fontIcon === 'side_menu' && (<View style={styles.icon}>
-            <Entypo name="menu" size={24} color="#DADADA" />
+            <Image source={require('./../../assets/menu.png')}  />
           </View>)}
         </TouchableOpacity>
       </View>

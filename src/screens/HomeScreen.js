@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
+import MapViewDirections from 'react-native-maps-directions';
+
+
 import { FontAwesome } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Title from '../components/Title';
@@ -16,7 +19,6 @@ const styles = StyleSheet.create({
   map: {
     height: '90%',
     width: '100%',
-    // minHeight: normalize(230),
     minHeight: normalize(230),
   },
   content: {
@@ -48,7 +50,6 @@ function HomeScreen({ navigation }) {
 
   const dispatch = useDispatch()
   const mapRef = useRef();
-
 
   const trip = useSelector(state => state.trip);
 
@@ -150,7 +151,8 @@ function HomeScreen({ navigation }) {
                 value={trip.source}
                 label="You are Here:"
                 event={changeSourceAddress}
-                containerStyle={{ height: normalize(71) }} />
+                placeholder="enter source address"
+                />
             </View>
 
             <View>
@@ -182,8 +184,6 @@ function HomeScreen({ navigation }) {
                       marginBottom: normalize(15),
                       borderTopWidth: 0,
                       borderBottomWidth: 0,
-                      // zIndex: -200,
-                      // position: 'absolute',
                       width: '100%'
                     },
                     description: {
@@ -219,10 +219,26 @@ function HomeScreen({ navigation }) {
                   latitudeDelta: 0.015,
                   longitudeDelta: 0.015,
                 }} >
+
+                <Marker
+                  coordinate={trip.destinationCoord || trip.sourceCoord}
+                  title="Destination"
+                  description="Moove destination"
+                  pinColor="blue"
+                />
+
                 <Marker
                   coordinate={trip.sourceCoord}
                   title="My location"
                   description="My location 2"
+                />
+
+                <MapViewDirections
+                  origin={{...trip.sourceCoord}}
+                  destination={{...trip.destinationCoord}}
+                  apikey={GOOGLE_PLACES_API_KEY}
+                  strokeWidth={3}
+                  strokeColor="#CE0303"
                 />
 
               </MapView>

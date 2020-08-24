@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     color: "#CE0303",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(18),
+    fontWeight: 'bold',
   },
   button: {
     backgroundColor: '#FFFFFF',

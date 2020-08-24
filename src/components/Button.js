@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: normalize(1),
-    borderRadius: normalize(20),
+    borderRadius: normalize(15),
   }
 });
 
