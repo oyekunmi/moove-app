@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    backgroundColor: '#CE0303',
     marginBottom: normalize(5)
   }
 })
@@ -39,7 +38,7 @@ const RedButton = ({
         onPress={onPress}
         rippleColor={rippleColor}
         background={background}
-        style={[styles.button, buttonStyle]}
+        style={[styles.button, buttonStyle, disabled ? {backgroundColor: '#F0C2C2'} : {backgroundColor: '#CE0303'} ]}
       >
           { commonState.isLoading === true ? <ActivityIndicator size="large" color="#FFFFFF" /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
       </AppButton>

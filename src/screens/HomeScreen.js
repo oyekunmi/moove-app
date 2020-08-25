@@ -17,7 +17,7 @@ import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 
 const styles = StyleSheet.create({
   map: {
-    height: '90%',
+    height: '70%',
     width: '100%',
     minHeight: normalize(230),
   },

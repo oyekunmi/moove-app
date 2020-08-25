@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
 
 export default function Title({ subTitle, subTitleStyle, title, titleStyle, containerStyle, statusBarStyle, fontIcon, headerOptionHandler,orderId }) {
 
-  const titleColor = statusBarStyle === 'light-content' ? '#F1F1F1' : styles.title.color
+  const titleColor = statusBarStyle === 'light-content' ? '#918F8F' : styles.title.color
   const subTitleColor = statusBarStyle === 'light-content' ? '#FFFFFF' : styles.subTitle.color
 
   const _titleStyle = [styles.title, { color: titleColor }, titleStyle]

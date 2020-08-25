@@ -27,40 +27,6 @@ export default function LoginScreen({navigation}) {
   const formFields = ['phone', 'password'];
 
   useEffect(() => {
-
-    if (Platform.OS === 'android') {
-
-    Linking.getInitialURL().then(url => {
-      navigate(url);
-    });
-
-    } else {
-      Linking.addEventListener('url', handleOpenURL);
-    }
-
-
-    return () => {
-      Linking.removeEventListener('url', handleOpenURL);
-    }
-  }, []);
-
-  const handleOpenURL = (event) => {
-    this.navigate(event.url);
-  }
-
-  const navigate = (url) => { // E
-    const { navigate } = navigation;
-    const route = url.replace(/.*?:\/\//g, '');
-    // const id = route.match(/\/([^\/]+)\/?$/)[1];
-    // const routeName = route.split('/')[0];
-    console.log('ROUTE FOR FORGOT PASSWORD ------>', route);
-
-    // if (routeName === 'people') {
-    //   navigate('People', { id, name: 'chris' })
-    // };
-  }
-
-  useEffect(() => {
     biometricCapability();
   },[hasFingerPrintScanner, hasEnrolledFingerPrint]);
 
@@ -95,7 +61,7 @@ export default function LoginScreen({navigation}) {
     dispatch(isBtnDisabled(true));
     dispatch(isAppLoading(true));
     try {
-      const { access_token: token, phoneNo, name } = await userSignIn(phone, password);
+      const { access_token: token, phoneNo, name } = await userSignIn(phone,null, password);
       resetDetails();
 
       dispatch(signIn(token, name, phoneNo));
@@ -144,7 +110,7 @@ export default function LoginScreen({navigation}) {
 
           <View style={styles.contentInputContainer}>
             <TextField
-              label="Phone Number"
+              label="Phone No/Email Address"
               value={phone}
               onChangeText={setPhone}
               onBlur={() => checkErrorHandler('phone', phone, setError) }

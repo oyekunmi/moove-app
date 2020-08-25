@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Keyboard, Text, StatusBar, TextInput, ScrollView } from 'react-native';
+import { Alert, View, StyleSheet, Keyboard, Text, StatusBar, TextInput, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { normalize } from '../normalizeFont';
-import { changePackageInfo } from '../redux/actions';
+import { changePackageInfo, setTripCost } from '../redux/actions';
 import RedButton from '../components/RedButton';
 import Title from '../components/Title';
 import AddressField from '../components/AddressField';
 import {  changeSourceAddress, changeDestinationAddress } from '../redux/actions';
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
+import { calculateCost } from '../utils/helpers/api';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,6 +31,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(15),
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(14),
+    color: '#181818'
   },
   packageInput: {
     backgroundColor: "#efefef",
@@ -38,6 +40,8 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(10),
     paddingHorizontal: normalize(15),
     height: normalize(145),
+    fontSize: normalize(13),
+    color: '#545252'
   },
   button: {
     marginBottom: normalize(10),
@@ -47,33 +51,51 @@ const styles = StyleSheet.create({
   },
 })
 
-// https://maps.googleapis.com/maps/api/distancematrix/json?origin=19.107163,72.862375&destination=place_id:ChIJ_0P9DzjI5zsRf5xuhTv8VCk&sensor=false&mode=driving&alternatives=true&key=XXXXXXXXXXXXXXXXXXXXXX
-
 export default function PackageDescriptionScreen({ navigation }) {
+
+  let trip = useSelector(state => state.trip);
+  let auth = useSelector(state => state.auth);
+
+  const [distance, setDistance ] = useState('');
+  const [duration, setDuration] = useState('');
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const distanceMatrixUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${trip.sourceCoord.latitude},${trip.sourceCoord.longitude}&destinations=${trip.destinationCoord.latitude},${trip.destinationCoord.longitude}&&mode=driving&key=${GOOGLE_PLACES_API_KEY}`;
 
+    const distanceMatrixUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${trip.sourceCoord.latitude},${trip.sourceCoord.longitude}&destinations=${trip.destinationCoord.latitude},${trip.destinationCoord.longitude}&&mode=driving&key=${GOOGLE_PLACES_API_KEY}`;
 
     async function fetchData() {
       const response = await axios.get(distanceMatrixUrl);
-      console.log('FROM DISTANCE MATRIX ----->', response);
+      let { distance, duration } = response.data.rows[0].elements[0];
+      const { status } = response.data.rows[0].elements[0];
+
+      if( status === 'OK') {
+        distance = distance.text.split(' ').filter(value => Number(value)).join('');
+        duration = duration.text.split(' ').filter(value => Number(value)).join('.');
+      }
+
+      setDistance(distance);
+      setDuration(duration);
+
     }
 
     fetchData();
 
   }, []);
 
-
-  let trip = useSelector(state => state.trip);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-  const onContinue = () => {
+  const onContinue = async () => {
     if (!trip.package) {
+      Alert.alert('No package description', 'Please fill out the package description field' , null, { cancelable: true });
       return;
     }
+
+    const cost = await calculateCost(auth.name, auth.phone, trip.package, null, trip.source, trip.destination, null, distance, duration);
+
+    dispatch(setTripCost(cost));
+
     navigation.navigate('MooveVerification')
   }
 
