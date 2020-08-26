@@ -35,7 +35,7 @@ export default function PasswordResetScreen({ navigation , route}) {
 
 			dispatch(isAppLoading(false));
 
-			navigation.navigate('SuccessScreen', { title: 'password reset', subTitle: 'Password Updated'});
+			navigation.navigate('PasswordUpdateSuccess');
 		} catch (error) {
 			dispatch(isAppLoading(false));
 			const errorMessage = Object.values(

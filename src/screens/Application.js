@@ -32,6 +32,7 @@ import RegistrationVerificationScreen from './RegistrationVerificationScreen';
 import AddCardSuccessfulScreen from './AddCardSuccessfulScreen';
 import SuccessScreen from './SuccessScreen';
 import HomeDrawerScreen from './HomeDrawerScreen';
+import VerifyEmailScreen from './VerifyEmailScreen';
 
 const Stack = createStackNavigator();
 
@@ -98,6 +99,7 @@ export default function Application() {
             <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
             <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
             <Stack.Screen name="AddCardCardSuccess" component={AddCardSuccessfulScreen} />
+            <Stack.Screen name="RegistrationVerifySuccess" component={RegistrationVerifySuccessfulScreen} />
 
 
           </>
@@ -108,10 +110,10 @@ export default function Application() {
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
             <Stack.Screen name="PasswordResetScreen" component={PasswordResetScreen} />
             <Stack.Screen name="RegistrationVerification" component={RegistrationVerificationScreen} />
-            <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
+            {/* <Stack.Screen name="SuccessScreen" component={SuccessScreen} /> */}
             <Stack.Screen name="Biometrics" component={BiometricsScreen} />
             <Stack.Screen name="PasswordUpdateSuccess" component={PasswordUpdateSuccessfulScreen} />
-            <Stack.Screen name="RegistrationVerifySuccess" component={RegistrationVerifySuccessfulScreen} />
+            <Stack.Screen name="VerifyEmailScreen" component={VerifyEmailScreen} />
           </>
         }
       </Stack.Navigator>

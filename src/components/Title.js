@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(13),
     color: '#545252',
     fontFamily: 'Roboto_400Regular',
+    fontStyle: 'normal',
     lineHeight: normalize(15)
   },
   subTitle: {
@@ -19,6 +20,7 @@ const styles = StyleSheet.create({
     lineHeight: normalize(25),
     marginTop: normalize(10),
     fontFamily: 'Roboto_900Black',
+    fontStyle: 'normal',
     fontWeight: 'bold',
     color: '#181818',
   },

@@ -50,6 +50,8 @@ const SuccessAlert = ({
     title,
     text,
     subTitle,
+    buttonTitle,
+    routeTo
 }) => {
     return (
         <ScrollView style={styles.container}>
@@ -63,8 +65,9 @@ const SuccessAlert = ({
             <Image style={styles.image} source={require('./../../assets/check-mark-icon.png')} />
             <View ><Text style={styles.text}>{text}</Text></View>
             <RedButton
-                title="Go To Dashboard"
+                title={buttonTitle}
                 buttonStyle = {styles.lastButton}
+                onPress={routeTo}
             >
             </RedButton>
 
