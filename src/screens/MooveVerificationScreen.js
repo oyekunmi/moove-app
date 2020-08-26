@@ -44,12 +44,14 @@ const styles = StyleSheet.create({
   costLabel: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(16)
+    fontSize: normalize(16),
+    fontWeight: 'bold'
   },
   costValue: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(44),
+    fontWeight: 'bold'
   },
   button: {
     marginBottom: normalize(10),
@@ -98,7 +100,7 @@ export default function MooveVerificationScreen({ navigation }) {
 
   const onCancelTripRequest = () => {
     dispatch(cancelTripRequest())
-    navigation.navigate('Home')
+    navigation.push('Home')
   }
 
   useEffect(() => {

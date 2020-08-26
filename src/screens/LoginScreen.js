@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Alert, View, StyleSheet, StatusBar, Text, Image, AsyncStorage, Linking } from 'react-native';
+import { View, StyleSheet, StatusBar, Text, Image, AsyncStorage } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { signIn, isAppLoading, isBtnDisabled } from '../redux/actions';
 import { userSignIn } from '../utils/helpers/api';
 import { normalize } from '../normalizeFont';
@@ -18,13 +17,12 @@ export default function LoginScreen({navigation}) {
 
   const passwordInputEl = useRef();
 
-  const [phone, setPhone] = useState('');
+  const [phoneOrEmail, setPhoneOrEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorBag, setError] = useState({});
+  const [showErrorMsg, setShowErrorMessage] = useState(false)
   const [hasFingerPrintScanner, setHasFingerPrintScanner] = useState(false);
   const [hasEnrolledFingerPrint, setHasEnrolledFingerPrint] = useState(false);
   const [canLoginUsingFingerPrint, setCanLoginUsingFingerPrint] = useState(false);
-  const formFields = ['phone', 'password'];
 
   useEffect(() => {
     biometricCapability();
@@ -41,27 +39,18 @@ export default function LoginScreen({navigation}) {
   }
 
   const resetDetails = () => {
-    const fieldHandlers = [setPhone, setPassword];
+    const fieldHandlers = [setPhoneOrEmail, setPassword];
 
     for (let handler of fieldHandlers) {
       handler('');
     }
   }
 
-  const isFormValid = (formErrorBag, fields) => {
-    let isValid = false;
-    const errorBagValues = Object.values(formErrorBag);
-    if(errorBagValues.length === fields.length) {
-      isValid = errorBagValues.every((value) => value === undefined);
-    }
-    dispatch(isBtnDisabled(!isValid));
-  }
-
   const loginUserHandler = async () => {
     dispatch(isBtnDisabled(true));
     dispatch(isAppLoading(true));
     try {
-      const { access_token: token, phoneNo, name } = await userSignIn(phone,null, password);
+      const { access_token: token, phoneNo, name } = await userSignIn(phoneOrEmail, password);
       resetDetails();
 
       dispatch(signIn(token, name, phoneNo));
@@ -73,18 +62,19 @@ export default function LoginScreen({navigation}) {
       navigation.navigate('Home');
 
     } catch(error) {
+      setPassword('')
       dispatch(isAppLoading(false));
-      const { message } = error.response.data;
-      Alert.alert('An error has occurred', message, null, { cancelable: true });
+      setShowErrorMessage(true);
     }
   }
 
    useEffect(() => {
-    isFormValid(errorBag,formFields);
-   },[errorBag]);
+      (phoneOrEmail.length === 0 || password.length === 0) ? dispatch(isBtnDisabled(true)): dispatch(isBtnDisabled(false))
+   },[phoneOrEmail, password]);
 
 
   const gotoBiometrics = () => {
+    setShowErrorMessage(false);
     navigation.navigate("Biometrics");
   }
 
@@ -111,13 +101,12 @@ export default function LoginScreen({navigation}) {
           <View style={styles.contentInputContainer}>
             <TextField
               label="Phone No/Email Address"
-              value={phone}
-              onChangeText={setPhone}
-              onBlur={() => checkErrorHandler('phone', phone, setError) }
-              error={errorBag['phone']}
+              value={phoneOrEmail}
+              onChangeText={setPhoneOrEmail}
               returnKeyType ="next"
               onSubmitEditing={() => { passwordInputEl.current.focus() }}
               blurOnSubmit={false}
+              onFocus={() => setShowErrorMessage(false)}
             />
 
           </View>
@@ -129,17 +118,21 @@ export default function LoginScreen({navigation}) {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              onBlur={() => checkErrorHandler('password', password, setError)}
-              error={errorBag['password']}
+              onFocus={() => setShowErrorMessage(false)}
             />
           </View>
 
         </View>
 
+        { showErrorMsg && <View>
+          <Text style={styles.invalidCredentialsErroMsg}>The provided login details is not valid.</Text>
+          <Text style={styles.invalidCredentialsErroMsg}>Please verify , then try again</Text>
+        </View>}
+
         <View style={styles.links}>
           <View style={{display: 'flex', flexDirection: 'row', marginBottom: normalize(10)}}>
             <TouchableOpacity onPress={() => {
-              setError({})
+              setShowErrorMessage(false)
               navigation.navigate('ForgotPassword')
               }}>
               <Text style={styles.link}>Forgot Password</Text>
@@ -150,7 +143,7 @@ export default function LoginScreen({navigation}) {
             </TouchableOpacity>}
           </View>
           <TouchableOpacity style={styles.helpAndSignUp} onPress={() =>{
-            setError({})
+            setShowErrorMessage(false)
             navigation.navigate('SignupScreen')}}><Text style={styles.helpAndSignUpText}>New User? Sign Up</Text></TouchableOpacity>
           <TouchableOpacity style={styles.helpAndSignUp}><Text style={styles.helpAndSignUpText}>help?</Text></TouchableOpacity>
         </View>
@@ -209,5 +202,11 @@ const styles = StyleSheet.create({
     helpAndSignUpText: {
       fontFamily: 'Roboto_900Black',
       fontWeight: 'bold',
+    },
+    invalidCredentialsErroMsg: {
+      color: '#FF1111',
+      fontSize: normalize(14),
+      fontFamily: 'Roboto_400Regular',
+      textAlign: 'center'
     }
   })

@@ -54,6 +54,7 @@ const AddressField = (props) => {
 
           }}
           getDefaultValue={() => props.value}
+          onChangeText={() => { console.log('CHANGING LOCATION TEXT ----------->')}}
           styles={{
             listView: {
               zIndex: 500,

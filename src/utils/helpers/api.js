@@ -23,12 +23,13 @@ export const userSignUp = async (
 	return access_token;
 };
 
-export const userSignIn = async (phone, email='', password) => {
+export const userSignIn = async (email, password) => {
 	const response = await axios.post(`${baseURL}/auth/login`, {
-		email: 'v@v.com',
-		phone_number: phone,
-		password: password,
+		email,
+		password,
 	});
+
+	console.log('RESPONSE FROM LOGIN CONTROLLER ------>', response);
 
 	const {
 		token: { access_token },

@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, TextInput, ScrollView } from 'react-native';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
+import TextField from '../components/TextInput';
 
 const styles = StyleSheet.create({
   container: {
@@ -10,8 +11,10 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingHorizontal: normalize(18),
-    paddingVertical: normalize(10),
-    flexGrow: 1,
+		flexGrow: 1,
+		borderWidth: 1,
+		borderStyle: 'solid',
+		borderColor: 'red',
   },
   button: {
     marginBottom: normalize(10),
@@ -19,11 +22,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: '100%',
   },
-	content: {
-    paddingHorizontal: normalize(18),
-    paddingVertical: normalize(10),
-    flexGrow: 1,
-	},
 	contentInputContainer: {
 		marginVertical: normalize(5),
 	},
@@ -60,11 +58,7 @@ export default function CreditCardPayment({ navigation }) {
       <Title
 					showBackButton={true}
 					statusBarStyle='light-content'
-					fontIcon={{
-						name: 'long-arrow-left',
-						color: '#ffffff',
-						size: 14,
-					}}
+					fontIcon='arrow_back_light'
 					title={'make card payment'}
 					headerOptionHandler={() => navigation.goBack()}
 					subTitle={'Enter your card details'}
@@ -74,26 +68,24 @@ export default function CreditCardPayment({ navigation }) {
 
         <View style={styles.content}>
 
-          <View
-						style={{
-							...styles.contentInputContainer,
-							marginTop: normalize(40),
-						}}>
-						<Text style={styles.contentLabel}>Card Number</Text>
-						<TextInput
-							style={styles.contentInput}
-							placeholder='XXXX XXXX XXXX XXXX'
-						/>
+          <View>
+						<TextField
+							placeholder="XXXX XXXX XXXX XXXX"
+							label="Card Number"
+							value={''}
+							onchangeText={() => {}}
+							onBlur={() => {}}
+							/>
 					</View>
 
 					<View style={styles.contentInputContainer}>
-						<Text style={styles.contentLabel}>
-							Card holder's full name
-						</Text>
-						<TextInput
-							style={styles.contentInput}
+						<TextField
 							placeholder='E.g Ayo Musa Okoro'
-						/>
+							label="Card holder's full name"
+							value={''}
+							onchangeText={() => {}}
+							onBlur={() => {}}
+							/>
 					</View>
 
 					<View style={styles.dateAndCvv}>
@@ -103,22 +95,26 @@ export default function CreditCardPayment({ navigation }) {
 								width: '30%',
 								marginRight: normalize(30),
 							}}>
-							<Text style={styles.contentLabel}>Expiry Date</Text>
-							<TextInput
-								style={styles.contentInput}
+							<TextField
 								placeholder='MM/YY'
-							/>
+								label="Expiry Date"
+								value={''}
+								onchangeText={() => {}}
+								onBlur={() => {}}
+								/>
 						</View>
 						<View
 							style={{
 								...styles.contentInputContainer,
 								width: '30%',
 							}}>
-							<Text style={styles.contentLabel}>CVV</Text>
-							<TextInput
-								style={styles.contentInput}
+							<TextField
 								placeholder='XXX'
-							/>
+								label="CVV"
+								value={''}
+								onchangeText={() => {}}
+								onBlur={() => {}}
+								/>
 						</View>
 					</View>
 

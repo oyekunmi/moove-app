@@ -40,10 +40,15 @@ export default (state = defaultState, action) => {
         ...state,
         package: action.value
       };
-    case TRIP_CANCEL_REQUEST:
+    case TRIP_CANCEL_REQUEST: {
+      console.log('DEFAULT STATE ---->', defaultState);
       return {
-        ...defaultState
+        ...defaultState,
+        sourceCoord: state.sourceCoord,
+        source: state.source,
+        destination: ''
       }
+    }
     case SIGN_OUT:
       return defaultState;
     default:

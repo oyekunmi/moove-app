@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { normalize } from "../normalizeFont";
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Entypo } from '@expo/vector-icons';
 
 const styles = StyleSheet.create({
   titleContainer: {
