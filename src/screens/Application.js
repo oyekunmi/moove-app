@@ -33,6 +33,7 @@ import AddCardSuccessfulScreen from './AddCardSuccessfulScreen';
 import SuccessScreen from './SuccessScreen';
 import HomeDrawerScreen from './HomeDrawerScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
+import PasswordResetEmailSentScreen from './PasswordResetEmailSentScreen';
 
 const Stack = createStackNavigator();
 
@@ -110,10 +111,11 @@ export default function Application() {
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
             <Stack.Screen name="PasswordResetScreen" component={PasswordResetScreen} />
             <Stack.Screen name="RegistrationVerification" component={RegistrationVerificationScreen} />
-            {/* <Stack.Screen name="SuccessScreen" component={SuccessScreen} /> */}
+            <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
             <Stack.Screen name="Biometrics" component={BiometricsScreen} />
             <Stack.Screen name="PasswordUpdateSuccess" component={PasswordUpdateSuccessfulScreen} />
             <Stack.Screen name="VerifyEmailScreen" component={VerifyEmailScreen} />
+            <Stack.Screen name="PasswordResetEmailSentScreen" component={PasswordResetEmailSentScreen} />
           </>
         }
       </Stack.Navigator>
