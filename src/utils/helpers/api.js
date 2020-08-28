@@ -29,8 +29,6 @@ export const userSignIn = async (email, password) => {
 		password,
 	});
 
-	console.log('RESPONSE FROM LOGIN CONTROLLER ------>', response);
-
 	const {
 		token: { access_token },
 		user: {

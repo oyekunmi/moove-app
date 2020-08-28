@@ -141,12 +141,14 @@ export default function PackageDescriptionScreen({ navigation }) {
                   value={trip.source}
                   label="Pickup Location"
                   event={changeSourceAddress}
+                  editable={false}
                   containerStyle={{ height: normalize(71) }} />
 
                 <AddressField
                   value={trip.destination}
                   label="Delivery Location"
                   event={changeDestinationAddress}
+                  editable={false}
                   containerStyle={{ height: normalize(71) }} />
 
               <View style={styles.packageContainer}>
