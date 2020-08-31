@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
 import * as Location from 'expo-location';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
-
 
 import { FontAwesome } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -16,6 +15,9 @@ import {  changeSourceAddress, changeDestinationAddress } from '../redux/actions
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   map: {
     height: '70%',
     width: '100%',
@@ -44,9 +46,16 @@ const styles = StyleSheet.create({
   }
 });
 
+function HomeScreen({ navigation, route }) {
+
+  useEffect(() => {
+    if(route.params && route.params.logoutUser === true) {
+      navigation.navigate('SignIn');
+    }
+
+  }, [route.params])
 
 
-function HomeScreen({ navigation }) {
 
   const dispatch = useDispatch()
   const mapRef = useRef();

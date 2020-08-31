@@ -79,10 +79,9 @@ export default function LoginScreen({navigation}) {
   }
 
   StatusBar.setBarStyle('dark-content');
-  StatusBar.setTranslucent(false);
-  StatusBar.setBackgroundColor("#Fff");
+  // StatusBar.setTranslucent(false); // comment this in if you want the screens contents to show below the statusBar anfddo well to add it to all other screens too to avoid weird jerking when you navigate screens
+  StatusBar.setBackgroundColor("#fff");
   return (
-
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 
       <Title

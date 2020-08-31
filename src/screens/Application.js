@@ -101,6 +101,7 @@ export default function Application() {
             <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
             <Stack.Screen name="AddCardCardSuccess" component={AddCardSuccessfulScreen} />
             <Stack.Screen name="RegistrationVerifySuccess" component={RegistrationVerifySuccessfulScreen} />
+            <Stack.Screen name="SignIn" component={LoginScreen} />
 
 
           </>

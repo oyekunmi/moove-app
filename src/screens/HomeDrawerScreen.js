@@ -17,7 +17,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import HomeScreen from './HomeScreen';
 import HistoryScreen from './HistoryScreen';
 import FundWalletScreen from './FundWalletScreen';
-import LoginScreen from './LoginScreen';
 import { normalize } from '../normalizeFont';
 import { signOut } from '../redux/actions';
 
@@ -25,7 +24,7 @@ const CustomDrawerContent = (props, dispatch, authState) => {
 	const logoutUser = async () => {
 		await AsyncStorage.removeItem('userDetails');
 		dispatch(signOut());
-		// props.navigation.navigate('SignIn');
+		props.navigation.navigate('Home', { 'logoutUser': true });
 	};
 
 	return (

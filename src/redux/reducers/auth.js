@@ -34,7 +34,8 @@ export default (state = defaultState, action) => {
     }
     case SIGN_OUT:
       return {
-        ...defaultState
+        ...state,
+        userToken: null
       };
     case SHOW_INTRO:
       return {

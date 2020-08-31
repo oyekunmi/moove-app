@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { Alert, View, StyleSheet, Keyboard, Text, StatusBar, TextInput, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { normalize } from '../normalizeFont';
-import { changePackageInfo, setTripCost } from '../redux/actions';
+import { changePackageInfo, setTripCost, isAppLoading, isBtnDisabled } from '../redux/actions';
 import RedButton from '../components/RedButton';
 import Title from '../components/Title';
 import AddressField from '../components/AddressField';
@@ -55,9 +55,11 @@ export default function PackageDescriptionScreen({ navigation }) {
 
   let trip = useSelector(state => state.trip);
   let auth = useSelector(state => state.auth);
+  let common = useSelector(state => state.common);
 
   const [distance, setDistance ] = useState('');
   const [duration, setDuration] = useState('');
+  const [packageDescription, setPackageDescription] = useState('')
 
   const dispatch = useDispatch();
 
@@ -84,19 +86,37 @@ export default function PackageDescriptionScreen({ navigation }) {
 
   }, []);
 
+  useEffect(() => {
+    changePackageDescriptionHandler(packageDescription);
+    dispatch(changePackageInfo(packageDescription));
+  }, [packageDescription, trip.package]);
+
+  const changePackageDescriptionHandler = value => {
+
+    value.length === 0 ?
+      dispatch(isBtnDisabled(true)) :
+      dispatch(isBtnDisabled(false));
+
+  };
+
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const onContinue = async () => {
-    if (!trip.package) {
-      Alert.alert('No package description', 'Please fill out the package description field' , null, { cancelable: true });
-      return;
+
+    dispatch(isBtnDisabled(true));
+    dispatch(isAppLoading(true));
+
+    try {
+      const cost = await calculateCost(auth.name, auth.phone, trip.package, null, trip.source, trip.destination, null, distance, duration);
+
+      dispatch(setTripCost(cost));
+      dispatch(isAppLoading(false));
+      navigation.navigate('MooveVerification');
+    } catch (error) {
+      // There is no error response that can be tapped into from the backend this should be changed to reflect the error
+      Alert.alert('An error has occurred', 'Please verify your input', null, { cancelable: true });
+      dispatch(isAppLoading(false));
     }
-
-    const cost = await calculateCost(auth.name, auth.phone, trip.package, null, trip.source, trip.destination, null, distance, duration);
-
-    dispatch(setTripCost(cost));
-
-    navigation.navigate('MooveVerification')
   }
 
   useEffect(() => {
@@ -157,8 +177,8 @@ export default function PackageDescriptionScreen({ navigation }) {
                   multiline={true}
                   numberOfLines={3}
                   style={styles.packageInput}
-                  value={trip.package}
-                  onChangeText={text => dispatch(changePackageInfo(text))}
+                  value={packageDescription}
+                  onChangeText={setPackageDescription}
                   autoFocus />
               </View>
             </View>
@@ -166,8 +186,8 @@ export default function PackageDescriptionScreen({ navigation }) {
           <RedButton
             title="Complete moove request"
             buttonStyle={styles.button}
+            disabled={common.isBtnDisabled}
             onPress={onContinue} />
-
         </View>
 
       </ScrollView>

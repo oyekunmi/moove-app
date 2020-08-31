@@ -8,8 +8,6 @@ import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
 import currency from '../currency';
-import SourceAddress from '../components/SourceAddress';
-import DeliveryAddress from '../components/DeliveryAddress';
 
 const styles = StyleSheet.create({
   container: {
