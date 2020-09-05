@@ -12,11 +12,22 @@ export default function App({ navigation }) {
 
     const linking = {
       prefixes: [prefix],
+      // config: {
+      //   screens: {
+      //     RegistrationVerifySuccessfulScreen: 'verify',
+      //     PasswordResetScreen: {
+      //       path:'reset/:email',
+      //       params: {
+      //         email :null,
+      //         }
+      //       },
+      //   },
+      // },
     };
 
   return (
     <Provider store={store}>
-      <NavigationContainer linking={linking} fallback={<Text>Please hold on</Text>}>
+      <NavigationContainer linking={linking} fallback={<Text>Please hold on...</Text>}>
         <Application />
       </NavigationContainer>
     </Provider>
