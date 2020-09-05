@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
 		color: '#51504D',
 		fontSize: normalize(13),
 		fontFamily: 'Roboto_400Regular',
-		textAlign: 'right',
+		textAlign: 'center',
 		width: '80%',
 		lineHeight: normalize(15),
 	},
