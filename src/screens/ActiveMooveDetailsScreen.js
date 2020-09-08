@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Text, StatusBar, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TextInput, StatusBar, ScrollView, Linking } from 'react-native';
 import { useSelector } from 'react-redux';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
-import AddressField from '../components/AddressField';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,28 +30,33 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(10),
     paddingHorizontal: normalize(15),
   },
-  costContainer: {
+  phoneContainer: {
     alignItems: "center",
-    marginVertical: normalize(20),
+    marginTop: normalize(20),
+    marginBottom: normalize(30),
   },
   packageContainer: {
-    justifyContent: "center",
     flexGrow:1
   },
-  costLabel: {
+  nameLabel: {
     color: "#908F8F",
     fontFamily: 'Roboto_900Black',
     fontSize: normalize(13),
     lineHeight: normalize(15)
   },
-  costValue: {
+  telLabel: {
+    color: '#918F8F',
+    fontSize: normalize(13),
+    fontFamily: 'Roboto_400Regular',
+    lineHeight: normalize(15),
+  },
+  phone: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(44),
-
+    fontWeight: 'bold'
   },
   button: {
-    marginBottom: normalize(10),
     marginTop: normalize(5),
     alignSelf: "center",
     width: '100%',
@@ -61,16 +66,8 @@ const styles = StyleSheet.create({
     color: "#FFF",
   },
 
-  radioButton: {
-    borderRadius: normalize(50),
-    backgroundColor: "#253A4D",
-    color: "#FFF",
-    padding: normalize(10),
-    flexDirection: "row-reverse",
-    justifyContent: "space-between",
-  },
   locationDetails: {
-    height: normalize(146),
+    height: normalize(135),
     marginBottom: normalize(7),
     borderRadius: normalize(15),
     display: 'flex',
@@ -94,11 +91,34 @@ const styles = StyleSheet.create({
     color: '#D1D1D1',
     fontFamily: 'Roboto_400Regular',
     lineHeight: normalize(15)
+  },
+  DeliveryItemDescription: {
+    height: normalize(71),
+    backgroundColor: '#1E3040',
+    borderRadius: normalize(15),
+    paddingVertical: normalize(10)
+  },
+  packageDescriptionLabel: {
+    color: '#DADADA',
+    fontSize: normalize(14),
+    fontFamily: 'Roboto_500Medium',
+    paddingHorizontal: normalize(14),
+    fontWeight: 'bold',
+  },
+  packageDescriptionInput: {
+    marginHorizontal: normalize(14),
+    color: '#D1D1D1',
+    fontSize: normalize(13),
+    fontWeight: 'normal',
+  },
+  mb9: {
+    marginBottom: normalize(9),
   }
 })
 
 export default function ActiveMooveDetailsScreen({ navigation }) {
-  const trip = useSelector(state => state.trip)
+  const trip = useSelector(state => state.trip);
+  const auth = useSelector(state => state.auth);
 
   const onContinue = () => {
     navigation.navigate("TrackActiveMoove")
@@ -112,51 +132,54 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
         <Title
           showBackButton={true}
           statusBarStyle="light-content"
+          fontIcon="arrow_back_light"
           title={"active moove"}
           orderId={"Moove - MV100002"}
-          fontIcon={{
-						name: 'long-arrow-left',
-						color: '#ffffff',
-						size: 14,
-					}}
 					headerOptionHandler={() => navigation.goBack()}
-          subTitle={"Your moove champion is enroute for pickup"}
+          subTitle={"Your moove champion is enroute"}
           subTitleStyle={{ fontSize: normalize(22) }}
           containerStyle={{ paddingHorizontal: normalize(18) }} />
 
         <View style={styles.content}>
 
-          <View style={styles.costContainer}>
-            <Text style={styles.costLabel}>Champion: {"John Boye"} </Text>
-            <Text style={styles.costValue}>{"08022233344"}</Text>
-            <Text style={styles.costLabel }>Tap to call or text</Text>
+          <View style={styles.phoneContainer}>
+            <Text style={styles.nameLabel}>Champion: {auth.name} </Text>
+            <Text style={styles.phone}>{auth.phone}</Text>
+            <TouchableOpacity onPress={() => Linking.openURL(`tel:${auth.phone}`)}>
+              <Text style={styles.telLabel }>tap to call or text</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.packageContainer}>
+          <View style={[styles.packageContainer, styles.mb9]}>
 
-          <View style={styles.locationDetails}>
+          <View style={[styles.locationDetails, styles.mb9]}>
             <View style={styles.pickUpandDelivery}>
               <Text style={styles.pickupAndLocationLabel}>Pick-up Location</Text>
-              <Text style={styles.pickUpAndLocationDetails}>Alhaji Masha street, Surulere, Lagos</Text>
+              <Text style={styles.pickUpAndLocationDetails}>{trip.source}</Text>
             </View>
             <View style={styles.pickUpandDelivery}>
             <Text style={styles.pickupAndLocationLabel} >Delivery Location</Text>
-              <Text style={styles.pickUpAndLocationDetails}>43 Saka Tinubu Street, Victoria Island, Lagos</Text>
+            <Text style={styles.pickUpAndLocationDetails}>{trip.destination}</Text>
             </View>
           </View>
 
-          <AddressField
-            defaultValue={trip.package}
-            label="Delivery item(s) Description"
-            editable={false}
-            multiline={true}
-            textAlignVertical="top"
-            labelStyle={{ color: "#FFF", marginBottom: normalize(10) }}
-            inputStyle={{ color: "#D1D1D1" }}
-            containerStyle={{ backgroundColor: "#1E3040", height: normalize(71) }}
-          />
+
+          <View style={styles.DeliveryItemDescription}>
+            <Text style={styles.packageDescriptionLabel}>Delivery Item(s) Description</Text>
+            <TextInput
+                multiline={true}
+                numberOfLines={3}
+                style={styles.packageDescriptionInput}
+                value={trip.package}
+                editable={false} />
+          </View>
         </View>
-          <RedButton title="Track Moove Request" buttonStyle={styles.button} onPress={onContinue} />
+
+          <RedButton
+            title="Track Moove Request"
+            buttonStyle={styles.button}
+            onPress={onContinue}
+          />
 
         </View>
 

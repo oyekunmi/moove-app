@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Keyboard, Text, StatusBar, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Keyboard, Text, TextInput, StatusBar, ScrollView } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { cancelTripRequest } from '../redux/actions';
 import AddressField from '../components/AddressField';
@@ -8,8 +8,6 @@ import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
 import currency from '../currency';
-import SourceAddress from '../components/SourceAddress';
-import DeliveryAddress from '../components/DeliveryAddress';
 
 const styles = StyleSheet.create({
   container: {
@@ -19,6 +17,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(18),
     paddingVertical: normalize(10),
     flexGrow: 1,
+    justifyContent: 'space-between',
   },
   packageContainer: {
   },
@@ -38,17 +37,19 @@ const styles = StyleSheet.create({
   costContainer: {
     flex: 1,
     alignItems: "center",
-    marginVertical: normalize(20),
+    marginVertical: normalize(25),
   },
   costLabel: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(16)
+    fontSize: normalize(16),
+    fontWeight: 'bold'
   },
   costValue: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(44),
+    fontWeight: 'bold'
   },
   button: {
     marginBottom: normalize(10),
@@ -62,6 +63,28 @@ const styles = StyleSheet.create({
     fontSize: normalize(16),
     lineHeight: normalize(19)
   },
+  DeliveryItemDescription: {
+    height: normalize(71),
+    backgroundColor: '#1E3040',
+    borderRadius: normalize(15),
+    paddingVertical: normalize(10)
+  },
+  packageDescriptionLabel: {
+    color: '#DADADA',
+    fontSize: normalize(14),
+    fontFamily: 'Roboto_500Medium',
+    paddingHorizontal: normalize(14),
+    fontWeight: 'bold',
+  },
+  packageDescriptionInput: {
+    marginHorizontal: normalize(14),
+    color: '#D1D1D1',
+    fontSize: normalize(13),
+    fontWeight: 'normal',
+  },
+  mb9: {
+    marginBottom: normalize(9),
+  }
 })
 
 export default function MooveVerificationScreen({ navigation }) {
@@ -75,10 +98,10 @@ export default function MooveVerificationScreen({ navigation }) {
 
   const onCancelTripRequest = () => {
     dispatch(cancelTripRequest())
-    navigation.navigate('Home')
+    navigation.push('Home')
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
 
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -103,48 +126,69 @@ export default function MooveVerificationScreen({ navigation }) {
   StatusBar.setBackgroundColor("#132535");
   return (
     <>
-      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps='always'>
         <Title
           showBackButton={true}
           statusBarStyle="light-content"
           title={"verify your request"}
-          fontIcon={{name: 'long-arrow-left', color: "#ffffff", size: 14 }}
+          fontIcon="arrow_back_light"
           headerOptionHandler={() => navigation.goBack()}
           subTitle={"Are the details below correct?"}
           subTitleStyle={{ fontSize: normalize(22) }}
           containerStyle={{ paddingHorizontal: normalize(18), }} />
 
         <View style={styles.content}>
+          <View>
+            <View style={styles.mb9}>
+              <AddressField
+                value={trip.source}
+                label="Pick-up Location"
+                editable={false}
+                multiline={true}
+                customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
+                labelStyle={{ color: '#DADADA' }}
+                placeholder="enter source address"
+              />
+            </View>
+            <View style={styles.mb9}>
+              <AddressField
+                value={trip.destination}
+                label="Delivery Location"
+                editable={false}
+                multiline={true}
+                customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
+                labelStyle={{ color: '#DADADA' }}
+                placeholder="enter destination address"
+              />
+            </View>
 
-          <SourceAddress />
-          <DeliveryAddress />
+            <View style={styles.DeliveryItemDescription}>
+              <Text style={styles.packageDescriptionLabel}>Delivery Item(s) Description</Text>
+              <TextInput
+                  multiline={true}
+                  numberOfLines={3}
+                  style={styles.packageDescriptionInput}
+                  value={trip.package}
+                  editable={false} />
+            </View>
 
-          <AddressField
-            defaultValue={trip.package}
-            label="Delivery item(s) description"
-            editable={false}
-            multiline={true}
-            textAlignVertical="top"
-            labelStyle={{ color: "#FFF" }}
-            inputStyle={{ color: "#D1D1D1", paddingTop: normalize(5) }}
-            containerStyle={{ backgroundColor: "#1E3040" }}
-          />
-
-          <View style={styles.costContainer}>
-            <Text style={styles.costLabel}>Your delivery cost</Text>
-            <Text style={styles.costValue}>{currency(trip.cost)}</Text>
+            <View style={styles.costContainer}>
+              <Text style={styles.costLabel}>Your delivery cost</Text>
+              <Text style={styles.costValue}>{currency(trip.cost)}</Text>
+            </View>
           </View>
+          <View>
+            <RedButton
+              title="Yes! Start My Moovee"
+              buttonStyle={styles.button}
+              onPress={onContinue} />
 
-          <RedButton
-            title="Yes! start moove"
-            buttonStyle={styles.button}
-            onPress={onContinue} />
-
-          <PlainButton
-            title="Cancel/Reset Moove"
-            titleStyle={styles.cancelButtonStyle}
-            buttonStyle={styles.button}
-            onPress={onCancelTripRequest} />
+            <PlainButton
+              title="Cancel/Reset Moove"
+              titleStyle={styles.cancelButtonStyle}
+              buttonStyle={styles.button}
+              onPress={onCancelTripRequest} />
+          </View>
 
         </View>
 

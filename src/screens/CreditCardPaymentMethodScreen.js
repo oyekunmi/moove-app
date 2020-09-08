@@ -1,17 +1,21 @@
-import React from 'react';
-import { View, StyleSheet, Text, TextInput, ScrollView } from 'react-native';
+import React, { useState , useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { View, StyleSheet, ScrollView, Image, StatusBar } from 'react-native';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
+import TextField from '../components/TextInput';
+import { isAppLoading, isBtnDisabled } from '../redux/actions';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#132535',
   },
   content: {
-    paddingHorizontal: normalize(18),
-    paddingVertical: normalize(10),
-    flexGrow: 1,
+		paddingHorizontal: normalize(18),
+		marginTop: normalize(50),
+		flexGrow: 1,
   },
   button: {
     marginBottom: normalize(10),
@@ -19,11 +23,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: '100%',
   },
-	content: {
-    paddingHorizontal: normalize(18),
-    paddingVertical: normalize(10),
-    flexGrow: 1,
-	},
 	contentInputContainer: {
 		marginVertical: normalize(5),
 	},
@@ -45,10 +44,44 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
     marginBottom: 'auto',
-  },
+	},
+	visaMasterCardIcon: {
+		position: 'absolute',
+		right: '5%',
+		top: '47%',
+		zIndex: 500,
+	}
 })
 
+StatusBar.setBarStyle('light-content');
+StatusBar.setBackgroundColor('#132535');
+
 export default function CreditCardPayment({ navigation }) {
+
+	const common = useSelector(state => state.common);
+	const dispatch = useDispatch();
+
+	const [cardNumber, setCardNumber]   = useState('');
+	const [holdersName, setHoldersName] = useState('');
+	const [expiryDate, setExpiryDate]   = useState('');
+	const [cvv, setCvv]                 = useState('');
+
+
+	const formatCardNumber = () => {
+		const pattern = /^(\d{0,4})(\d{0,4})(\d{0,4})(\d{0,4})$/g
+		const filteredNumber = cardNumber.replace(/[^\d]/g, '')
+
+		const result = filteredNumber.replace(pattern, (pattern, $1, $2, $3, $4) =>
+			[$1, $2, $3, $4].filter(value => !!value).join(' ')
+		);
+
+		setCardNumber(result);
+	}
+
+	useEffect(() => {
+		(cardNumber.length === 0 || holdersName.length === 0 || expiryDate.length === 0 || cvv.length === 0) ? dispatch(isBtnDisabled(true)): dispatch(isBtnDisabled(false))
+	}, [cardNumber, holdersName, expiryDate, cvv])
+
 
   const onContinue = () => {
     navigation.navigate("ActiveMooveDetails")
@@ -60,11 +93,7 @@ export default function CreditCardPayment({ navigation }) {
       <Title
 					showBackButton={true}
 					statusBarStyle='light-content'
-					fontIcon={{
-						name: 'long-arrow-left',
-						color: '#ffffff',
-						size: 14,
-					}}
+					fontIcon='arrow_back_light'
 					title={'make card payment'}
 					headerOptionHandler={() => navigation.goBack()}
 					subTitle={'Enter your card details'}
@@ -74,26 +103,27 @@ export default function CreditCardPayment({ navigation }) {
 
         <View style={styles.content}>
 
-          <View
-						style={{
-							...styles.contentInputContainer,
-							marginTop: normalize(40),
-						}}>
-						<Text style={styles.contentLabel}>Card Number</Text>
-						<TextInput
-							style={styles.contentInput}
-							placeholder='XXXX XXXX XXXX XXXX'
+          <View>
+						<Image source={require('../../assets/visa-mastercard-icon.png')} style={styles.visaMasterCardIcon} />
+						<TextField
+							maxLength={19}
+							placeholder="XXXX XXXX XXXX XXXX"
+							label="Card Number"
+							value={cardNumber}
+							onChangeText={setCardNumber}
+							labelColor="#F1F1F1"
+							onBlur={formatCardNumber}
 						/>
 					</View>
 
 					<View style={styles.contentInputContainer}>
-						<Text style={styles.contentLabel}>
-							Card holder's full name
-						</Text>
-						<TextInput
-							style={styles.contentInput}
+						<TextField
 							placeholder='E.g Ayo Musa Okoro'
-						/>
+							label="Card holder's full name"
+							value={holdersName}
+							onChangeText={setHoldersName}
+							labelColor="#F1F1F1"
+							/>
 					</View>
 
 					<View style={styles.dateAndCvv}>
@@ -103,26 +133,36 @@ export default function CreditCardPayment({ navigation }) {
 								width: '30%',
 								marginRight: normalize(30),
 							}}>
-							<Text style={styles.contentLabel}>Expiry Date</Text>
-							<TextInput
-								style={styles.contentInput}
+							<TextField
 								placeholder='MM/YY'
-							/>
+								label="Expiry Date"
+								value={expiryDate}
+								labelColor="#F1F1F1"
+								onChangeText={setExpiryDate}
+								/>
 						</View>
 						<View
 							style={{
 								...styles.contentInputContainer,
 								width: '30%',
 							}}>
-							<Text style={styles.contentLabel}>CVV</Text>
-							<TextInput
-								style={styles.contentInput}
+							<TextField
+								maxLength={3}
 								placeholder='XXX'
-							/>
+								label="CVV"
+								value={cvv}
+								labelColor="#F1F1F1"
+								onChangeText={setCvv}
+								/>
 						</View>
 					</View>
 
-          <RedButton title="Make Payment" buttonStyle={styles.button} onPress={onContinue} />
+					<RedButton
+						title="Make Payment"
+						buttonStyle={styles.button}
+						onPress={onContinue}
+						disabled={common.isBtnDisabled}
+					/>
 
         </View>
 

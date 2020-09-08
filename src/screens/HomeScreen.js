@@ -1,35 +1,39 @@
-import * as React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar } from 'react-native';
+import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
+import MapViewDirections from 'react-native-maps-directions';
+
 import { FontAwesome } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
 import AddressField from '../components/AddressField';
-import {  changeSourceAddress } from '../redux/actions';
+import {  changeSourceAddress, changeDestinationAddress } from '../redux/actions';
+import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
   },
   map: {
-    flexGrow: 1,
+    height: '70%',
+    width: '100%',
+    minHeight: normalize(230),
+  },
+  content: {
+    justifyContent: 'space-between',
+    flex: 2
   },
   spinner: {
     flexGrow: 1,
     alignSelf: "center",
     justifyContent: "center",
   },
-  content: {
+  p18: {
     paddingHorizontal: normalize(18),
-  },
-  button: {
-    position: 'absolute',
-    left: normalize(18),
-    right: normalize(18),
-    bottom: normalize(10),
   },
   searchFont: {
     paddingVertical: normalize(10),
@@ -37,18 +41,28 @@ const styles = StyleSheet.create({
     marginRight: normalize(15),
     position: 'absolute',
     zIndex: 100,
-    left: normalize(17),
-    top: normalize(8)
+    left: normalize(35),
+    top: normalize(8),
   }
 });
 
+function HomeScreen({ navigation, route }) {
+
+  useEffect(() => {
+    if(route.params && route.params.logoutUser === true) {
+      navigation.navigate('SignIn');
+    }
+
+  }, [route.params])
 
 
-function HomeScreen({ navigation }) {
 
   const dispatch = useDispatch()
-  const trip = useSelector(state => state.trip)
-  const [isKeyboardVisible, setKeyboardVisible] = React.useState(false);
+  const mapRef = useRef();
+
+  const trip = useSelector(state => state.trip);
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const toggleDrawerHandler = () => {
     // The drawer should be toggled here
@@ -57,13 +71,15 @@ function HomeScreen({ navigation }) {
   }
 
   const onContinue = () => {
-    if (!trip.destination) {
+    if (!trip.destination || !trip.source) {
+      Alert.alert('You are almost there','Please ensure that source and destination address are filled', null, { cancelable: true });
       return;
     }
-    navigation.navigate('PackageDescription')
+
+    navigation.navigate('PackageDescription');
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
 
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -84,29 +100,40 @@ function HomeScreen({ navigation }) {
     };
   }, []);
 
-  React.useEffect(() => {
+  const getLocation = async () => {
+    const { status } = await Location.requestPermissionsAsync();
 
-    let getLocation = (async () => {
-      let { status } = await Location.requestPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Permission to access location was denied');
-      }
-      console.log("getting location");
-
-      Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High }).then(locationData => {
-        Location.reverseGeocodeAsync({ latitude: locationData.coords.latitude, longitude: locationData.coords.longitude }).then(locationAddress => {
-          const geoAddress1 = locationAddress[0];
-          dispatch(changeSourceAddress(`${geoAddress1.name}, ${geoAddress1.street}, ${geoAddress1.city}, ${geoAddress1.country}`, locationData.coords));
-        })
-      });
-    });
-
-    if (!trip || !trip.source || !trip.sourceCoord) {
-      getLocation();
+    if (status !== 'granted') {
+      Alert.alert('An error has occurred','Permission to access location was denied', null, { cancelable: true });
     }
 
-  }, [trip]);
+    const { coords: { latitude, longitude }} = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
 
+    const [ { name, street, city, country} ] = await Location.reverseGeocodeAsync({ latitude, longitude });
+
+    const sourceAddress = `${name ?? ''}, ${street ?? ''}, ${city ?? ''}, ${country ?? ''}`;
+    const sourceCord = { longitude, latitude };
+
+    dispatch(changeSourceAddress( sourceAddress, sourceCord));
+
+  }
+
+   useEffect(() => {
+      getLocation();
+  }, []);
+
+  const onMapLayout = () => {
+    if(trip.sourceCoord){
+      const { latitude } = trip.sourceCoord;
+      const { longitude } = trip.sourceCoord;
+      mapRef.current.animateToRegion({
+        latitude,
+        longitude,
+        latitudeDelta: 0.1,
+        longitudeDelta: 0.1
+      });
+    }
+  }
 
   StatusBar.setBarStyle("dark-content");
   StatusBar.setBackgroundColor("#fff");
@@ -115,89 +142,130 @@ function HomeScreen({ navigation }) {
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps='always'>
       <Title
         title={"start a moove"}
-        fontIcon={{name: "bars", color: "#DADADA", size: 20}}
+        fontIcon="side_menu"
         headerOptionHandler={toggleDrawerHandler}
         subTitle={"Your moove champion is one click away"}
-        subTitleStyle={{ fontSize: normalize(26) }}
-        containerStyle={{ paddingHorizontal: normalize(18)}} />
+        subTitleStyle={{ fontSize: normalize(22) }}
+        style={styles.p18}
+        containerStyle={styles.p18}
+      />
+
+      <View style={styles.content}>
 
       {(!trip || !trip.sourceCoord) ? <ActivityIndicator style={styles.spinner} />
         :
-        <>
-          <View style={styles.content}>
-
-            <AddressField
-              value={trip.source}
-              label="You are Here:"
-              isEditable={true}
-              containerStyle={{ height: normalize(71) }}
-              onChangeText={text => dispatch(changeSourceAddress(text))} />
-
-            <View>
-              <FontAwesome name='search' size={normalize(14)} style={styles.searchFont}  />
-             <GooglePlacesAutocomplete
-              placeholder='enter delivery address'
-              minLength={2}
-              onPress={(data, details = null) => {
-                // 'details' is provided when fetchDetails = true
-              }}
-              styles={{
-                textInputContainer: {
-                  backgroundColor: 'rgba(0,0,0,0)',
-                  marginBottom: normalize(10),
-                  borderTopWidth: 0,
-                  borderBottomWidth: 0,
-                },
-                description: {
-                  fontFamily: 'Roboto_400Regular',
-                },
-                textInput: {
-                  backgroundColor: "#EFEFEF",
-                  paddingLeft: normalize(30),
-                  height: normalize(37),
-                  width: normalize(296),
-                  color: '#545252',
-                  fontSize: 16,
-                  borderRadius: normalize(50),
-                  fontFamily: 'Roboto_400Regular'
-                },
-              }}
-              query={{
-                key: 'AIzaSyDl2ismTJL7qQveLJM9UlL-Ai6ixpQXQdw',
-                language: 'en',
-              }}
-              fetchDetails={true}
-              nearbyPlacesAPI="GooglePlacesSearch"
-              debounce={200}
-            />
+          <View>
+            <View style={styles.p18}>
+              <AddressField
+                value={trip.source}
+                label="You are Here:"
+                event={changeSourceAddress}
+                placeholder="enter source address"
+                />
             </View>
 
-          </View>
-          <View style={{ height: '40%'}}>
-            <MapView style={styles.map}
-              initialRegion={{
-                latitude: trip.sourceCoord.latitude,
-                longitude: trip.sourceCoord.longitude,
-                latitudeDelta: 0.015,
-                longitudeDelta: 0.015,
-              }} >
-              <Marker
-                coordinate={trip.sourceCoord}
-                title="My location"
-                description="My location 2"
-              />
+            <View>
 
-            </MapView>
+              <View style={styles.p18}>
+                <FontAwesome name='search' size={normalize(14)} style={styles.searchFont}  />
+                <GooglePlacesAutocomplete
+                  placeholder='enter delivery address'
+                  minLength={2}
+                  onPress={(data, details = null) => {
+
+                    // 'details' is provided when fetchDetails = true
+                    const { lat: latitude, lng: longitude } = details.geometry.location;
+
+                    const destinationAddress = data.description;
+
+                    dispatch(changeDestinationAddress(destinationAddress,{ latitude, longitude }));
+                  }}
+                  getDefaultValue={() => trip.destination }
+                  styles={{
+                    listView: {
+                      backgroundColor: '#EFEFEF',
+                      position: 'absolute',
+                      top: '100%',
+                      zIndex: 500
+                    },
+                    textInputContainer: {
+                      backgroundColor:'#fff',
+                      marginBottom: normalize(15),
+                      borderTopWidth: 0,
+                      borderBottomWidth: 0,
+                      width: '100%'
+                    },
+                    description: {
+                      fontFamily: 'Roboto_400Regular',
+                    },
+                    textInput: {
+                      backgroundColor: "#EFEFEF",
+                      paddingLeft: normalize(30),
+                      height: normalize(37),
+                      width: normalize(296),
+                      color: '#545252',
+                      fontSize: 16,
+                      borderRadius: normalize(50),
+                      fontFamily: 'Roboto_400Regular'
+                    },
+                  }}
+                  query={{
+                    key: `${GOOGLE_PLACES_API_KEY}`,
+                    language: 'en',
+                  }}
+                  fetchDetails={true}
+                  nearbyPlacesAPI="GooglePlacesSearch"
+                  debounce={200}
+                />
+              </View>
+              <View>
+              <MapView style={styles.map}
+                ref={mapRef}
+                onLayout={onMapLayout}
+                initialRegion={{
+                  latitude: trip.sourceCoord.latitude,
+                  longitude: trip.sourceCoord.longitude,
+                  latitudeDelta: 0.015,
+                  longitudeDelta: 0.015,
+                }} >
+
+                <Marker
+                  coordinate={trip.destinationCoord || trip.sourceCoord}
+                  title="Destination"
+                  description="Moove destination"
+                  pinColor="blue"
+                />
+
+                <Marker
+                  coordinate={trip.sourceCoord}
+                  title="My location"
+                  description="My location 2"
+                />
+
+                <MapViewDirections
+                  origin={{...trip.sourceCoord}}
+                  destination={{...trip.destinationCoord}}
+                  apikey={GOOGLE_PLACES_API_KEY}
+                  strokeWidth={3}
+                  strokeColor="#CE0303"
+                />
+
+              </MapView>
+            </View>
           </View>
-        </>
+
+        </View>
       }
 
+      </View>
+    <View style={styles.p18}>
       {!isKeyboardVisible &&
         <RedButton
           title="Request a Moove"
           buttonStyle={styles.button}
           onPress={onContinue} />
       }
+    </View>
 
     </ScrollView>
   );

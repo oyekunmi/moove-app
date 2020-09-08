@@ -1,7 +1,7 @@
 import {
   APP_LOADED, SIGN_IN, SIGN_OUT, SIGN_UP, IS_SIGNUP_BUTTON_ACTIVE, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN,
   SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, PACKAGE_INFO_CHANGED,
-  TRIP_CANCEL_REQUEST,
+  TRIP_CANCEL_REQUEST, IS_LOADING, IS_BTN_DISABLED, SOURCE_COORDINATES_FETCHED, TRIP_COST_CHANGED
 } from "./actionTypes";
 
 export const restoreToken = (token, introduced) => ({
@@ -10,9 +10,11 @@ export const restoreToken = (token, introduced) => ({
   showIntro: !introduced
 })
 
-export const signIn = token => ({
+export const signIn = (token, name, phone) => ({
   type: SIGN_IN,
-  token
+  token,
+  name,
+  phone
 })
 
 export const checkSubmitButton = (isValid) => {
@@ -22,12 +24,24 @@ export const checkSubmitButton = (isValid) => {
   }
 }
 
-export const signUp = (token) => {
+export const signUp = (token, name, phone) => {
   return {
     type: SIGN_UP,
-    token
+    token,
+    name,
+    phone
   }
 }
+
+export const isAppLoading = (value) => ({
+  type: IS_LOADING,
+  isLoading: value
+})
+
+export const isBtnDisabled = (value) => ({
+  type: IS_BTN_DISABLED,
+  isBtnDisabled: value
+})
 
 export const signOut = () => ({
   type: SIGN_OUT,
@@ -49,12 +63,13 @@ export const hideIntro = () => ({
 export const changeSourceAddress = (value, coord) => ({
   type: SOURCE_ADDRESS_CHANGED,
   value,
-  coord
+  coord,
 })
 
-export const changeDestinationAddress = (value) => ({
+export const changeDestinationAddress = (value, coord) => ({
   type: DESTINATION_ADDRESS_CHANGED,
-  value
+  value,
+  coord,
 })
 
 export const changePackageInfo = (value) => ({
@@ -65,3 +80,17 @@ export const changePackageInfo = (value) => ({
 export const cancelTripRequest = () => ({
   type: TRIP_CANCEL_REQUEST,
 })
+
+export const setSourceCoordinates = (location) => {
+  return {
+    type: SOURCE_COORDINATES_FETCHED,
+    location
+  }
+}
+
+export const setTripCost = (value) => {
+  return {
+    type: TRIP_COST_CHANGED,
+    value
+  }
+}

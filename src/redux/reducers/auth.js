@@ -5,6 +5,8 @@ const defaultState =     {
   isSignout: false,
   userToken: null,
   showIntro: false,
+  name     : '',
+  phone    : ''
 }
 
 export default (state = defaultState, action) => {
@@ -16,19 +18,24 @@ export default (state = defaultState, action) => {
         isLoading: false,
         showIntro: action.showIntro,
       };
-    case SIGN_IN:
+    case SIGN_IN: {
+      const {token, name, phone} = action;
       return {
         ...state,
         isSignout: false,
-        userToken: action.token,
+        userToken: token,
+        phone: phone,
+        name: name
       };
-    case SIGN_UP:
-        return {...state, userToken: action.token}
+    }
+    case SIGN_UP: {
+      const { name,phone, token } = action;
+      return {...state, userToken: token, name, phone }
+    }
     case SIGN_OUT:
       return {
         ...state,
-        isSignout: true,
-        userToken: null,
+        userToken: null
       };
     case SHOW_INTRO:
       return {

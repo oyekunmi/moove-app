@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Alert, View, StyleSheet, StatusBar, Text, Image } from 'react-native';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, StatusBar, Text, Image, AsyncStorage } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
-import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
-import { signIn } from '../redux/actions';
+import { signIn, isAppLoading, isBtnDisabled } from '../redux/actions';
 import { userSignIn } from '../utils/helpers/api';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
-import { Link } from '@react-navigation/native';
 import Title from '../components/Title';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import TextField from '../components/TextInput';
@@ -15,15 +13,16 @@ import TextField from '../components/TextInput';
 export default function LoginScreen({navigation}) {
 
   const dispatch = useDispatch();
+  const common = useSelector(state => state.common);
 
-  const [phone, setPhone] = useState('');
+  const passwordInputEl = useRef();
+
+  const [phoneOrEmail, setPhoneOrEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorBag, setError] = useState({});
-  const [isBtnDisabled, setBtnDisabled] = useState(true);
+  const [showErrorMsg, setShowErrorMessage] = useState(false)
   const [hasFingerPrintScanner, setHasFingerPrintScanner] = useState(false);
   const [hasEnrolledFingerPrint, setHasEnrolledFingerPrint] = useState(false);
   const [canLoginUsingFingerPrint, setCanLoginUsingFingerPrint] = useState(false);
-  const formFields = ['phone', 'password'];
 
   useEffect(() => {
     biometricCapability();
@@ -40,146 +39,101 @@ export default function LoginScreen({navigation}) {
   }
 
   const resetDetails = () => {
-    const fieldHandlers = [setPhone, setPassword];
+    const fieldHandlers = [setPhoneOrEmail, setPassword];
 
     for (let handler of fieldHandlers) {
       handler('');
     }
   }
 
-  const isFormValid = (formErrorBag, fields) => {
-    let isValid = false;
-    const errorBagValues = Object.values(formErrorBag);
-    if(errorBagValues.length === fields.length) {
-        isValid = errorBagValues.every((value) => value === undefined);
-    }
-    setBtnDisabled(!isValid);
-  }
-
   const loginUserHandler = async () => {
+    dispatch(isBtnDisabled(true));
+    dispatch(isAppLoading(true));
     try {
-      const token = await userSignIn(phone, password);
+      const { access_token: token, phoneNo, name } = await userSignIn(phoneOrEmail, password);
       resetDetails();
-      dispatch(signIn(token));
 
-    } catch(e) {
-        return Alert.alert('Opss', 'please ensure you have network connection and you credentials are correct', null, { cancelable: true });
+      dispatch(signIn(token, name, phoneNo));
+
+      await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phoneNo}));
+
+      dispatch(isAppLoading(false));
+
+      navigation.navigate('Home');
+
+    } catch(error) {
+      setPassword('')
+      dispatch(isAppLoading(false));
+      setShowErrorMessage(true);
     }
-
-    navigation.navigate('Home');
   }
 
    useEffect(() => {
-    isFormValid(errorBag,formFields);
-   },[errorBag, isBtnDisabled]);
+      (phoneOrEmail.length === 0 || password.length === 0) ? dispatch(isBtnDisabled(true)): dispatch(isBtnDisabled(false))
+   },[phoneOrEmail, password]);
 
 
   const gotoBiometrics = () => {
+    setShowErrorMessage(false);
     navigation.navigate("Biometrics");
   }
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      paddingHorizontal: normalize(18),
-    },
-    image: {
-      width: normalize(150),
-      height: normalize(80),
-      resizeMode: 'contain',
-      marginVertical: normalize(20),
-    },
-    content: {
-      justifyContent: "center",
-    },
-    contentInputContainer: {
-      marginVertical: normalize(5),
-    },
-    contentLabel: {
-      color: '#545252',
-      fontFamily: 'Roboto_400Regular',
-      fontSize: normalize(14),
-      marginVertical: normalize(5),
-    },
-    contentInput: {
-      backgroundColor: '#E3E3EC',
-      borderRadius: normalize(20),
-      height: normalize(40),
-      fontSize: normalize(14),
-      paddingHorizontal: normalize(10),
-      marginVertical: normalize(5),
-
-    },
-    lastButton: {
-      marginVertical: normalize(20),
-    },
-
-    links: {
-      alignItems: "center",
-    },
-    link: {
-      marginVertical: normalize(5),
-      fontSize: normalize(14),
-      color: '#181818',
-      fontFamily: 'Roboto_900Black',
-    },
-  })
-
   StatusBar.setBarStyle('dark-content');
-  StatusBar.setTranslucent(false);
-  StatusBar.setBackgroundColor("#Fff");
+  // StatusBar.setTranslucent(false); // comment this in if you want the screens contents to show below the statusBar anfddo well to add it to all other screens too to avoid weird jerking when you navigate screens
+  StatusBar.setBackgroundColor("#fff");
   return (
-
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 
       <Title
           title="welcome"
           subTitle="Let’s get you signed in"
-          fontIcon={{
-						name: 'long-arrow-left',
-						color: '#132535',
-						size: 14,
-					}}
 					headerOptionHandler={() => navigation.goBack()}
           subTitleStyle={{ fontSize: normalize(22) }}
-          containerStyle={{ paddingHorizontal: normalize(18) }}
         />
 
       <Image source={require('./../../assets/logo.png')} style={styles.image} />
 
       <View style={styles.content}>
-
+    <View>
         <View style={styles.form}>
 
           <View style={styles.contentInputContainer}>
-            <Text style={styles.contentLabel}>Phone Number</Text>
             <TextField
-              style={styles.contentInput}
-              value={phone}
-              onChangeText={setPhone}
-              onBlur={() => checkErrorHandler('phone', phone, setError) }
-              error={errorBag['phone']}
+              label="Phone No/Email Address"
+              value={phoneOrEmail}
+              onChangeText={setPhoneOrEmail}
+              returnKeyType ="next"
+              onSubmitEditing={() => { passwordInputEl.current.focus() }}
+              blurOnSubmit={false}
+              onFocus={() => setShowErrorMessage(false)}
             />
 
           </View>
 
           <View style={styles.contentInputContainer}>
-            <Text style={styles.contentLabel}>Password</Text>
             <TextField
-              style={styles.contentInput}
+              ref={passwordInputEl}
+              label="Password"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              onBlur={() => checkErrorHandler('password', password, setError)}
-              error={errorBag['password']}
+              onFocus={() => setShowErrorMessage(false)}
             />
           </View>
 
         </View>
 
+        { showErrorMsg && <View>
+          <Text style={styles.invalidCredentialsErroMsg}>The provided login details is not valid.</Text>
+          <Text style={styles.invalidCredentialsErroMsg}>Please verify , then try again</Text>
+        </View>}
+
         <View style={styles.links}>
           <View style={{display: 'flex', flexDirection: 'row', marginBottom: normalize(10)}}>
-            <TouchableOpacity onPress={() => { navigation.navigate('ForgotPassword')}}>
+            <TouchableOpacity onPress={() => {
+              setShowErrorMessage(false)
+              navigation.navigate('ForgotPassword')
+              }}>
               <Text style={styles.link}>Forgot Password</Text>
             </TouchableOpacity>
             { canLoginUsingFingerPrint && <Text style={{...styles.link, paddingHorizontal: normalize(5)}}>|</Text>}
@@ -187,18 +141,71 @@ export default function LoginScreen({navigation}) {
               <Text style={styles.link}>Use Biometrics</Text>
             </TouchableOpacity>}
           </View>
-          <Link linkStyle={styles.link} to="/SignupScreen">New User? Sign Up</Link>
-          <Link linkStyle={styles.link}>Help ?</Link>
+          <TouchableOpacity style={styles.helpAndSignUp} onPress={() =>{
+            setShowErrorMessage(false)
+            navigation.navigate('SignupScreen')}}><Text style={styles.helpAndSignUpText}>New User? Sign Up</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.helpAndSignUp}><Text style={styles.helpAndSignUpText}>help?</Text></TouchableOpacity>
         </View>
+        </View>
+        <RedButton
+          title="Sign In"
+          buttonStyle={styles.lastButton}
+          disabled={common.isBtnDisabled}
+          onPress={loginUserHandler}>
+        </RedButton>
       </View>
 
-      <RedButton
-        title="Sign in"
-        buttonStyle={styles.lastButton}
-        disabled={isBtnDisabled}
-        onPress={loginUserHandler}>
-      </RedButton>
 
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      paddingHorizontal: normalize(18),
+      backgroundColor: '#ffffff'
+    },
+    image: {
+      width: normalize(90),
+      height: normalize(70),
+      resizeMode: 'contain',
+      marginBottom: normalize(10)
+    },
+    content: {
+      justifyContent: "space-between",
+      flex: 2,
+    },
+    contentInputContainer: {
+      marginVertical: normalize(5),
+    },
+
+    lastButton: {
+      marginBottom: normalize(10),
+    },
+
+    links: {
+      alignItems: "center",
+    },
+    link: {
+      marginTop: normalize(24),
+      marginBottom: normalize(10),
+      fontSize: normalize(11),
+      color: '#181818',
+      fontFamily: 'Roboto_900Black',
+      fontWeight: 'bold'
+    },
+    helpAndSignUp: {
+      marginBottom: normalize(8)
+    },
+    helpAndSignUpText: {
+      fontFamily: 'Roboto_900Black',
+      fontWeight: 'bold',
+    },
+    invalidCredentialsErroMsg: {
+      color: '#FF1111',
+      fontSize: normalize(14),
+      fontFamily: 'Roboto_400Regular',
+      textAlign: 'center'
+    }
+  })

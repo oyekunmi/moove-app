@@ -1,14 +1,14 @@
 import {
-  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, TRIP_CANCEL_REQUEST, PACKAGE_INFO_CHANGED, SIGN_OUT
+  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, TRIP_CANCEL_REQUEST, PACKAGE_INFO_CHANGED, SIGN_OUT, SOURCE_COORDINATES_FETCHED, TRIP_COST_CHANGED
 } from "../actionTypes";
 
 const defaultState = {
-  source: 'Villa 26, 44B Street, Al Wasl, Dubai, UAE',
-  destination: 'Villa 26, 44B Street, Al Wasl, Dubai, UAE',
+  source: '',
+  destination: '',
   sourceCoord: null,
-  destinationCord: null,  
-  package: '5 Boxes of Akara',
-  cost: 1530,
+  destinationCoord: null,
+  package: '',
+  cost: 0,
 }
 
 export default (state = defaultState, action) => {
@@ -17,12 +17,23 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         source: action.value,
-        sourceCoord: action.coord ?? state.sourceCoord
+        sourceCoord: action.coord
       };
     case DESTINATION_ADDRESS_CHANGED:
       return {
         ...state,
-        destination: action.value
+        destination: action.value,
+        destinationCoord: action.coord,
+      };
+    case TRIP_COST_CHANGED:
+      return {
+        ...state,
+        cost: action.value
+      };
+    case SOURCE_COORDINATES_FETCHED:
+      return {
+        ...state,
+        sourceCoord: action.location
       };
     case PACKAGE_INFO_CHANGED:
       return {
@@ -30,10 +41,16 @@ export default (state = defaultState, action) => {
         package: action.value
       };
     case TRIP_CANCEL_REQUEST:
+      return {
+        ...defaultState,
+        sourceCoord: state.sourceCoord,
+        source: state.source,
+        destination: ''
+      }
     case SIGN_OUT:
       return defaultState;
     default:
-    
+
       return state;
   }
 }

@@ -1,5 +1,6 @@
-import React, { Children } from 'react'
-import {TouchableNativeFeedback, StyleSheet, View, Text} from 'react-native';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { StyleSheet, View, Text, Image, ActivityIndicator} from 'react-native';
 import AppButton from './Button';
 import { normalize } from '../normalizeFont';
 
@@ -8,9 +9,9 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(18),
+    fontWeight: 'bold',
   },
   button: {
-    backgroundColor: '#CE0303',
     marginBottom: normalize(5)
   }
 })
@@ -27,6 +28,7 @@ const RedButton = ({
   disabled
 }) => {
 
+  const commonState = useSelector((state) => state.common);
 
     return (
       <AppButton
@@ -36,9 +38,9 @@ const RedButton = ({
         onPress={onPress}
         rippleColor={rippleColor}
         background={background}
-        style={[styles.button, buttonStyle]}
+        style={[styles.button, buttonStyle, disabled ? {backgroundColor: '#F0C2C2'} : {backgroundColor: '#CE0303'} ]}
       >
-          <Text style={[styles.text, textStyle]}>{title}</Text>
+          { commonState.isLoading === true ? <ActivityIndicator size="large" color="#FFFFFF" /> : <Text style={[styles.text, textStyle]}>{title}</Text>}
       </AppButton>
     )
 }

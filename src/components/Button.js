@@ -10,8 +10,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: normalize(4),
-    borderRadius: normalize(20),
+    elevation: normalize(1),
+    borderRadius: normalize(15),
   }
 });
 
