@@ -34,6 +34,7 @@ import SuccessScreen from './SuccessScreen';
 import HomeDrawerScreen from './HomeDrawerScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
 import PasswordResetEmailSentScreen from './PasswordResetEmailSentScreen';
+import HistoryDetailScreen from './HistoryDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -91,6 +92,7 @@ export default function Application() {
         {state.userToken != null && state.userToken != undefined ?
           <>
             <Stack.Screen name="History" component={HomeDrawerScreen} />
+            <Stack.Screen name = "HistoryDetails" component = {HomeDrawerScreen}/>
             <Stack.Screen name="Home" component={HomeDrawerScreen} />
             <Stack.Screen name = "Wallet" component = {HomeDrawerScreen}/>
             <Stack.Screen name="PackageDescription" component={PackageDescriptionScreen} />

@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: '4%',
     bottom: '10%',
-    
+
   },
   viewText: {
     color: '#DADADA',
@@ -148,11 +148,14 @@ function HistoryScreen({ navigation }) {
           {ShowErrorMessage && <View>
             <Text style={styles.errorMsg}>You have no History Yet.</Text>
           </View>}
-          {!ShowErrorMessage && history.map(x =><View key={x.id}>
-            <View  style={styles.historyInput}>
+          {!ShowErrorMessage && history.map(x => <View key={x.id}>
+            <View style={styles.historyInput}>
               <Text style={styles.mooveId}>Moove - MV{x.moove_id}</Text>
               <Text>{x.created_at}</Text><View ><TouchableOpacity onPress={() => {
-                navigation.navigate('#')
+                navigation.navigate('HistoryDetails', {
+                  moove_id: x.moove_id, pick_up: x.start_location, delivery_location: x.end_location,
+                  date: x.created_at, cost: x.cost_of_trip
+                })
               }} style={styles.viewDetails}><Text style={styles.viewText}>View</Text></TouchableOpacity></View>
               <Text style={styles.tripCost}>N{x.cost_of_trip}</Text>
             </View>
@@ -162,13 +165,14 @@ function HistoryScreen({ navigation }) {
 
       </View>
       <RedButton
-          title="Go to Dashboard"
-          buttonStyle={styles.button}
-          onPress={() => {
-            navigation.navigate('Home')}}>
-        </RedButton>
-        
-     
+        title="Go to Dashboard"
+        buttonStyle={styles.button}
+        onPress={() => {
+          navigation.navigate('Home')
+        }}>
+      </RedButton>
+
+
 
 
 

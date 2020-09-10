@@ -19,6 +19,7 @@ import HistoryScreen from './HistoryScreen';
 import FundWalletScreen from './FundWalletScreen';
 import { normalize } from '../normalizeFont';
 import { signOut } from '../redux/actions';
+import HistoryDetailScreen from './HistoryDetailScreen';
 
 const CustomDrawerContent = (props, dispatch, authState) => {
 	const logoutUser = async () => {
@@ -147,6 +148,7 @@ const HomeDrawerScreen = () => {
 			<HomeDrawer.Screen name='Home' component={HomeScreen} />
 			<HomeDrawer.Screen name='My mooves' component={HistoryScreen} />
 			<HomeDrawer.Screen name='Wallet' component={FundWalletScreen} />
+			<HomeDrawer.Screen name='HistoryDetails' component={HistoryDetailScreen} />
 		</HomeDrawer.Navigator>
 	);
 };
