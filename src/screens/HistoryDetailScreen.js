@@ -4,6 +4,7 @@ import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
 import GreenButton from '../components/GreenButton';
+import currency from '../currency';
 
 
 
@@ -16,29 +17,13 @@ const styles = StyleSheet.create({
         flexGrow: 1,
 
     },
-    logoContainer: {
-        width: '100%',
-        height: normalize(50),
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        padding: normalize(5),
-        position: "absolute",
-        top: '9%',
-        left: '30%',
-        zIndex: 1
-    },
-    image: {
-        resizeMode: 'contain',
-        width: '50%',
-        height: '100%',
-        marginTop: normalize(10)
-    },
     historyInput: {
         backgroundColor: "#efefef",
         borderRadius: normalize(20),
         textAlignVertical: "top",
         paddingVertical: normalize(10),
         paddingHorizontal: normalize(15),
+        alignSelf: "center",
         marginHorizontal: normalize(8),
         marginTop: normalize(15),
         width: '93%',
@@ -67,9 +52,10 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        marginTop: normalize(20),
+        marginTop: normalize(15),
         alignSelf: "center",
         width: '90%',
+        height: '7%'
       
       },
 
@@ -91,14 +77,6 @@ export default function HistoryDetailScreen({ navigation, route }) {
                 subTitle={"Moove MV" + moove_id}
                 subTitleStyle={{ fontSize: normalize(22), flex: 1 }}
                 containerStyle={{ paddingHorizontal: normalize(10) }} />
-            <View style={styles.logoContainer}>
-                <Image
-                    style={styles.image}
-                    fadeDuration={0}
-                    resizeMode={'contain'}
-                    source={require('../../assets/logo.png')}
-                />
-            </View>
             <View style={styles.historyInput}>
                 <Text style={styles.date}>
                     {date}
@@ -112,7 +90,7 @@ export default function HistoryDetailScreen({ navigation, route }) {
                 </Text>
                 <Text style={styles.descriptionDetails}>{delivery_location}</Text>
                 <Text style={styles.tripCost}>
-                    You Paid - N{cost}
+                    You Paid - {currency(cost)}
                 </Text>
 
             </View>

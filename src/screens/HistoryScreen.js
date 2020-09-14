@@ -6,6 +6,8 @@ import RedButton from '../components/RedButton';
 import { useSelector, useDispatch } from 'react-redux';
 import { mooveHistory } from '../utils/helpers/api';
 import { historyDetails } from '../redux/actions';
+import currency from '../currency';
+
 
 
 const styles = StyleSheet.create({
@@ -19,22 +21,6 @@ const styles = StyleSheet.create({
   },
   historyContainer: {
   },
-  logoContainer: {
-    width: '100%',
-    height: normalize(50),
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: normalize(5),
-    position: "absolute",
-    top: '8%',
-    left: '30%',
-    zIndex: 1
-  },
-  image: {
-    resizeMode: 'contain',
-    width: '50%',
-    height: '100%',
-  },
   historyLabel: {
     marginVertical: normalize(10),
     paddingHorizontal: normalize(15),
@@ -42,6 +28,15 @@ const styles = StyleSheet.create({
   },
   historyInput: {
     backgroundColor: "#efefef",
+    borderRadius: normalize(20),
+    textAlignVertical: "top",
+    paddingVertical: normalize(10),
+    paddingHorizontal: normalize(15),
+    height: normalize(85),
+    marginTop: normalize(15),
+  },
+  enrouteDetails: {
+    backgroundColor: '#C8F2A7',
     borderRadius: normalize(20),
     textAlignVertical: "top",
     paddingVertical: normalize(10),
@@ -85,6 +80,18 @@ const styles = StyleSheet.create({
   },
   viewText: {
     color: '#DADADA',
+  },
+  enrouteButton: {
+    position: "absolute",
+    right: '4%',
+    bottom: '30%',
+    paddingHorizontal: normalize(7),
+  },
+  enrouteText: {
+    color: '#DE2424',
+    fontWeight: 'bold',
+    fontSize: normalize(12),
+    fontFamily: 'Roboto'
   }
 });
 
@@ -114,6 +121,11 @@ function HistoryScreen({ navigation }) {
     }
   }, [])
 
+
+
+
+
+
   console.log(token);
 
   const toggleDrawerHandler = () => {
@@ -121,8 +133,6 @@ function HistoryScreen({ navigation }) {
     navigation.openDrawer();
     // console.log('Drawer handler');
   }
-
-
 
 
   return (
@@ -134,35 +144,35 @@ function HistoryScreen({ navigation }) {
         subTitle={"Moove history "}
         subTitleStyle={{ fontSize: normalize(26) }}
         containerStyle={{ paddingHorizontal: normalize(18) }} />
-      <View style={styles.logoContainer}>
-        <Image
-          style={styles.image}
-          fadeDuration={0}
-          resizeMode={'contain'}
-          source={require('../../assets/logo.png')}
-        />
-      </View>
       <View style={styles.content}>
 
         <View style={styles.historyContainer}>
           {ShowErrorMessage && <View>
             <Text style={styles.errorMsg}>You have no History Yet.</Text>
           </View>}
-          {!ShowErrorMessage && history.map(x => <View key={x.id}>
-            <View style={styles.historyInput}>
+          {!ShowErrorMessage && history.map(x => <View key={x.id}>{
+            x.trip_status === "IN_PROGRESS" ? <View style={styles.enrouteDetails}>
               <Text style={styles.mooveId}>Moove - MV{x.moove_id}</Text>
-              <Text>{x.created_at}</Text><View ><TouchableOpacity onPress={() => {
-                navigation.navigate('HistoryDetails', {
-                  moove_id: x.moove_id, pick_up: x.start_location, delivery_location: x.end_location,
-                  date: x.created_at, cost: x.cost_of_trip
-                })
-              }} style={styles.viewDetails}><Text style={styles.viewText}>View</Text></TouchableOpacity></View>
-              <Text style={styles.tripCost}>N{x.cost_of_trip}</Text>
-            </View>
+              <Text>{x.created_at}</Text>
+              <TouchableOpacity onPress={() => {
+                navigation.navigate("TrackActiveMoove")
+              }} style={styles.enrouteButton}><Text style={styles.enrouteText}>En-Route</Text>
+              </TouchableOpacity>
+              <Text style={styles.tripCost}>{currency(x.cost_of_trip)}</Text>
+            </View> : <View style={styles.historyInput}>
+                <Text style={styles.mooveId}>Moove - MV{x.moove_id}</Text>
+                <Text>{x.created_at}</Text><View ><TouchableOpacity onPress={() => {
+                  navigation.navigate('HistoryDetails', {
+                    moove_id: x.moove_id, pick_up: x.start_location, delivery_location: x.end_location,
+                    date: x.created_at, cost: x.cost_of_trip
+                  })
+                }} style={styles.viewDetails}><Text style={styles.viewText}>View</Text></TouchableOpacity></View>
+                <Text style={styles.tripCost}>{currency(x.cost_of_trip)}</Text>
+              </View>
+          }
 
           </View>)}
         </View>
-
       </View>
       <RedButton
         title="Go to Dashboard"
