@@ -1,24 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, Text, TouchableOpacity , Alert} from 'react-native';
 import { ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { normalize } from '../normalizeFont';
 import WhiteButton from '../components/WhiteButton';
 import Title from '../components/Title';
-import OTPInput from '../components/OTPInput';
+import { verifyOTP } from '../utils/helpers/api';
 
 export default function RegistrationVerificationScreen({ navigation, route }) {
 	const dispatch = useDispatch();
 	const common = useSelector((state) => state.common);
 	const { email } = route.params;
+	const [otp, setOtp]= useState('');
+
+
+	
+	const verifyOTPHandler = async ()=>{
+		try{
+			await verifyOTP(otp);
+			navigation.navigate('PasswordResetScreen', { otpCode:otp });
+		}
+		catch(error){
+			if (error.response) {
+				if(error.response.data.message){
+					Alert.alert('An error has occurred', error.response.data.message);
+				}	
+			} else if (error.request) {
+				console.log(error.request);
+			} else {
+				console.log('Error', error.message);
+			}
+		
+		}
+		
+	}
 
 	return (
 		<ScrollView
 			style={styles.container}
 			contentContainerStyle={{ flexGrow: 1 }}>
 			<Title
-				title='user registration | email verification'
+				title='forgot password | email verification'
 				statusBarStyle='light-content'
 				fontIcon='arrow_back_light'
 				subTitle='Let’s verify your email address'
@@ -43,7 +66,12 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 						<Text style={styles.otpEmail}>{email}</Text>
 					</View>
 
-					<OTPInput />
+					<TextInput
+							style = {styles.otpInput}
+							value={otp}
+							onChangeText={setOtp}  
+							placeholder='- - -'
+                        />
 
 				<View style={styles.resendCodeOrEmail}>
 					<TouchableOpacity>
@@ -59,7 +87,7 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 					title='Verify'
 					// disabled={common.isBtnDisabled}
 					buttonStyle={styles.lastButton}
-					onPress={() => { navigation.navigate('PasswordResetScreen', { email })}}></WhiteButton>
+					onPress={verifyOTPHandler}></WhiteButton>
 			</View>
 		</ScrollView>
 	);
@@ -128,4 +156,11 @@ const styles = StyleSheet.create({
 		fontSize: normalize(14),
 		paddingHorizontal: normalize(8)
 	},
+	otpInput:{
+		backgroundColor:'#CE0303',
+		color:'#ffffff',
+		fontSize: normalize(50),
+		paddingHorizontal: normalize(20),
+		marginHorizontal: normalize(65)
+	}
 });
