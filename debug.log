@@ -8,3 +8,5 @@
 [0814/112107.967:ERROR:exception_snapshot_win.cc(98)] thread ID 12272 not found in process
 [0814/112107.983:ERROR:process_reader_win.cc(123)] NtOpenThread: {Access Denied} A process has requested access to an object, but has not been granted those access rights. (0xc0000022)
 [0814/112107.983:ERROR:exception_snapshot_win.cc(98)] thread ID 14528 not found in process
+[1020/115422.012:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[1022/114313.855:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
