@@ -10,7 +10,7 @@ export default function PasswordUpdateSuccessfulScreen({navigation}){
             title = "password reset"
             subTitle="Password Updated"
             text = "Password reset completed"
-            buttonTitle ="Sign In"
+            buttonTitle ="Go To Sign In"
             routeTo = {() => navigation.navigate('SignIn') }
         />
     )

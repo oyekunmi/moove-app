@@ -70,7 +70,7 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 							style = {styles.otpInput}
 							value={otp}
 							onChangeText={setOtp}  
-							placeholder='- - -'
+							placeholder='  - - -'
                         />
 
 				<View style={styles.resendCodeOrEmail}>
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
 		backgroundColor:'#CE0303',
 		color:'#ffffff',
 		fontSize: normalize(50),
-		paddingHorizontal: normalize(20),
-		marginHorizontal: normalize(65)
+		paddingHorizontal: normalize(25),
+		marginHorizontal: normalize(60)
 	}
 });
