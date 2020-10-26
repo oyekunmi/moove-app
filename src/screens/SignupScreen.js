@@ -86,6 +86,7 @@ export default function SignupScreen({ navigation }) {
             flex: 1,
             backgroundColor: '#132535',
             paddingHorizontal: normalize(18),
+            paddingTop: normalize(20)
         },
         title: {
             fontSize: normalize(14),
@@ -123,7 +124,7 @@ export default function SignupScreen({ navigation }) {
             alignItems: "center",
             flexDirection: "row",
             justifyContent: "center",
-            marginBottom: normalize(10)
+             marginTop: normalize(10)
         },
         link: {
             marginVertical: normalize(5),
@@ -133,6 +134,8 @@ export default function SignupScreen({ navigation }) {
             color: "#FFFFFF",
             fontSize: normalize(10),
             fontFamily: 'Roboto_400Regular',
+            fontWeight:'bold',
+          
         },
         lastButton: {
             marginBottom: normalize(10)

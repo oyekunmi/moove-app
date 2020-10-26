@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { normalize } from '../normalizeFont';
 import WhiteButton from '../components/WhiteButton';
 import Title from '../components/Title';
-import { verifyOTP } from '../utils/helpers/api';
+import { resendOTP, verifyOTP } from '../utils/helpers/api';
 
 export default function RegistrationVerificationScreen({ navigation, route }) {
 	const dispatch = useDispatch();
@@ -34,6 +34,16 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 		
 		}
 		
+	}
+
+	const resendOTPHandler = async ()=>{
+		try {
+			await resendOTP(email);
+			Alert.alert('Successful!', 'Check ' +email + ' for your new code.')
+		  } catch(error) {
+			const { message } = error.response.data;
+			Alert.alert('Invalid credentials', `${message}`, null, { cancelable: true });
+		  }
 	}
 
 	return (
@@ -75,7 +85,7 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 
 				<View style={styles.resendCodeOrEmail}>
 					<TouchableOpacity>
-						<Text style={styles.resendCodeOrEmailText}>Resend Code</Text>
+						<Text style={styles.resendCodeOrEmailText} onPress={resendOTPHandler}>Resend Code</Text>
 					</TouchableOpacity>
 					<Text style={styles.separator}>|</Text>
 					<TouchableOpacity>

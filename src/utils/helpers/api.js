@@ -49,6 +49,10 @@ export const forgotPassword = async (email) => {
 	return axios.post(`${baseURL}/auth/password/email`, { email });
 }
 
+export const resendOTP = async (email) => {
+	return axios.post(`${baseURL}/auth/resend/${email}`);
+}
+
 export const resetNewPassword = async (otpCode, newPassword, confirmNewPassword) => {
 	await axios.post(`${baseURL}/auth/password/reset/${otpCode}`, {'new_password': newPassword, 'new_password_confirmation': confirmNewPassword });
 }

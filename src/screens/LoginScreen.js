@@ -155,7 +155,6 @@ export default function LoginScreen({navigation}) {
         </RedButton>
       </View>
 
-
     </ScrollView>
   );
 }
@@ -164,31 +163,35 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: normalize(18),
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      paddingTop: normalize(20)
     },
     image: {
       width: normalize(90),
       height: normalize(70),
       resizeMode: 'contain',
-      marginBottom: normalize(10)
+      marginTop: normalize(10)
     },
     content: {
       justifyContent: "space-between",
       flex: 2,
+      paddingTop: normalize(50)
     },
     contentInputContainer: {
-      marginVertical: normalize(5),
+     
     },
-
+   
     lastButton: {
       marginBottom: normalize(10),
     },
 
     links: {
       alignItems: "center",
+      marginTop: normalize(40),
+      fontWeight: '700'
     },
     link: {
-      marginTop: normalize(24),
+      marginTop: normalize(45),
       marginBottom: normalize(10),
       fontSize: normalize(11),
       color: '#181818',
