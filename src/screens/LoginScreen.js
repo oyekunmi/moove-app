@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, StatusBar, Text, Image, AsyncStorage } from 'react-native';
+import { View, StyleSheet, StatusBar, Text, Image, AsyncStorage , Alert} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { signIn, isAppLoading, isBtnDisabled } from '../redux/actions';
@@ -62,9 +62,16 @@ export default function LoginScreen({navigation}) {
       navigation.navigate('Home');
 
     } catch(error) {
-      setPassword('')
-      dispatch(isAppLoading(false));
-      setShowErrorMessage(true);
+        if (error.request) {
+          dispatch(isAppLoading(false));
+          console.log(error.request);
+          Alert.alert('An error has occurred', 'Network error, Please try again.');
+        }
+        else{
+          setPassword('')
+          dispatch(isAppLoading(false));
+          setShowErrorMessage(true);
+        }
     }
   }
 
@@ -167,7 +174,7 @@ const styles = StyleSheet.create({
       paddingTop: normalize(20)
     },
     image: {
-      width: normalize(90),
+      width: normalize(100),
       height: normalize(70),
       resizeMode: 'contain',
       marginTop: normalize(10)
@@ -196,7 +203,8 @@ const styles = StyleSheet.create({
       fontSize: normalize(11),
       color: '#181818',
       fontFamily: 'Roboto_900Black',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontSize: normalize(15)
     },
     helpAndSignUp: {
       marginBottom: normalize(8)
@@ -204,6 +212,7 @@ const styles = StyleSheet.create({
     helpAndSignUpText: {
       fontFamily: 'Roboto_900Black',
       fontWeight: 'bold',
+      fontSize: normalize(15)
     },
     invalidCredentialsErroMsg: {
       color: '#FF1111',

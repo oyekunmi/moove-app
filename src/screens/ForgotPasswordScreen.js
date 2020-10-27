@@ -49,9 +49,19 @@ export default function ForgotPasswordScreen({ navigation }) {
         resetDetails();
         navigation.navigate('RegistrationVerification', { email });
 
-      } catch(error) {
-        const { message } = error.response.data;
-        Alert.alert('Invalid credentials', `${message}`, null, { cancelable: true });
+      } catch(error){
+        if (error.response) {
+          if(error.response.data.message){
+            Alert.alert('An error has occurred', error.response.data.message);
+          }	
+        } else if (error.request) {
+          console.log(error.request);
+          Alert.alert('An error has occurred', 'Network error, Please try again.');
+        } else {
+          console.log('Error', error.message);
+          Alert.alert('An error has occurred', error.message);
+        }
+      
       }
       dispatch(isAppLoading(false));
       dispatch(isBtnDisabled(true));

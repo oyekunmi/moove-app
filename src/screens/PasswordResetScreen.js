@@ -32,25 +32,22 @@ export default function PasswordResetScreen({ navigation ,route}) {
 			dispatch(isAppLoading(false));
 
 			navigation.navigate('PasswordUpdateSuccess');
-		} catch (error) {
-			dispatch(isAppLoading(false));
+		} catch(error){
 			if (error.response) {
-				if(error.response.data.message){
-					Alert.alert('An error has occurred', error.response.data.message);
-				}	
+			  if(error.response.data.message){
+				Alert.alert('An error has occurred', error.response.data.message);
+			  }	
 			} else if (error.request) {
-				 console.log(error.request);
+			  console.log(error.request);
+			  Alert.alert('An error has occurred', 'Network error, Please try again.');
 			} else {
-				console.log('Error', error.message);
+			  console.log('Error', error.message);
+			  Alert.alert('An error has occurred', error.message);
 			}
-			// const errorMessage = Object.values(
-			// 	error.response.data.errors,
-			// )[0][0];
-			// Alert.alert('An error has occurred', `${errorMessage}`, null, {
-			// 	cancelable: true,
-			// });
-		}
-
+		  
+		  }
+		dispatch(isAppLoading(false));
+		dispatch(isBtnDisabled(true));
 	};
 
 	const resetDetails = () => {
@@ -85,6 +82,7 @@ export default function PasswordResetScreen({ navigation ,route}) {
 				headerOptionHandler={() =>{
 					setError({})
 					navigation.goBack()}}
+				titleStyle ={styles.title}
 			/>
 
 			<View style={styles.content} contentContainerStyle={{ flexGrow: 1 }}>
@@ -192,4 +190,8 @@ const styles = StyleSheet.create({
 		marginTop: normalize(30),
 		marginBottom: normalize(10),
 	},
+	title:{
+		color:'#f1f1f1',
+		fontFamily: 'Roboto_400Regular',
+	}
 });

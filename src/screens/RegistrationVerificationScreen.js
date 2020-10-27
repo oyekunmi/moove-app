@@ -7,43 +7,87 @@ import { normalize } from '../normalizeFont';
 import WhiteButton from '../components/WhiteButton';
 import Title from '../components/Title';
 import { resendOTP, verifyOTP } from '../utils/helpers/api';
+import { isAppLoading, isBtnDisabled } from '../redux/actions';
+
 
 export default function RegistrationVerificationScreen({ navigation, route }) {
 	const dispatch = useDispatch();
-	const common = useSelector((state) => state.common);
 	const { email } = route.params;
 	const [otp, setOtp]= useState('');
+	const [errorBag, setError] = useState({});
+	const formFields = ['email'];
 
+	const isFormValid = (formErrorBag, fields) => {
+        let isValid = false;
+        const errorBagValues = Object.values(formErrorBag);
+        if(errorBagValues.length === fields.length) {
+            isValid = errorBagValues.every((value) => value === undefined);
+        }
+        dispatch(isBtnDisabled(!isValid));
+    }
 
+    useEffect(() => {
+       isFormValid(errorBag,formFields);
+	},[errorBag]);
+	
+	const resetDetails = () => {
+		const fieldHandlers = [setOtp];
+	
+		for (let handler of fieldHandlers) {
+		  handler('');
+		}
+	}
 	
 	const verifyOTPHandler = async ()=>{
+		dispatch(isAppLoading(true));
+      	dispatch(isBtnDisabled(true));
 		try{
 			await verifyOTP(otp);
+			resetDetails();
 			navigation.navigate('PasswordResetScreen', { otpCode:otp });
 		}
 		catch(error){
 			if (error.response) {
-				if(error.response.data.message){
-					Alert.alert('An error has occurred', error.response.data.message);
-				}	
+			  if(error.response.data.message){
+				Alert.alert('An error has occurred', error.response.data.message);
+			  }	
 			} else if (error.request) {
-				console.log(error.request);
+			  console.log(error.request);
+			  Alert.alert('An error has occurred', 'Network error, Please try again.');
 			} else {
-				console.log('Error', error.message);
+			  console.log('Error', error.message);
+			  Alert.alert('An error has occurred', error.message);
 			}
-		
-		}
+		  
+		  }
+		dispatch(isAppLoading(false));
+		dispatch(isBtnDisabled(true));
 		
 	}
 
 	const resendOTPHandler = async ()=>{
+		dispatch(isAppLoading(true));
+		dispatch(isBtnDisabled(true));
 		try {
 			await resendOTP(email);
 			Alert.alert('Successful!', 'Check ' +email + ' for your new code.')
-		  } catch(error) {
-			const { message } = error.response.data;
-			Alert.alert('Invalid credentials', `${message}`, null, { cancelable: true });
+		  } catch(error){
+			if (error.response) {
+			  if(error.response.data.message){
+				Alert.alert('An error has occurred', error.response.data.message);
+			  }	
+			} else if (error.request) {
+			  console.log(error.request);
+			  Alert.alert('An error has occurred', 'Network error, Please try again.');
+			} else {
+			  console.log('Error', error.message);
+			  Alert.alert('An error has occurred', error.message);
+			}
+		  
 		  }
+		dispatch(isAppLoading(false));
+		dispatch(isBtnDisabled(true));
+		
 	}
 
 	return (
@@ -58,6 +102,7 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 				fontIcon='arrow_back_light'
 				subTitleStyle={{ fontSize: normalize(22) }}
 				headerOptionHandler={() => navigation.goBack()}
+				titleStyle={styles.title}
 			/>
 
 			<View style={styles.content}>
@@ -81,6 +126,7 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 							value={otp}
 							onChangeText={setOtp}  
 							placeholder='  - - -'
+              				
                         />
 
 				<View style={styles.resendCodeOrEmail}>
@@ -89,13 +135,13 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 					</TouchableOpacity>
 					<Text style={styles.separator}>|</Text>
 					<TouchableOpacity>
-						<Text style={styles.resendCodeOrEmailText}>Change Email</Text>
+						<Text style={styles.resendCodeOrEmailText} onPress={() => navigation.goBack()}>Change Email</Text>
 					</TouchableOpacity>
 				</View>
 				</View>
 				<WhiteButton
 					title='Verify'
-					// disabled={common.isBtnDisabled}
+					disabled={otp.length < 4 ||otp.length > 4 }
 					buttonStyle={styles.lastButton}
 					onPress={verifyOTPHandler}></WhiteButton>
 			</View>
@@ -172,5 +218,9 @@ const styles = StyleSheet.create({
 		fontSize: normalize(50),
 		paddingHorizontal: normalize(25),
 		marginHorizontal: normalize(60)
+	},
+	title:{
+		color:'#f1f1f1',
+		fontFamily: 'Roboto_400Regular',
 	}
 });

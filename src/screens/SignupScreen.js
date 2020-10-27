@@ -53,6 +53,7 @@ export default function SignupScreen({ navigation }) {
                     Alert.alert('An error has occurred', `${errorMessage}`, null, { cancelable: true });
                 } else if (error.request) {
                     console.log(error.request);
+                    Alert.alert('An error has occurred', 'Network error, Please try again.');
                 } else {
                     console.log('Error', error.message);
                 }
