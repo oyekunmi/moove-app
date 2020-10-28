@@ -1,6 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, StatusBar, Alert, Platform, AsyncStorage } from 'react-native';
+import { StyleSheet, Text, View, Image, StatusBar, Alert, Platform } from 'react-native';
 import AppIntroSlider from 'react-native-app-intro-slider';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { normalize } from './../normalizeFont';
 import { useDispatch } from 'react-redux';
 import { hideIntro } from '../redux/actions';
@@ -36,6 +37,9 @@ const styles = StyleSheet.create({
   activeDotStyle: {
     width: normalize(30),
     backgroundColor: '#E8505B'
+  },
+  title: {
+    color:'#F1F1F1'
   }
 });
 
@@ -64,6 +68,7 @@ const slides = [
     backgroundColor: '#132535',
     textStyle: styles.text,
     imageStyle: styles.image,
+    titleStyle:styles.title
   },
   {
     key: '3',
@@ -75,6 +80,7 @@ const slides = [
     backgroundColor: '#CE0303',
     textStyle: styles.text,
     imageStyle: styles.image,
+    titleStyle:styles.title
   }
 ];
 
@@ -105,6 +111,7 @@ export default function IntroSlidersScreen() {
           title={item.title}
           subTitle={item.subTitle}
           statusBarStyle={item.statusBarStyle}
+          titleStyle={item.titleStyle}
         />
 
         <View style={styles.contentStyle}>
