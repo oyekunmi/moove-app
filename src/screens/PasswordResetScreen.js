@@ -11,17 +11,13 @@ import { checkErrorHandler } from '../utils/helpers/validation_wrapper';
 import { resetNewPassword } from '../utils/helpers/api';
 import { isAppLoading, isBtnDisabled } from '../redux/actions';
 
-export default function PasswordResetScreen({ navigation , route}) {
+export default function PasswordResetScreen({ navigation ,route}) {
 
-	const [email, setEmail] = useState('');
+	const otpCode = route.params.otpCode;
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [errorBag, setError] = useState({});
-	const formFields = ['email', 'password', 'confirmPassword'];
-
-	useEffect(() => {
-		setEmail(route.params.email);
-	}, [])
+	const formFields = [ 'password', 'confirmPassword'];
 
 	const dispatch = useDispatch();
 	const common = useSelector(state => state.common);
@@ -30,26 +26,32 @@ export default function PasswordResetScreen({ navigation , route}) {
 		dispatch(isAppLoading(true));
 		dispatch(isBtnDisabled(true));
 		try {
-			await resetNewPassword(email, password, confirmPassword);
+			await resetNewPassword(otpCode, password, confirmPassword);
 			resetDetails();
 
 			dispatch(isAppLoading(false));
 
 			navigation.navigate('PasswordUpdateSuccess');
-		} catch (error) {
-			dispatch(isAppLoading(false));
-			const errorMessage = Object.values(
-				error.response.data.errors,
-			)[0][0];
-			Alert.alert('An error has occurred', `${errorMessage}`, null, {
-				cancelable: true,
-			});
-		}
-
+		} catch(error){
+			if (error.response) {
+			  if(error.response.data.message){
+				Alert.alert('An error has occurred', error.response.data.message);
+			  }	
+			} else if (error.request) {
+			  console.log(error.request);
+			  Alert.alert('An error has occurred', 'Network error, Please try again.');
+			} else {
+			  console.log('Error', error.message);
+			  Alert.alert('An error has occurred', error.message);
+			}
+		  
+		  }
+		dispatch(isAppLoading(false));
+		dispatch(isBtnDisabled(true));
 	};
 
 	const resetDetails = () => {
-		const fieldHandlers = [setEmail, setPassword, setConfirmPassword];
+		const fieldHandlers = [ setPassword, setConfirmPassword];
 
 		for (let handler of fieldHandlers) {
 			handler('');
@@ -80,6 +82,7 @@ export default function PasswordResetScreen({ navigation , route}) {
 				headerOptionHandler={() =>{
 					setError({})
 					navigation.goBack()}}
+				titleStyle ={styles.title}
 			/>
 
 			<View style={styles.content} contentContainerStyle={{ flexGrow: 1 }}>
@@ -92,21 +95,7 @@ export default function PasswordResetScreen({ navigation , route}) {
 
 				<View>
 					<View style={styles.contentInputContainer}>
-						<TextField
-							label='Email'
-							labelColor='#F1F1F1'
-							errorTextColor='#F1F1F1'
-							style={styles.contentIconInput}
-							iconSource={require('./../../assets/email-vector.png')}
-							inputBackgroundColor='#E07A7A'
-							autoFocus
-							value={email}
-							onChangeText={setEmail}
-							onBlur={() => {
-								checkErrorHandler('email', email, setError);
-							}}
-							error={errorBag['email']}
-						/>
+						
 					</View>
 					<View style={styles.contentInputContainer}>
 						<TextField
@@ -201,4 +190,8 @@ const styles = StyleSheet.create({
 		marginTop: normalize(30),
 		marginBottom: normalize(10),
 	},
+	title:{
+		color:'#f1f1f1',
+		fontFamily: 'Roboto_400Regular',
+	}
 });

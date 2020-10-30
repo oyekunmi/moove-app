@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, Image, CheckBox, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
@@ -32,23 +33,31 @@ export default function SignupScreen({ navigation }) {
         dispatch(isBtnDisabled(true));
         dispatch(isAppLoading(true));
         try {
+            // console.log('signing up')
            const token = await userSignUp(firstname, lastname, email, phone, password, confirmPassword);
            resetDetails();
 
            const name = `${firstname} ${lastname}`;
            dispatch(signUp(token, name, phone));
-
-
            dispatch(isAppLoading(false));
-           await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phoneNo}));
-
-
-           navigation.navigate('Home');
+        //console.log('storing..')
+           await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phone}));
+            // console.log('navigating...')
+           navigation.navigate('RegistrationVerifySuccess');
 
         } catch(error) {
+            // console.log('something went wrong.')
             dispatch(isAppLoading(false));
-            const errorMessage = Object.values(error.response.data.errors)[0][0];
-            Alert.alert('An error has occurred', `${errorMessage}`, null, { cancelable: true });
+                if (error.response) {
+                    const errorMessage = Object.values(error.response.data.errors)[0][0];
+                    Alert.alert('An error has occurred', `${errorMessage}`, null, { cancelable: true });
+                } else if (error.request) {
+                    console.log(error.request);
+                    Alert.alert('An error has occurred', 'Network error, Please try again.');
+                } else {
+                    console.log('Error', error.message);
+                }
+            
         }
     }
 
@@ -78,6 +87,7 @@ export default function SignupScreen({ navigation }) {
             flex: 1,
             backgroundColor: '#132535',
             paddingHorizontal: normalize(18),
+            paddingTop: normalize(20)
         },
         title: {
             fontSize: normalize(14),
@@ -115,7 +125,7 @@ export default function SignupScreen({ navigation }) {
             alignItems: "center",
             flexDirection: "row",
             justifyContent: "center",
-            marginBottom: normalize(10)
+             marginTop: normalize(10)
         },
         link: {
             marginVertical: normalize(5),
@@ -125,6 +135,8 @@ export default function SignupScreen({ navigation }) {
             color: "#FFFFFF",
             fontSize: normalize(10),
             fontFamily: 'Roboto_400Regular',
+            fontWeight:'bold',
+          
         },
         lastButton: {
             marginBottom: normalize(10)

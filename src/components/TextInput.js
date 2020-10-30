@@ -31,18 +31,19 @@ const styles = StyleSheet.create({
   },
   contentLabel: {
     fontFamily: 'Roboto_400Regular',
-    fontSize: normalize(11),
+    fontSize: normalize(13),
     marginBottom: normalize(7),
     marginLeft: normalize(14)
   },
   icon: {
     width: normalize(15),
-    height: normalize(16),
+    height: normalize(17),
     left: '5%',
     top: '50%',
     transform: [{ translateY: normalize(-8) }],
     position: 'absolute',
     zIndex: 2,
+    
   },
 })
 

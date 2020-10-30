@@ -1,30 +1,108 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Image, Text, TouchableOpacity , Alert} from 'react-native';
 import { ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { normalize } from '../normalizeFont';
 import WhiteButton from '../components/WhiteButton';
 import Title from '../components/Title';
-import OTPInput from '../components/OTPInput';
+import { resendOTP, verifyOTP } from '../utils/helpers/api';
+import { isAppLoading, isBtnDisabled } from '../redux/actions';
+
 
 export default function RegistrationVerificationScreen({ navigation, route }) {
 	const dispatch = useDispatch();
-	const common = useSelector((state) => state.common);
 	const { email } = route.params;
+	const [otp, setOtp]= useState('');
+	const [errorBag, setError] = useState({});
+	const formFields = ['email'];
+
+	const isFormValid = (formErrorBag, fields) => {
+        let isValid = false;
+        const errorBagValues = Object.values(formErrorBag);
+        if(errorBagValues.length === fields.length) {
+            isValid = errorBagValues.every((value) => value === undefined);
+        }
+        dispatch(isBtnDisabled(!isValid));
+    }
+
+    useEffect(() => {
+       isFormValid(errorBag,formFields);
+	},[errorBag]);
+	
+	const resetDetails = () => {
+		const fieldHandlers = [setOtp];
+	
+		for (let handler of fieldHandlers) {
+		  handler('');
+		}
+	}
+	
+	const verifyOTPHandler = async ()=>{
+		dispatch(isAppLoading(true));
+      	dispatch(isBtnDisabled(true));
+		try{
+			await verifyOTP(otp);
+			resetDetails();
+			navigation.navigate('PasswordResetScreen', { otpCode:otp });
+		}
+		catch(error){
+			if (error.response) {
+			  if(error.response.data.message){
+				Alert.alert('An error has occurred', error.response.data.message);
+			  }	
+			} else if (error.request) {
+			  console.log(error.request);
+			  Alert.alert('An error has occurred', 'Network error, Please try again.');
+			} else {
+			  console.log('Error', error.message);
+			  Alert.alert('An error has occurred', error.message);
+			}
+		  
+		  }
+		dispatch(isAppLoading(false));
+		dispatch(isBtnDisabled(true));
+		
+	}
+
+	const resendOTPHandler = async ()=>{
+		dispatch(isAppLoading(true));
+		dispatch(isBtnDisabled(true));
+		try {
+			await resendOTP(email);
+			Alert.alert('Successful!', 'Check ' +email + ' for your new code.')
+		  } catch(error){
+			if (error.response) {
+			  if(error.response.data.message){
+				Alert.alert('An error has occurred', error.response.data.message);
+			  }	
+			} else if (error.request) {
+			  console.log(error.request);
+			  Alert.alert('An error has occurred', 'Network error, Please try again.');
+			} else {
+			  console.log('Error', error.message);
+			  Alert.alert('An error has occurred', error.message);
+			}
+		  
+		  }
+		dispatch(isAppLoading(false));
+		dispatch(isBtnDisabled(true));
+		
+	}
 
 	return (
 		<ScrollView
 			style={styles.container}
 			contentContainerStyle={{ flexGrow: 1 }}>
 			<Title
-				title='user registration | email verification'
+				title='forgot password | email verification'
 				statusBarStyle='light-content'
 				fontIcon='arrow_back_light'
 				subTitle='Let’s verify your email address'
 				fontIcon='arrow_back_light'
 				subTitleStyle={{ fontSize: normalize(22) }}
 				headerOptionHandler={() => navigation.goBack()}
+				titleStyle={styles.title}
 			/>
 
 			<View style={styles.content}>
@@ -43,23 +121,29 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 						<Text style={styles.otpEmail}>{email}</Text>
 					</View>
 
-					<OTPInput />
+					<TextInput
+							style = {styles.otpInput}
+							value={otp}
+							onChangeText={setOtp}  
+							placeholder='  - - -'
+              				
+                        />
 
 				<View style={styles.resendCodeOrEmail}>
 					<TouchableOpacity>
-						<Text style={styles.resendCodeOrEmailText}>Resend Code</Text>
+						<Text style={styles.resendCodeOrEmailText} onPress={resendOTPHandler}>Resend Code</Text>
 					</TouchableOpacity>
 					<Text style={styles.separator}>|</Text>
 					<TouchableOpacity>
-						<Text style={styles.resendCodeOrEmailText}>Change Email</Text>
+						<Text style={styles.resendCodeOrEmailText} onPress={() => navigation.goBack()}>Change Email</Text>
 					</TouchableOpacity>
 				</View>
 				</View>
 				<WhiteButton
 					title='Verify'
-					// disabled={common.isBtnDisabled}
+					disabled={otp.length < 4 ||otp.length > 4 }
 					buttonStyle={styles.lastButton}
-					onPress={() => { navigation.navigate('PasswordResetScreen', { email })}}></WhiteButton>
+					onPress={verifyOTPHandler}></WhiteButton>
 			</View>
 		</ScrollView>
 	);
@@ -128,4 +212,15 @@ const styles = StyleSheet.create({
 		fontSize: normalize(14),
 		paddingHorizontal: normalize(8)
 	},
+	otpInput:{
+		backgroundColor:'#CE0303',
+		color:'#ffffff',
+		fontSize: normalize(50),
+		paddingHorizontal: normalize(25),
+		marginHorizontal: normalize(60)
+	},
+	title:{
+		color:'#f1f1f1',
+		fontFamily: 'Roboto_400Regular',
+	}
 });

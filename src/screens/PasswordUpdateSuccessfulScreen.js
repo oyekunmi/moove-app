@@ -9,9 +9,9 @@ export default function PasswordUpdateSuccessfulScreen({navigation}){
         <SuccessAlert
             title = "password reset"
             subTitle="Password Updated"
-            text = "Now your account is safe"
-            buttonTitle ="Go To Dashboard"
-            routeTo = {() => navigation.navigate('Home') }
+            text = "Password reset completed"
+            buttonTitle ="Go To Sign In"
+            routeTo = {() => navigation.navigate('SignIn') }
         />
     )
 }

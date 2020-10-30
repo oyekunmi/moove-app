@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, StatusBar, Text, Image, AsyncStorage } from 'react-native';
+import { View, StyleSheet, StatusBar, Text, Image, AsyncStorage , Alert} from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { signIn, isAppLoading, isBtnDisabled } from '../redux/actions';
@@ -60,11 +60,22 @@ export default function LoginScreen({navigation}) {
       dispatch(isAppLoading(false));
 
       navigation.navigate('Home');
-
     } catch(error) {
-      setPassword('')
-      dispatch(isAppLoading(false));
-      setShowErrorMessage(true);
+        dispatch(isAppLoading(false));  
+        if (error.response) {
+          if(error.response.data.message){
+          setPassword('')
+          setShowErrorMessage(true);
+          }	
+        } 
+        else if (error.request) {
+          console.log(error.request);
+          Alert.alert('An error has occurred', 'Network error, Please try again.');
+        }
+        else{
+          setPassword('')
+          setShowErrorMessage(true);
+        }
     }
   }
 
@@ -155,7 +166,6 @@ export default function LoginScreen({navigation}) {
         </RedButton>
       </View>
 
-
     </ScrollView>
   );
 }
@@ -164,36 +174,41 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       paddingHorizontal: normalize(18),
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      paddingTop: normalize(20)
     },
     image: {
-      width: normalize(90),
+      width: normalize(100),
       height: normalize(70),
       resizeMode: 'contain',
-      marginBottom: normalize(10)
+      marginTop: normalize(10)
     },
     content: {
       justifyContent: "space-between",
       flex: 2,
+      paddingTop: normalize(50)
     },
     contentInputContainer: {
-      marginVertical: normalize(5),
+     
     },
-
+   
     lastButton: {
       marginBottom: normalize(10),
     },
 
     links: {
       alignItems: "center",
+      marginTop: normalize(40),
+      fontWeight: '700'
     },
     link: {
-      marginTop: normalize(24),
+      marginTop: normalize(45),
       marginBottom: normalize(10),
       fontSize: normalize(11),
       color: '#181818',
       fontFamily: 'Roboto_900Black',
-      fontWeight: 'bold'
+      fontWeight: 'bold',
+      fontSize: normalize(15)
     },
     helpAndSignUp: {
       marginBottom: normalize(8)
@@ -201,6 +216,7 @@ const styles = StyleSheet.create({
     helpAndSignUpText: {
       fontFamily: 'Roboto_900Black',
       fontWeight: 'bold',
+      fontSize: normalize(15)
     },
     invalidCredentialsErroMsg: {
       color: '#FF1111',

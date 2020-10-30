@@ -26,8 +26,8 @@ const validate = (fieldName, value) => {
 		password: {
 			presence: { allowEmpty: false, message: 'cannot be blank' },
 			length: {
-				minimum: 6,
-				message: '^Invalid Password',
+				minimum: 8,
+				message: '^Password must not be less than 8 characters',
 			},
 		},
 		confirmPassword: {
