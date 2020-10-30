@@ -10,13 +10,13 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#132535',
         flex: 1,
-        paddingHorizontal: normalize(18),
+        paddingHorizontal: normalize(10),
 
     },
     text: {
-        color: "#FFFFFF",
+        color: '#F1F1F1',
         fontSize: normalize(15),
-        marginHorizontal: normalize(56),
+        marginHorizontal: normalize(50),
         marginVertical: normalize(70),
         textAlign: "center"
     },
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: normalize(14),
-        color: '#FFFFFF',
+        color: '#F1F1F1',
         fontFamily: 'Roboto_400Regular',
     },
     subTitle: {
@@ -36,12 +36,12 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
     },
     image: {
-        marginHorizontal: normalize(80),
-        marginVertical: normalize(40),
+        alignSelf:"center",
+        marginTop: normalize(85),
     },
     lastButton: {
-        marginVertical: normalize(70),
-        marginBottom: normalize(5),
+        marginVertical: normalize(75),
+       
         
     },
 })
@@ -51,16 +51,21 @@ const SuccessAlert = ({
     text,
     subTitle,
     buttonTitle,
-    routeTo
+    routeTo,
+    headerOptionHandler,
+    fontIcon
 }) => {
     return (
         <ScrollView style={styles.container}>
             <Title
                 title={title}
+                fontIcon={fontIcon}
                 statusBarStyle="light-content"
                 subTitle={subTitle}
                 subTitleStyle={{ fontSize: normalize(22) }}
                 containerStyle={{ paddingHorizontal: normalize(18) }}
+                titleStyle={styles.title}
+                headerOptionHandler={headerOptionHandler}
             />
             <Image style={styles.image} source={require('./../../assets/check-mark-icon.png')} />
             <View ><Text style={styles.text}>{text}</Text></View>

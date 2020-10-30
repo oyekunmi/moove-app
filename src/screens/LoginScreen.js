@@ -70,7 +70,7 @@ export default function LoginScreen({navigation}) {
         } 
         else if (error.request) {
           console.log(error.request);
-          Alert.alert('An error has occurred', 'Network error, Please try again.');
+          Alert.alert('An error has occurred', 'Network error, Please check your network and try again.');
         }
         else{
           setPassword('')
@@ -193,12 +193,12 @@ const styles = StyleSheet.create({
     },
    
     lastButton: {
-      marginBottom: normalize(10),
+      marginBottom: normalize(20),
     },
 
     links: {
       alignItems: "center",
-      marginTop: normalize(40),
+      marginTop: normalize(20),
       fontWeight: '700'
     },
     link: {
