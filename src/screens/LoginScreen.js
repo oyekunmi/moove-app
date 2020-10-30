@@ -64,7 +64,8 @@ export default function LoginScreen({navigation}) {
         dispatch(isAppLoading(false));  
         if (error.response) {
           if(error.response.data.message){
-          Alert.alert('An error has occurred', error.response.data.message);
+          setPassword('')
+          setShowErrorMessage(true);
           }	
         } 
         else if (error.request) {
