@@ -60,16 +60,19 @@ export default function LoginScreen({navigation}) {
       dispatch(isAppLoading(false));
 
       navigation.navigate('Home');
-
     } catch(error) {
-        if (error.request) {
-          dispatch(isAppLoading(false));
+        dispatch(isAppLoading(false));  
+        if (error.response) {
+          if(error.response.data.message){
+          Alert.alert('An error has occurred', error.response.data.message);
+          }	
+        } 
+        else if (error.request) {
           console.log(error.request);
           Alert.alert('An error has occurred', 'Network error, Please try again.');
         }
         else{
           setPassword('')
-          dispatch(isAppLoading(false));
           setShowErrorMessage(true);
         }
     }
