@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Image, Text, TouchableOpacity , Alert} from 'react-native';
-import { ScrollView, TextInput, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { useDispatch, useSelector } from 'react-redux';
+import { ScrollView, TextInput } from 'react-native-gesture-handler';
+import { useDispatch } from 'react-redux';
 
 import { normalize } from '../normalizeFont';
 import WhiteButton from '../components/WhiteButton';
@@ -14,21 +14,7 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 	const dispatch = useDispatch();
 	const { email } = route.params;
 	const [otp, setOtp]= useState('');
-	const [errorBag, setError] = useState({});
-	const formFields = ['email'];
-
-	const isFormValid = (formErrorBag, fields) => {
-        let isValid = false;
-        const errorBagValues = Object.values(formErrorBag);
-        if(errorBagValues.length === fields.length) {
-            isValid = errorBagValues.every((value) => value === undefined);
-        }
-        dispatch(isBtnDisabled(!isValid));
-    }
-
-    useEffect(() => {
-       isFormValid(errorBag,formFields);
-	},[errorBag]);
+	
 	
 	const resetDetails = () => {
 		const fieldHandlers = [setOtp];
@@ -126,6 +112,8 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 							value={otp}
 							onChangeText={setOtp}  
 							placeholder='  - - -'
+							maxLength= {4}
+							keyboardType='numeric'
               				
                         />
 
@@ -160,7 +148,7 @@ const styles = StyleSheet.create({
 		flex: 2,
 	},
 	lastButton: {
-		marginBottom: normalize(10),
+		marginBottom: normalize(20),
 	},
 	emailLogo: {
 		width: normalize(115),

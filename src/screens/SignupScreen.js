@@ -87,11 +87,11 @@ export default function SignupScreen({ navigation }) {
             flex: 1,
             backgroundColor: '#132535',
             paddingHorizontal: normalize(18),
-            paddingTop: normalize(20)
+            paddingTop: normalize(25)
         },
         title: {
             fontSize: normalize(14),
-            color: '#FFFFFF',
+            color: '#F1F1F1',
             fontFamily: 'Roboto_400Regular',
         },
         subTitle: {
@@ -125,7 +125,7 @@ export default function SignupScreen({ navigation }) {
             alignItems: "center",
             flexDirection: "row",
             justifyContent: "center",
-             marginTop: normalize(10)
+            marginTop: normalize(5)
         },
         link: {
             marginVertical: normalize(5),
@@ -139,7 +139,7 @@ export default function SignupScreen({ navigation }) {
           
         },
         lastButton: {
-            marginBottom: normalize(10)
+            marginBottom: normalize(25),
         },
 
     })
@@ -151,6 +151,7 @@ export default function SignupScreen({ navigation }) {
                 statusBarStyle="light-content"
                 subTitle="Let’s get you signed up with just a few details"
                 subTitleStyle={{ fontSize: normalize(22) }}
+                titleStyle={styles.title}
 				headerOptionHandler={() => {
                     setError({})
                     navigation.goBack() }}
