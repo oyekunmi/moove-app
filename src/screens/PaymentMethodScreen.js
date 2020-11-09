@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, Text, StatusBar, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, StyleSheet, Text, StatusBar, ScrollView,Alert } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import PlainButton from '../components/PlainButton';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
@@ -11,10 +11,13 @@ import RadioForm, {
 	RadioButtonInput,
 	RadioButtonLabel,
 } from 'react-native-simple-radio-button';
+import { findRider } from '../utils/helpers/api';
+import { tripCreated } from '../redux/actions';
 
 const styles = StyleSheet.create({
 	container: {
 		backgroundColor: '#132535',
+		paddingTop: normalize(20)
 	},
 	content: {
 		paddingHorizontal: normalize(18),
@@ -55,10 +58,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
 	},
 	button: {
-		marginBottom: normalize(10),
+		marginBottom: normalize(15),
 		marginTop: normalize(5),
 		alignSelf: 'center',
 		width: '100%',
+		
 	},
 	cancelButtonStyle: {
 		fontFamily: 'Roboto_700Bold',
@@ -77,15 +81,50 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default function PaymentMethodScreen({ navigation }) {
+export default function PaymentMethodScreen({ navigation, route }) {
 	const trip = useSelector((state) => state.trip);
-
 	const [cashInputIndex, setCashInputIndex] = useState(0);
-
+	const [showProceedButton, setShowProceedButton] = useState(false);
+	const [paymentMethod, setPaymentMethod] = useState('');
+	const dispatch = useDispatch();
+	const {recipient_name, recipient_phone_number, start_location, end_location, 
+	  package_description, who_pays, latitude, longitude
+	} = route.params;
+	const token = useSelector(state => state.auth.userToken);
+	
 	const onContinue = () => {
-		radio_props[cashInputIndex].label === 'CASH' ? navigation.navigate("ActiveMooveDetails") :
 		navigation.navigate('CreditCardPayment');
 	};
+
+	const startMoove = async () => {
+		try{
+		 await findRider(recipient_name, recipient_phone_number, start_location, end_location, 
+			package_description, who_pays, latitude, longitude , paymentMethod, token);
+			console.log(findRider());
+			dispatch(tripCreated())
+			navigation.navigate("ActiveMooveDetails") ;
+		}
+		catch(error){
+		  console.log('in catch')
+		  if (error.response) {
+		    console.log('i have a response')
+		    if(error.response.data.message){
+		      console.log('i have an error message :')
+		      console.log(error.response.data)
+		      Alert.alert('An error has occurred', error.response.data.message);
+		    }	
+		  } else if (error.request) {
+		    console.log(error.request);
+		    Alert.alert('An error has occurred', 'Network error, Please try again.');
+		  } else {
+		    console.log('Error', error.message);
+		    Alert.alert('An error has occurred', error.message);
+		  }
+	
+		}
+		
+	  }
+	
 
 	const setSelectedPaymentMethod = useCallback((value) => {
 		setCashInputIndex(value);
@@ -96,6 +135,15 @@ export default function PaymentMethodScreen({ navigation }) {
 		{ label: 'VISA/MASTERCARD', value: 1 },
 	];
 
+	useEffect(()=>{
+		console.log(trip);
+		console.log(token);
+		radio_props[cashInputIndex].label === 'CASH' ?
+		[setPaymentMethod('CASH'),  setShowProceedButton(false)]
+		 :[setPaymentMethod('CARD'),setShowProceedButton(true)];
+	}); 
+
+	
 	StatusBar.setBarStyle('light-content');
 	StatusBar.setBackgroundColor('#132535');
 	return (
@@ -112,6 +160,7 @@ export default function PaymentMethodScreen({ navigation }) {
 					orderId='MV100002'
 					subTitle={'Please make payment for moove:'}
 					subTitleStyle={{ fontSize: normalize(22) }}
+					titleStyle ={{color: '#908F8F'}}
 					containerStyle={{ paddingHorizontal: normalize(18) }}
 				/>
 
@@ -164,12 +213,20 @@ export default function PaymentMethodScreen({ navigation }) {
 							</RadioForm>
 						</View>
 					</View>
-
+				{ showProceedButton ?
 					<RedButton
 						title='Proceed'
 						buttonStyle={styles.button}
 						onPress={onContinue}
 					/>
+				:
+		
+					<RedButton
+						title='Start My Moove'
+						buttonStyle={styles.button}
+						onPress={startMoove}
+					/>
+				}
 				</View>
 			</ScrollView>
 		</>

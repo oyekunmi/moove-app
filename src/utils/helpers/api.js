@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { State } from 'react-native-gesture-handler';
 import { baseURL } from '../constants';
 
 export const userSignUp = async (
@@ -57,7 +58,7 @@ export const resetNewPassword = async (otpCode, newPassword, confirmNewPassword)
 	await axios.post(`${baseURL}/auth/password/reset/${otpCode}`, {'new_password': newPassword, 'new_password_confirmation': confirmNewPassword });
 }
 
-export const calculateCost = async (recipient_name, recipient_phone_number, package_description, who_pays = "RECIPIENT", start_location, end_location, payment_method = "card", km, time) => {
+export const calculateCost = async (recipient_name, recipient_phone_number, package_description, who_pays = "REQUESTER", start_location, end_location, payment_method = "card", km, time) => {
 	const { data: { data: cost } } = await axios.post(`${baseURL}/cost`, { recipient_name, recipient_phone_number, package_description, who_pays, start_location, end_location, payment_method, km, time });
 
 	return cost;
@@ -67,6 +68,32 @@ export const mooveHistory = (token) => {
 		headers: { Authorization: `Bearer ${token}` }
 	};
 	return axios.get(`${baseURL}/customer-history`, config);
+}
+
+export const findRider = async (recipient_name, recipient_phone_number, start_location, end_location,package_description, who_pays, latitude, longitude,paymentMethod, token)=>{
+	// console.info(payLoad + ' in api');
+	const config = {
+		headers: { Authorization: `Bearer ${token}` }
+	};
+	await axios.post(`${baseURL}/request-rider`,
+	{	'recipient_name': recipient_name,
+		'recipient_phone_number': recipient_phone_number, 
+		'start_location': start_location,
+		'end_location': end_location, 
+		'package_description': package_description,
+		'who_pays': who_pays, 
+		'latitude':latitude, 
+		'longitude' : longitude, 
+		'payment_method': paymentMethod}, config
+	);
+}
+
+export const cancelTrip = (tripId, riderId, token)=>{
+	const config = {
+		headers: { Authorization: `Bearer ${token}` }
+	};
+	return axios.post(`${baseURL}/cancel-trip/${tripId}/${riderId}`, config);
+	
 }
 
 export const verifyOTP = (otpCode)=>{

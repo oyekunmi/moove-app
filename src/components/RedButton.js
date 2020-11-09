@@ -12,7 +12,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    marginBottom: normalize(5)
+    marginBottom: normalize(5),
+    height: normalize(48),
+    borderRadius: 50
   }
 })
 

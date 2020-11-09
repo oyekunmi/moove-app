@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Keyboard, Text, TextInput, StatusBar, ScrollView } from 'react-native';
+import { View, StyleSheet, Keyboard, Text, TextInput, StatusBar, ScrollView, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { cancelTripRequest } from '../redux/actions';
 import AddressField from '../components/AddressField';
@@ -8,10 +8,12 @@ import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
 import currency from '../currency';
+import { cancelTrip } from '../utils/helpers/api';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#132535',
+    paddingTop: normalize(20)
   },
   content: {
     paddingHorizontal: normalize(18),
@@ -87,19 +89,30 @@ const styles = StyleSheet.create({
   }
 })
 
-export default function MooveVerificationScreen({ navigation }) {
-  const dispatch = useDispatch()
-  const trip = useSelector(state => state.trip)
+export default function MooveVerificationScreen({ navigation, route }) {
+  const trip = useSelector(state => state.trip);
+  const auth = useSelector(state=>state.auth);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  const onContinue = () => {
-    navigation.navigate("PaymentMethod")
+  
+  const onContinue = async () => {
+    navigation.navigate("PaymentMethod", {
+      recipient_name: auth.name, recipient_phone_number: auth.phone, start_location : trip.source, 
+      end_location: trip.destination, package_description: trip.package, who_pays: "REQUESTER",
+      latitude :trip.sourceCoord.latitude, longitude :trip.sourceCoord.longitude
+    })
+    
   }
 
-  const onCancelTripRequest = () => {
-    dispatch(cancelTripRequest())
-    navigation.push('Home')
-  }
+  // const onCancelTripRequest = async () => {
+  //   try{
+  //     await cancelTrip(tripId,riderId,token)
+  //   }
+  //   catch(error){
+
+  //   }
+  //   dispatch(cancelTripRequest())
+  //   navigation.push('Home')
+  // }
 
   useEffect(() => {
 
@@ -134,7 +147,7 @@ export default function MooveVerificationScreen({ navigation }) {
           fontIcon="arrow_back_light"
           headerOptionHandler={() => navigation.goBack()}
           subTitle={"Are the details below correct?"}
-          subTitleStyle={{ fontSize: normalize(22) }}
+          subTitleStyle={{ fontSize: normalize(20,) }}
           containerStyle={{ paddingHorizontal: normalize(18), }} />
 
         <View style={styles.content}>
@@ -179,15 +192,14 @@ export default function MooveVerificationScreen({ navigation }) {
           </View>
           <View>
             <RedButton
-              title="Yes! Start My Moovee"
+              title="Proceed"
               buttonStyle={styles.button}
               onPress={onContinue} />
-
-            <PlainButton
+            {/* <PlainButton
               title="Cancel/Reset Moove"
               titleStyle={styles.cancelButtonStyle}
               buttonStyle={styles.button}
-              onPress={onCancelTripRequest} />
+              onPress={onCancelTripRequest} /> */}
           </View>
 
         </View>

@@ -15,6 +15,7 @@ import { calculateCost } from '../utils/helpers/api';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ffffff",
+    paddingTop: normalize(20)
   },
   content: {
     paddingHorizontal: normalize(18),
@@ -62,6 +63,7 @@ export default function PackageDescriptionScreen({ navigation }) {
   const [packageDescription, setPackageDescription] = useState('')
 
   const dispatch = useDispatch();
+  
 
   useEffect(() => {
 
@@ -152,7 +154,7 @@ export default function PackageDescriptionScreen({ navigation }) {
           fontIcon='arrow_back'
           headerOptionHandler={() => navigation.goBack()}
           subTitle={"One more step. Enter your package description"}
-          subTitleStyle={{ fontSize: normalize(21),lineHeight: normalize(25), width: normalize(240) }}
+          subTitleStyle={{ fontSize: normalize(20),lineHeight: normalize(25), width: normalize(240) }}
           containerStyle={{ paddingHorizontal: normalize(18),}} />
 
         <View style={styles.content}>
