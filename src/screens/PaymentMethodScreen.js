@@ -12,7 +12,7 @@ import RadioForm, {
 	RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import { findRider } from '../utils/helpers/api';
-import { tripCreated } from '../redux/actions';
+import { riderFound, mooveIdAdded } from '../redux/actions';
 
 const styles = StyleSheet.create({
 	container: {
@@ -98,10 +98,9 @@ export default function PaymentMethodScreen({ navigation, route }) {
 
 	const startMoove = async () => {
 		try{
-		 await findRider(recipient_name, recipient_phone_number, start_location, end_location, 
-			package_description, who_pays, latitude, longitude , paymentMethod, token);
-			console.log(findRider());
-			dispatch(tripCreated())
+		const response= await findRider(recipient_name, recipient_phone_number, start_location, end_location, package_description, who_pays, latitude, longitude , paymentMethod, token);
+			dispatch(riderFound({ riderPhone:response.riderDetails.phone_number, riderName: response.riderName}));
+			dispatch(mooveIdAdded( response.mooveId));
 			navigation.navigate("ActiveMooveDetails") ;
 		}
 		catch(error){
@@ -111,7 +110,7 @@ export default function PaymentMethodScreen({ navigation, route }) {
 		    if(error.response.data.message){
 		      console.log('i have an error message :')
 		      console.log(error.response.data)
-		      Alert.alert('An error has occurred', error.response.data.message);
+		      Alert.alert('Opps! sorry, ', error.response.data.message);
 		    }	
 		  } else if (error.request) {
 		    console.log(error.request);
@@ -157,8 +156,7 @@ export default function PaymentMethodScreen({ navigation, route }) {
 					fontIcon='arrow_back_light'
 					title={'pay for your moove'}
 					headerOptionHandler={() => navigation.goBack()}
-					orderId='MV100002'
-					subTitle={'Please make payment for moove:'}
+					subTitle={'Please make payment for your moove request'}
 					subTitleStyle={{ fontSize: normalize(22) }}
 					titleStyle ={{color: '#908F8F'}}
 					containerStyle={{ paddingHorizontal: normalize(18) }}

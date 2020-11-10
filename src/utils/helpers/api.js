@@ -75,17 +75,22 @@ export const findRider = async (recipient_name, recipient_phone_number, start_lo
 	const config = {
 		headers: { Authorization: `Bearer ${token}` }
 	};
-	await axios.post(`${baseURL}/request-rider`,
-	{	'recipient_name': recipient_name,
-		'recipient_phone_number': recipient_phone_number, 
-		'start_location': start_location,
-		'end_location': end_location, 
-		'package_description': package_description,
-		'who_pays': who_pays, 
-		'latitude':latitude, 
-		'longitude' : longitude, 
-		'payment_method': paymentMethod}, config
+	const response = await axios.post(`${baseURL}/request-rider`,
+	{	recipient_name: recipient_name,
+		recipient_phone_number: recipient_phone_number, 
+		start_location: start_location,
+		end_location: end_location, 
+		package_description: package_description,
+		who_pays: who_pays, 
+		latitude:latitude, 
+		longitude : longitude, 
+		payment_method: paymentMethod}, config
 	);
+	const mooveId = response.data.data.trip.moove_id;
+	const  riderDetails  = response.data.data.rider;
+	const  riderName = response.data.data.rider.profile.first_name + " "+ response.data.data.rider.profile.last_name;
+	// console.log(mooveId + ' in api');
+	return {mooveId, riderDetails, riderName};  
 }
 
 export const cancelTrip = (tripId, riderId, token)=>{
