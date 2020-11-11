@@ -120,15 +120,3 @@ export const riderFound = (value) => {
     value
   }
 }
-export const mooveIdAdded = (value) => {
-  return {
-    type: MOOVE_ID_ADDED,
-    value
-  }
-}
-export const dateAdded = (value) => {
-  return {
-    type: DATE_ADDED,
-    value
-  }
-}

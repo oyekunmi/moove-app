@@ -119,8 +119,8 @@ export default function TrackActiveMooveScreen({ navigation }) {
               />
             </MapView>
             <Text style={styles.mapText}>Your delivery is on its way</Text>
-            <Text style={styles.mooveText}>Moove - MV{trip.mooveId}</Text>
-            <Text style={styles.mapText}>{trip.date}</Text>
+            <Text style={styles.mooveText}>Moove - MV{trip.tripDetails.moove_id}</Text>
+            <Text style={styles.mapText}>{trip.tripDetails.created_at}</Text>
           </>
         }
 

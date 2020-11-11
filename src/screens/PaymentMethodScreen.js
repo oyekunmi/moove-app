@@ -12,7 +12,7 @@ import RadioForm, {
 	RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import { findRider } from '../utils/helpers/api';
-import { riderFound, mooveIdAdded , isAppLoading,tripCreated, dateAdded} from '../redux/actions';
+import { riderFound, isAppLoading,tripCreated} from '../redux/actions';
 
 const styles = StyleSheet.create({
 	container: {
@@ -101,8 +101,6 @@ export default function PaymentMethodScreen({ navigation, route }) {
 		try{
 		const response= await findRider(recipient_name, recipient_phone_number, start_location, end_location, package_description, who_pays, latitude, longitude , paymentMethod, token);
 			dispatch(riderFound({ riderPhone:response.riderDetails.phone_number, riderName: response.riderName}));
-			dispatch(mooveIdAdded( response.mooveId));
-			dispatch(dateAdded(response.date));
 			dispatch(tripCreated(response.trip));
 			navigation.navigate("ActiveMooveDetails") ;
 		}

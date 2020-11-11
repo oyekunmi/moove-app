@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 2,
     top: normalize(15),
-    left: normalize(15)
+    left: normalize(15),
   }
 })
 
@@ -61,17 +61,17 @@ const AddressField = (props) => {
               backgroundColor: '#EFEFEF',
               position: 'absolute',
               top: '95%',
-              zIndex: 500
+              zIndex: 500,
             },
             textInputContainer: {
               backgroundColor: props.customStyle ? props.customStyle.backgroundColor : '#EFEFEF',
               borderTopWidth: 0,
               borderBottomWidth: 0,
               height: normalize(80),
-              display: 'flex',
+              display:'flex',
               borderRadius: normalize(20),
-              paddingHorizontal: normalize(10),
               marginBottom: normalize(6),
+              paddingLeft: normalize(8),
               width: '100%',
             },
             textInput: {
@@ -82,6 +82,7 @@ const AddressField = (props) => {
               color: props.customStyle ? props.customStyle.color: '#545252',
               fontSize: normalize(13),
               paddingLeft: 0,
+             
             },
           }}
           query={{
