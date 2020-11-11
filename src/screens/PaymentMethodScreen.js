@@ -12,7 +12,7 @@ import RadioForm, {
 	RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import { findRider } from '../utils/helpers/api';
-import { riderFound, mooveIdAdded } from '../redux/actions';
+import { riderFound, mooveIdAdded , isAppLoading,tripCreated, dateAdded} from '../redux/actions';
 
 const styles = StyleSheet.create({
 	container: {
@@ -97,31 +97,28 @@ export default function PaymentMethodScreen({ navigation, route }) {
 	};
 
 	const startMoove = async () => {
+		dispatch(isAppLoading(true));
 		try{
 		const response= await findRider(recipient_name, recipient_phone_number, start_location, end_location, package_description, who_pays, latitude, longitude , paymentMethod, token);
 			dispatch(riderFound({ riderPhone:response.riderDetails.phone_number, riderName: response.riderName}));
 			dispatch(mooveIdAdded( response.mooveId));
+			dispatch(dateAdded(response.date));
+			dispatch(tripCreated(response.trip));
 			navigation.navigate("ActiveMooveDetails") ;
 		}
 		catch(error){
-		  console.log('in catch')
 		  if (error.response) {
-		    console.log('i have a response')
 		    if(error.response.data.message){
-		      console.log('i have an error message :')
-		      console.log(error.response.data)
 		      Alert.alert('Opps! sorry, ', error.response.data.message);
 		    }	
 		  } else if (error.request) {
-		    console.log(error.request);
 		    Alert.alert('An error has occurred', 'Network error, Please try again.');
 		  } else {
-		    console.log('Error', error.message);
 		    Alert.alert('An error has occurred', error.message);
 		  }
 	
 		}
-		
+		dispatch(isAppLoading(false));
 	  }
 	
 
@@ -156,7 +153,7 @@ export default function PaymentMethodScreen({ navigation, route }) {
 					fontIcon='arrow_back_light'
 					title={'pay for your moove'}
 					headerOptionHandler={() => navigation.goBack()}
-					subTitle={'Please make payment for your moove request'}
+					subTitle={'Choose your payment method'}
 					subTitleStyle={{ fontSize: normalize(22) }}
 					titleStyle ={{color: '#908F8F'}}
 					containerStyle={{ paddingHorizontal: normalize(18) }}

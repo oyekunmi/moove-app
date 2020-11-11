@@ -1,7 +1,7 @@
 import {
   APP_LOADED, SIGN_IN, SIGN_OUT, SIGN_UP, IS_SIGNUP_BUTTON_ACTIVE, SHOW_INTRO, HIDE_INTRO, RESTORE_TOKEN,
-  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, PACKAGE_INFO_CHANGED,
-  TRIP_CANCEL_REQUEST, IS_LOADING, IS_BTN_DISABLED, SOURCE_COORDINATES_FETCHED, TRIP_COST_CHANGED, HISTORY_DETAILS, SET_PAYMENT_METHOD, RIDER_DETAILS, MOOVE_ID_ADDED
+  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, PACKAGE_INFO_CHANGED,DATE_ADDED,
+  TRIP_CANCEL_REQUEST, IS_LOADING, IS_BTN_DISABLED, SOURCE_COORDINATES_FETCHED, TRIP_CREATED, TRIP_COST_CHANGED, HISTORY_DETAILS, SET_PAYMENT_METHOD, RIDER_DETAILS, MOOVE_ID_ADDED
 } from "./actionTypes";
 
 export const restoreToken = (token, introduced) => ({
@@ -94,6 +94,12 @@ export const setTripCost = (value) => {
     value
   }
 }
+export const tripCreated = (value) =>{
+  return {
+    type: TRIP_CREATED,
+    value
+  }
+}
 
 export const historyDetails = (value) => {
   return {
@@ -117,6 +123,12 @@ export const riderFound = (value) => {
 export const mooveIdAdded = (value) => {
   return {
     type: MOOVE_ID_ADDED,
+    value
+  }
+}
+export const dateAdded = (value) => {
+  return {
+    type: DATE_ADDED,
     value
   }
 }

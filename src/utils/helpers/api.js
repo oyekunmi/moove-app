@@ -86,24 +86,24 @@ export const findRider = async (recipient_name, recipient_phone_number, start_lo
 		longitude : longitude, 
 		payment_method: paymentMethod}, config
 	);
+	const trip = response.data.data.trip;
 	const mooveId = response.data.data.trip.moove_id;
+	const date = response.data.data.trip.created_at;
 	const  riderDetails  = response.data.data.rider;
 	const  riderName = response.data.data.rider.profile.first_name + " "+ response.data.data.rider.profile.last_name;
-	// console.log(mooveId + ' in api');
-	return {mooveId, riderDetails, riderName};  
+	// console.log(trip + ' in api');
+	return {mooveId, riderDetails, riderName, date, trip};  
 }
 
-export const cancelTrip = (tripId, riderId, token)=>{
-	const config = {
-		headers: { Authorization: `Bearer ${token}` }
-	};
-	return axios.post(`${baseURL}/cancel-trip/${tripId}/${riderId}`, config);
+export const cancelTrip = async (tripId, riderId)=>{
+	
+	await axios.post(`${baseURL}/cancel-trip/${tripId}/${riderId}`);
 	
 }
 
 export const verifyOTP = (otpCode)=>{
 	
-	return axios.post(`${baseURL}/auth/token/validate`, {
+	 axios.post(`${baseURL}/auth/token/validate`, {
 		otp: otpCode
 	  });
 	

@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Keyboard, Text, TextInput, StatusBar, ScrollView, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { cancelTripRequest } from '../redux/actions';
 import AddressField from '../components/AddressField';
-import PlainButton from '../components/PlainButton';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
 import currency from '../currency';
-import { cancelTrip } from '../utils/helpers/api';
 
 const styles = StyleSheet.create({
   container: {
@@ -103,16 +100,6 @@ export default function MooveVerificationScreen({ navigation, route }) {
     
   }
 
-  // const onCancelTripRequest = async () => {
-  //   try{
-  //     await cancelTrip(tripId,riderId,token)
-  //   }
-  //   catch(error){
-
-  //   }
-  //   dispatch(cancelTripRequest())
-  //   navigation.push('Home')
-  // }
 
   useEffect(() => {
 

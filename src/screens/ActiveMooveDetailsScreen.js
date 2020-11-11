@@ -139,7 +139,7 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
           showBackButton={true}
           statusBarStyle="light-content"
           title={"active moove"}
-          orderId={"Moove - MV"+ mooveId}
+          // orderId={"Moove - MV"+ mooveId}
           subTitle={"Your moove champion is enroute"}
           subTitleStyle={{ fontSize: normalize(22), paddingTop:normalize(10) }}
           containerStyle={{ paddingHorizontal: normalize(18) }} />
