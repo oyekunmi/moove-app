@@ -56,7 +56,8 @@ export default (state = defaultState, action) => {
         sourceCoord: state.sourceCoord,
         source: state.source,
         destination: '',
-        package: ''
+        package: '',
+        recipientPhone:'',
       };
     case HISTORY_DETAILS:
       return {

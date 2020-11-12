@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 	contentInputContainer: {
-		marginVertical: normalize(5),
+		marginVertical: normalize(15),
 
 	},
 	contentLabel: {
@@ -46,9 +46,7 @@ const styles = StyleSheet.create({
 	dateAndCvv: {
 		display: 'flex',
 		flexDirection: 'row',
-		marginBottom: 'auto',
-		marginTop:normalize(5),
-		paddingLeft:normalize(0)
+		marginBottom: 'auto',	
 	},
 	visaMasterCardIcon: {
 		position: 'absolute',
@@ -157,7 +155,7 @@ export default function CreditCardPayment({ navigation, route }) {
 						<View
 							style={{
 								...styles.contentInputContainer,
-								width: '30%',
+								width: '32%',
 								marginRight: normalize(30),
 							}}>
 							<TextField
