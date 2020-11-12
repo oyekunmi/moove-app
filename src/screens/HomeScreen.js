@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import * as Location from 'expo-location';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
+import { View,Image, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
 
 import { FontAwesome } from '@expo/vector-icons';
@@ -37,13 +37,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: normalize(18),
   },
   searchFont: {
-    paddingVertical: normalize(10),
-    color: '#CCCCCC',
-    marginRight: normalize(15),
     position: 'absolute',
     zIndex: 100,
-    left: normalize(35),
-    top: normalize(8),
+    left: normalize(32),
+    top: normalize(17),
   }
 });
 
@@ -168,7 +165,8 @@ function HomeScreen({ navigation, route }) {
             <View>
 
               <View style={styles.p18}>
-                <FontAwesome name='search' size={normalize(14)} style={styles.searchFont}  />
+              <Image source={require('./../../assets/search_icon.png')} style={styles.searchFont} />
+                {/* <FontAwesome name='search' size={normalize(14)} style={styles.searchFont}  /> */}
                 <GooglePlacesAutocomplete
                   placeholder='enter delivery address'
                   minLength={2}

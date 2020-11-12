@@ -57,6 +57,13 @@ const styles = StyleSheet.create({
     fontSize: normalize(44),
     fontWeight: 'bold'
 	},
+	costInfo:{
+		color: '#FFF',
+		fontFamily: 'Roboto_700Bold',
+    	fontSize: normalize(18),
+		fontWeight: 'bold',
+		marginVertical:normalize(10)
+	},
 	button: {
 		marginBottom: normalize(15),
 		marginTop: normalize(5),
@@ -93,7 +100,10 @@ export default function PaymentMethodScreen({ navigation, route }) {
 	const token = useSelector(state => state.auth.userToken);
 	
 	const onContinue = () => {
-		navigation.navigate('CreditCardPayment');
+		navigation.navigate('CreditCardPayment', {
+			recipient_name, recipient_phone_number, start_location, end_location, 
+	  		package_description, who_pays, latitude, longitude,paymentMethod
+		});
 	};
 
 	const startMoove = async () => {
@@ -152,7 +162,7 @@ export default function PaymentMethodScreen({ navigation, route }) {
 					title={'pay for your moove'}
 					headerOptionHandler={() => navigation.goBack()}
 					subTitle={'Choose your payment method'}
-					subTitleStyle={{ fontSize: normalize(22) }}
+					subTitleStyle={{ fontSize: normalize(20),paddingTop:normalize(10) }}
 					titleStyle ={{color: '#908F8F'}}
 					containerStyle={{ paddingHorizontal: normalize(18) }}
 				/>
@@ -160,6 +170,9 @@ export default function PaymentMethodScreen({ navigation, route }) {
 				<View style={styles.content}>
 					<View>
 						<View style={styles.costContainer}>
+							<Text style={styles.costInfo}>
+								Your delivery cost
+							</Text>
 							<Text style={styles.costValue}>
 								{currency(trip.cost)}
 							</Text>

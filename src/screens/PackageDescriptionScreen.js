@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { normalize } from '../normalizeFont';
-import { changePackageInfo, setTripCost, isAppLoading, isBtnDisabled } from '../redux/actions';
+import { changePackageInfo, setTripCost, isAppLoading,addRecipientPhone, isBtnDisabled } from '../redux/actions';
 import RedButton from '../components/RedButton';
 import Title from '../components/Title';
 import AddressField from '../components/AddressField';
@@ -40,9 +40,43 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     paddingVertical: normalize(10),
     paddingHorizontal: normalize(15),
-    height: normalize(145),
+    height: normalize(100),
     fontSize: normalize(13),
     color: '#545252'
+  },
+  phoneInput: {
+    backgroundColor: "#efefef",
+    borderRadius: normalize(20),
+    paddingVertical: normalize(10),
+    paddingHorizontal: normalize(15),
+    color: '#545252'
+  },
+  deliveryLocation: {
+    height: normalize(80),
+    marginTop: normalize(7),
+    borderRadius: normalize(15),
+    display: 'flex',
+    backgroundColor: "#efefef"
+  },
+  deliveryContent: {
+    height: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    paddingHorizontal: normalize(14),
+    paddingTop: normalize(30),
+    paddingBottom:normalize(35)
+  },
+  deliveryLocationLabel: {
+    fontSize: normalize(14),
+    fontFamily: 'Roboto_500Medium',
+    marginBottom: normalize(10),
+    marginTop: normalize(18)
+  },
+  deliveryLocationDetails: {
+    fontSize: normalize(13),
+    color: '#545252',
+    fontFamily: 'Roboto_400Regular',
+    lineHeight: normalize(15)
   },
   button: {
     marginBottom: normalize(10),
@@ -60,7 +94,8 @@ export default function PackageDescriptionScreen({ navigation }) {
 
   const [distance, setDistance ] = useState('');
   const [duration, setDuration] = useState('');
-  const [packageDescription, setPackageDescription] = useState('')
+  const [packageDescription, setPackageDescription] = useState('');
+  const [recipientPhone, setRecipientPhone] = useState('');
 
   const dispatch = useDispatch();
   
@@ -90,10 +125,18 @@ export default function PackageDescriptionScreen({ navigation }) {
 
   useEffect(() => {
     changePackageDescriptionHandler(packageDescription);
+    changeRecipientPhoneHandler(recipientPhone);
     dispatch(changePackageInfo(packageDescription));
   }, [packageDescription, trip.package]);
 
   const changePackageDescriptionHandler = value => {
+
+    value.length === 0 ?
+      dispatch(isBtnDisabled(true)) :
+      dispatch(isBtnDisabled(false));
+
+  };
+  const changeRecipientPhoneHandler = value => {
 
     value.length === 0 ?
       dispatch(isBtnDisabled(true)) :
@@ -109,8 +152,9 @@ export default function PackageDescriptionScreen({ navigation }) {
     dispatch(isAppLoading(true));
 
     try {
-      const cost = await calculateCost(auth.name, auth.phone, trip.package, null, trip.source, trip.destination, null, distance, duration);
 
+      const cost = await calculateCost(auth.name, recipientPhone, trip.package, null, trip.source, trip.destination, null, distance, duration);
+      dispatch(addRecipientPhone(recipientPhone));
       dispatch(setTripCost(cost));
       dispatch(isAppLoading(false));
       navigation.navigate('MooveVerification');
@@ -165,14 +209,21 @@ export default function PackageDescriptionScreen({ navigation }) {
                   event={changeSourceAddress}
                   editable={false}
                   containerStyle={{ height: normalize(71) }} />
+              <View style={styles.deliveryLocation}>
+                <View style={styles.deliveryContent}>
+                <Text style={styles.deliveryLocationLabel} >Delivery Location</Text>
+                <Text style={styles.deliveryLocationDetails}>{trip.destination}</Text>
+              </View>
+          </View>
 
-                <AddressField
-                  value={trip.destination}
-                  label="Delivery Location"
-                  event={changeDestinationAddress}
-                  editable={false}
-                  containerStyle={{ height: normalize(71) }} />
-
+              <View style={styles.packageContainer}>
+                <Text style={styles.packageLabel}>Recipient Phone Number:</Text>
+                <TextInput                 
+                  style={styles.phoneInput}
+                  value={recipientPhone}
+                  onChangeText={setRecipientPhone}
+                  autoFocus />
+              </View>
               <View style={styles.packageContainer}>
                 <Text style={styles.packageLabel}>Delivery Item Description</Text>
                 <TextInput

@@ -78,9 +78,9 @@ const AddressField = (props) => {
               alignSelf: 'flex-end',
               marginBottom: normalize(8),
               backgroundColor: props.customStyle ? props.backgroundColor : '#EFEFEF',
-              height: normalize(37),
               color: props.customStyle ? props.customStyle.color: '#545252',
               fontSize: normalize(13),
+              height: normalize(37),
               paddingLeft: 0,
              
             },

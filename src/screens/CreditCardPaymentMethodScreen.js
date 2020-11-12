@@ -1,30 +1,34 @@
 import React, { useState , useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { View, StyleSheet, ScrollView, Image, StatusBar } from 'react-native';
+import { View, StyleSheet, ScrollView, Image,Alert, StatusBar } from 'react-native';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
 import TextField from '../components/TextInput';
-import { isAppLoading, isBtnDisabled } from '../redux/actions';
+import { isAppLoading,riderFound, isBtnDisabled, tripCreated} from '../redux/actions';
+import { findRider } from '../utils/helpers/api';
+
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#132535',
+	backgroundColor: '#132535',
+	paddingTop: normalize(25)
   },
   content: {
 		paddingHorizontal: normalize(18),
-		marginTop: normalize(50),
+		marginTop: normalize(85),
 		flexGrow: 1,
   },
   button: {
-    marginBottom: normalize(10),
+    marginBottom: normalize(20),
     marginTop: normalize(5),
     alignSelf: "center",
     width: '100%',
   },
 	contentInputContainer: {
 		marginVertical: normalize(5),
+
 	},
 	contentLabel: {
 		color: '#F1F1F1',
@@ -37,13 +41,14 @@ const styles = StyleSheet.create({
 		borderRadius: normalize(20),
 		height: normalize(40),
 		fontSize: normalize(14),
-		paddingHorizontal: normalize(10),
 		marginVertical: normalize(5),
 	},
 	dateAndCvv: {
 		display: 'flex',
 		flexDirection: 'row',
-    marginBottom: 'auto',
+		marginBottom: 'auto',
+		marginTop:normalize(5),
+		paddingLeft:normalize(0)
 	},
 	visaMasterCardIcon: {
 		position: 'absolute',
@@ -56,7 +61,7 @@ const styles = StyleSheet.create({
 StatusBar.setBarStyle('light-content');
 StatusBar.setBackgroundColor('#132535');
 
-export default function CreditCardPayment({ navigation }) {
+export default function CreditCardPayment({ navigation, route }) {
 
 	const common = useSelector(state => state.common);
 	const dispatch = useDispatch();
@@ -65,6 +70,10 @@ export default function CreditCardPayment({ navigation }) {
 	const [holdersName, setHoldersName] = useState('');
 	const [expiryDate, setExpiryDate]   = useState('');
 	const [cvv, setCvv]                 = useState('');
+	const {recipient_name, recipient_phone_number, start_location, end_location, 
+		package_description, who_pays, latitude, longitude,paymentMethod
+	  } = route.params;
+	const token = useSelector(state => state.auth.userToken);
 
 
 	const formatCardNumber = () => {
@@ -82,10 +91,28 @@ export default function CreditCardPayment({ navigation }) {
 		(cardNumber.length === 0 || holdersName.length === 0 || expiryDate.length === 0 || cvv.length === 0) ? dispatch(isBtnDisabled(true)): dispatch(isBtnDisabled(false))
 	}, [cardNumber, holdersName, expiryDate, cvv])
 
-
-  const onContinue = () => {
-    navigation.navigate("ActiveMooveDetails")
-  }
+	const startMoove = async () => {
+		dispatch(isAppLoading(true));
+		try{
+		const response= await findRider(recipient_name, recipient_phone_number, start_location, end_location, package_description, who_pays, latitude, longitude , paymentMethod, token);
+			dispatch(riderFound({ riderPhone:response.riderDetails.phone_number, riderName: response.riderName}));
+			dispatch(tripCreated(response.trip));
+			navigation.navigate("ActiveMooveDetails") ;
+		}
+		catch(error){
+		  if (error.response) {
+		    if(error.response.data.message){
+		      Alert.alert('Opps! sorry, ', error.response.data.message);
+		    }	
+		  } else if (error.request) {
+		    Alert.alert('An error has occurred', 'Network error, Please try again.');
+		  } else {
+		    Alert.alert('An error has occurred', error.message);
+		  }
+	
+		}
+		dispatch(isAppLoading(false));
+	  }
 
   return (
     <>
@@ -160,7 +187,7 @@ export default function CreditCardPayment({ navigation }) {
 					<RedButton
 						title="Make Payment"
 						buttonStyle={styles.button}
-						onPress={onContinue}
+						onPress={startMoove}
 						disabled={common.isBtnDisabled}
 					/>
 

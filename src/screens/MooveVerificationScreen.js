@@ -80,6 +80,35 @@ const styles = StyleSheet.create({
     color: '#D1D1D1',
     fontSize: normalize(13),
     fontWeight: 'normal',
+    marginBottom:normalize(10)
+  },
+  deliveryLocation: {
+    height: normalize(80),
+    marginTop: normalize(7),
+    borderRadius: normalize(15),
+    display: 'flex',
+    backgroundColor: "#1E3040"
+  },
+  deliveryContent: {
+    height: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    paddingHorizontal: normalize(14),
+    paddingTop: normalize(30),
+    paddingBottom:normalize(35),
+  },
+  deliveryLocationLabel: {
+    fontSize: normalize(14),
+    fontFamily: 'Roboto_500Medium',
+    marginBottom: normalize(10),
+    marginTop: normalize(18),
+    color:'#DADADA'
+  },
+  deliveryLocationDetails: {
+    fontSize: normalize(13),
+    color:'#DADADA',
+    fontFamily: 'Roboto_400Regular',
+    lineHeight: normalize(15)
   },
   mb9: {
     marginBottom: normalize(9),
@@ -151,9 +180,18 @@ export default function MooveVerificationScreen({ navigation, route }) {
               />
             </View>
             <View style={styles.mb9}>
+              <View style={styles.deliveryLocation}>
+                <View style={styles.deliveryContent}>
+                <Text style={styles.deliveryLocationLabel} >Delivery Location</Text>
+                <Text style={styles.deliveryLocationDetails}>{trip.destination}</Text>
+                </View>
+              </View>
+            </View>
+            
+            <View style={styles.mb9}>
               <AddressField
-                value={trip.destination}
-                label="Delivery Location"
+                value={trip.recipientPhone}
+                label="Recipient Phone Number"
                 editable={false}
                 multiline={true}
                 customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
@@ -170,11 +208,6 @@ export default function MooveVerificationScreen({ navigation, route }) {
                   style={styles.packageDescriptionInput}
                   value={trip.package}
                   editable={false} />
-            </View>
-
-            <View style={styles.costContainer}>
-              <Text style={styles.costLabel}>Your delivery cost</Text>
-              <Text style={styles.costValue}>{currency(trip.cost)}</Text>
             </View>
           </View>
           <View>
