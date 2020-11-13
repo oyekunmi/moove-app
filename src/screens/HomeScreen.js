@@ -41,6 +41,11 @@ const styles = StyleSheet.create({
     zIndex: 100,
     left: normalize(32),
     top: normalize(17),
+  },
+  button:{
+    marginTop:normalize(5),
+    marginBottom: normalize(18),
+    width:'100%'
   }
 });
 

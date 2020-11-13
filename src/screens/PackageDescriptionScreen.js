@@ -28,8 +28,9 @@ const styles = StyleSheet.create({
     zIndex: -500
   },
   packageLabel: {
-    marginVertical: normalize(10),
-    paddingHorizontal: normalize(15),
+    marginTop: normalize(15),
+    marginBottom:normalize(8),
+    paddingLeft: normalize(6),
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(14),
     color: '#181818'
@@ -203,25 +204,28 @@ export default function PackageDescriptionScreen({ navigation }) {
 
         <View style={styles.content}>
             <View>
-                <AddressField
-                  value={trip.source}
-                  label="Pickup Location"
-                  event={changeSourceAddress}
-                  editable={false}
-                  containerStyle={{ height: normalize(71) }} />
               <View style={styles.deliveryLocation}>
                 <View style={styles.deliveryContent}>
-                <Text style={styles.deliveryLocationLabel} >Delivery Location</Text>
-                <Text style={styles.deliveryLocationDetails}>{trip.destination}</Text>
+                  <Text style={styles.deliveryLocationLabel}>Pickup Location</Text>
+                  <Text style={styles.deliveryLocationDetails}>{trip.source}</Text>
+                </View>
+
               </View>
-          </View>
+                
+              <View style={styles.deliveryLocation}>
+                <View style={styles.deliveryContent}>
+                  <Text style={styles.deliveryLocationLabel} >Delivery Location</Text>
+                  <Text style={styles.deliveryLocationDetails}>{trip.destination}</Text>
+                </View>
+              </View>
 
               <View style={styles.packageContainer}>
-                <Text style={styles.packageLabel}>Recipient Phone Number:</Text>
+                <Text style={styles.packageLabel}>Recipient Phone Number</Text>
                 <TextInput                 
                   style={styles.phoneInput}
                   value={recipientPhone}
                   onChangeText={setRecipientPhone}
+                  keyboardType='numeric'
                   autoFocus />
               </View>
               <View style={styles.packageContainer}>

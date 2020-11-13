@@ -134,6 +134,7 @@ export default function CreditCardPayment({ navigation, route }) {
 							maxLength={19}
 							placeholder="XXXX XXXX XXXX XXXX"
 							label="Card Number"
+							keyboardType='numeric'
 							value={cardNumber}
 							onChangeText={setCardNumber}
 							labelColor="#F1F1F1"

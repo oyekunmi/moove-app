@@ -48,19 +48,20 @@ const styles = StyleSheet.create({
 	},
 	costLabel: {
 		color: '#908F8F',
-		fontFamily: 'Roboto_700Bold',
+		fontFamily: 'Roboto_400Regular',
+		fontStyle: 'normal',
 		marginVertical: normalize(16),
 	},
 	costValue: {
 		color: '#FFF',
 		fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(44),
-    fontWeight: 'bold'
+		fontSize: normalize(44),
+		fontWeight: 'bold'
 	},
 	costInfo:{
 		color: '#FFF',
 		fontFamily: 'Roboto_700Bold',
-    	fontSize: normalize(18),
+    	fontSize: normalize(17),
 		fontWeight: 'bold',
 		marginVertical:normalize(10)
 	},

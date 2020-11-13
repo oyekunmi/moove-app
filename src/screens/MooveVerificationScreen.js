@@ -168,16 +168,13 @@ export default function MooveVerificationScreen({ navigation, route }) {
 
         <View style={styles.content}>
           <View>
-            <View style={styles.mb9}>
-              <AddressField
-                value={trip.source}
-                label="Pick-up Location"
-                editable={false}
-                multiline={true}
-                customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
-                labelStyle={{ color: '#DADADA' }}
-                placeholder="enter source address"
-              />
+          <View style={styles.mb9}>
+              <View style={styles.deliveryLocation}>
+                <View style={styles.deliveryContent}>
+                <Text style={styles.deliveryLocationLabel} >Pick-up Location</Text>
+                <Text style={styles.deliveryLocationDetails}>{trip.source}</Text>
+                </View>
+              </View>
             </View>
             <View style={styles.mb9}>
               <View style={styles.deliveryLocation}>

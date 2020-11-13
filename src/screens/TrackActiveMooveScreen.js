@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   container: {
   },
   map: {
-    height: '73%'
+    height: '80%'
   },
   spinner: {
     flexGrow: 1,
@@ -25,19 +25,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    marginHorizontal: normalize(18)
+    marginHorizontal: normalize(17),
+    marginTop:normalize(5),
+    marginBottom: normalize(18)
   },
   mapText: {
     color: '#545252',
     fontSize: normalize(13),
     lineHeight: normalize(15),
     textAlign: 'center',
-    marginTop: normalize(20),
+    marginTop: normalize(18),
     fontFamily: 'Roboto_400Regular'
   },
+  date:{
+    marginTop: normalize(18),
+  },
   mooveText:{
-    color: '#545252',
-    fontSize: normalize(13),
+    color: '#181818',
+    fontSize: normalize(15),
     fontWeight: 'bold',
     textAlign: 'center',
     fontFamily: 'Roboto_400Regular',

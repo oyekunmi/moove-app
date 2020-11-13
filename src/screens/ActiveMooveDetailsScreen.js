@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   nameLabel: {
     color: "#908F8F",
     fontFamily: 'Roboto_900Black',
-    fontSize: normalize(13),
+    fontSize: normalize(15),
     lineHeight: normalize(15)
   },
   telLabel: {
@@ -141,6 +141,7 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
           title={"active moove"}
           subTitle={"Your moove champion is enroute"}
           subTitleStyle={{ fontSize: normalize(22), paddingTop:normalize(10) }}
+          titleStyle={{paddingTop:normalize(10)}}
           containerStyle={{ paddingHorizontal: normalize(18) }} />
 
         <View style={styles.content}>
