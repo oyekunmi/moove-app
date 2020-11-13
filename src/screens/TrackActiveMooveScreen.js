@@ -1,17 +1,20 @@
 import React from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
-import { View, StyleSheet, ActivityIndicator, ScrollView, StatusBar, Text, Dimensions } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, ScrollView,Alert, Linking, StatusBar, Text, Dimensions } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
+import { cancelTrip } from '../utils/helpers/api';
+import { cancelTripRequest } from '../redux/actions';
+import PlainButton from '../components/PlainButton';
 
 const styles = StyleSheet.create({
   container: {
   },
   map: {
-    height: '87%'
+    height: '80%'
   },
   spinner: {
     flexGrow: 1,
@@ -22,15 +25,28 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    marginHorizontal: normalize(18)
+    marginHorizontal: normalize(17),
+    marginTop:normalize(5),
+    marginBottom: normalize(18)
   },
   mapText: {
     color: '#545252',
     fontSize: normalize(13),
     lineHeight: normalize(15),
     textAlign: 'center',
-    marginTop: normalize(20),
+    marginTop: normalize(18),
     fontFamily: 'Roboto_400Regular'
+  },
+  date:{
+    marginTop: normalize(18),
+  },
+  mooveText:{
+    color: '#181818',
+    fontSize: normalize(15),
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontFamily: 'Roboto_400Regular',
+    marginTop: normalize(10),
   }
 });
 
@@ -44,6 +60,35 @@ export default function TrackActiveMooveScreen({ navigation }) {
   const ASPECT_RATIO = width / 320;
   const LATITUDE_DELTA = 0.015;
   const LONGITUDE_DELTA = 0.015;
+  const tripId = trip.tripDetails.id;
+  const riderId = trip.tripDetails.rider_id;
+  
+  const onCancelTripRequest = async () => {
+    try{
+      await cancelTrip(tripId,riderId);
+      dispatch(cancelTripRequest())
+    }
+		catch(error){
+		  console.log('in catch')
+		  if (error.response) {
+		    console.log('i have a response')
+		    if(error.response.data.message){
+		      console.log('i have an error message :')
+		      console.log(error.response.data)
+		      Alert.alert('Opps! sorry, ', error.response.data.message);
+		    }	
+		  } else if (error.request) {
+		    console.log(error.request);
+		    Alert.alert('An error has occurred', 'Network error, Please try again.');
+		  } else {
+		    console.log('Error', error.message);
+		    Alert.alert('An error has occurred', error.message);
+		  }
+	
+		}
+    navigation.push('Home')
+  }
+
 
   StatusBar.setBarStyle("dark-content");
   StatusBar.setBackgroundColor("#fff");
@@ -79,14 +124,21 @@ export default function TrackActiveMooveScreen({ navigation }) {
               />
             </MapView>
             <Text style={styles.mapText}>Your delivery is on its way</Text>
+            <Text style={styles.mooveText}>Moove - MV{trip.tripDetails.moove_id}</Text>
+            <Text style={styles.mapText}>{trip.tripDetails.created_at}</Text>
           </>
         }
 
       </View>
+        <PlainButton
+						title='Cancel'
+						titleStyle={{color:'#EA5858'}}
+						onPress={onCancelTripRequest}
+        />
         <RedButton
 						title='Contact Moove Champion'
 						buttonStyle={styles.button}
-						onPress={() => {}}
+						onPress={() => Linking.openURL(`tel:${trip.riderDetails.riderPhone}`)}
 					/>
     </ScrollView>
   );

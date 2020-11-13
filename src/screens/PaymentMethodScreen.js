@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, Text, StatusBar, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, StyleSheet, Text, StatusBar, ScrollView,Alert } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import PlainButton from '../components/PlainButton';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
@@ -11,10 +11,13 @@ import RadioForm, {
 	RadioButtonInput,
 	RadioButtonLabel,
 } from 'react-native-simple-radio-button';
+import { findRider } from '../utils/helpers/api';
+import { riderFound, isAppLoading,tripCreated} from '../redux/actions';
 
 const styles = StyleSheet.create({
 	container: {
 		backgroundColor: '#132535',
+		paddingTop: normalize(20)
 	},
 	content: {
 		paddingHorizontal: normalize(18),
@@ -45,20 +48,29 @@ const styles = StyleSheet.create({
 	},
 	costLabel: {
 		color: '#908F8F',
-		fontFamily: 'Roboto_700Bold',
+		fontFamily: 'Roboto_400Regular',
+		fontStyle: 'normal',
 		marginVertical: normalize(16),
 	},
 	costValue: {
 		color: '#FFF',
 		fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(44),
-    fontWeight: 'bold'
+		fontSize: normalize(44),
+		fontWeight: 'bold'
+	},
+	costInfo:{
+		color: '#FFF',
+		fontFamily: 'Roboto_700Bold',
+    	fontSize: normalize(17),
+		fontWeight: 'bold',
+		marginVertical:normalize(10)
 	},
 	button: {
-		marginBottom: normalize(10),
+		marginBottom: normalize(15),
 		marginTop: normalize(5),
 		alignSelf: 'center',
 		width: '100%',
+		
 	},
 	cancelButtonStyle: {
 		fontFamily: 'Roboto_700Bold',
@@ -77,15 +89,47 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default function PaymentMethodScreen({ navigation }) {
+export default function PaymentMethodScreen({ navigation, route }) {
 	const trip = useSelector((state) => state.trip);
-
 	const [cashInputIndex, setCashInputIndex] = useState(0);
-
+	const [showProceedButton, setShowProceedButton] = useState(false);
+	const [paymentMethod, setPaymentMethod] = useState('');
+	const dispatch = useDispatch();
+	const {recipient_name, recipient_phone_number, start_location, end_location, 
+	  package_description, who_pays, latitude, longitude
+	} = route.params;
+	const token = useSelector(state => state.auth.userToken);
+	
 	const onContinue = () => {
-		radio_props[cashInputIndex].label === 'CASH' ? navigation.navigate("ActiveMooveDetails") :
-		navigation.navigate('CreditCardPayment');
+		navigation.navigate('CreditCardPayment', {
+			recipient_name, recipient_phone_number, start_location, end_location, 
+	  		package_description, who_pays, latitude, longitude,paymentMethod
+		});
 	};
+
+	const startMoove = async () => {
+		dispatch(isAppLoading(true));
+		try{
+		const response= await findRider(recipient_name, recipient_phone_number, start_location, end_location, package_description, who_pays, latitude, longitude , paymentMethod, token);
+			dispatch(riderFound({ riderPhone:response.riderDetails.phone_number, riderName: response.riderName}));
+			dispatch(tripCreated(response.trip));
+			navigation.navigate("ActiveMooveDetails") ;
+		}
+		catch(error){
+		  if (error.response) {
+		    if(error.response.data.message){
+		      Alert.alert('Opps! sorry, ', error.response.data.message);
+		    }	
+		  } else if (error.request) {
+		    Alert.alert('An error has occurred', 'Network error, Please try again.');
+		  } else {
+		    Alert.alert('An error has occurred', error.message);
+		  }
+	
+		}
+		dispatch(isAppLoading(false));
+	  }
+	
 
 	const setSelectedPaymentMethod = useCallback((value) => {
 		setCashInputIndex(value);
@@ -96,6 +140,15 @@ export default function PaymentMethodScreen({ navigation }) {
 		{ label: 'VISA/MASTERCARD', value: 1 },
 	];
 
+	useEffect(()=>{
+		console.log(trip);
+		console.log(token);
+		radio_props[cashInputIndex].label === 'CASH' ?
+		[setPaymentMethod('CASH'),  setShowProceedButton(false)]
+		 :[setPaymentMethod('CARD'),setShowProceedButton(true)];
+	}); 
+
+	
 	StatusBar.setBarStyle('light-content');
 	StatusBar.setBackgroundColor('#132535');
 	return (
@@ -109,15 +162,18 @@ export default function PaymentMethodScreen({ navigation }) {
 					fontIcon='arrow_back_light'
 					title={'pay for your moove'}
 					headerOptionHandler={() => navigation.goBack()}
-					orderId='MV100002'
-					subTitle={'Please make payment for moove:'}
-					subTitleStyle={{ fontSize: normalize(22) }}
+					subTitle={'Choose your payment method'}
+					subTitleStyle={{ fontSize: normalize(20),paddingTop:normalize(10) }}
+					titleStyle ={{color: '#908F8F'}}
 					containerStyle={{ paddingHorizontal: normalize(18) }}
 				/>
 
 				<View style={styles.content}>
 					<View>
 						<View style={styles.costContainer}>
+							<Text style={styles.costInfo}>
+								Your delivery cost
+							</Text>
 							<Text style={styles.costValue}>
 								{currency(trip.cost)}
 							</Text>
@@ -164,12 +220,20 @@ export default function PaymentMethodScreen({ navigation }) {
 							</RadioForm>
 						</View>
 					</View>
-
+				{ showProceedButton ?
 					<RedButton
 						title='Proceed'
 						buttonStyle={styles.button}
 						onPress={onContinue}
 					/>
+				:
+		
+					<RedButton
+						title='Start My Moove'
+						buttonStyle={styles.button}
+						onPress={startMoove}
+					/>
+				}
 				</View>
 			</ScrollView>
 		</>

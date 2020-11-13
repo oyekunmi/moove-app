@@ -9,6 +9,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#132535',
+    paddingTop: normalize(30)
   },
   content: {
     paddingHorizontal: normalize(18),
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   nameLabel: {
     color: "#908F8F",
     fontFamily: 'Roboto_900Black',
-    fontSize: normalize(13),
+    fontSize: normalize(15),
     lineHeight: normalize(15)
   },
   telLabel: {
@@ -54,10 +55,10 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(44),
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    paddingTop: normalize(10)
   },
   button: {
-    marginTop: normalize(5),
     alignSelf: "center",
     width: '100%',
   },
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
   },
 
   locationDetails: {
-    height: normalize(135),
+    height: normalize(155),
     marginBottom: normalize(7),
     borderRadius: normalize(15),
     display: 'flex',
@@ -78,7 +79,9 @@ const styles = StyleSheet.create({
     height: '50%',
     display: 'flex',
     justifyContent: 'center',
-    paddingHorizontal: normalize(14)
+    paddingHorizontal: normalize(14),
+    paddingTop: normalize(30),
+    paddingBottom:normalize(35)
   },
   pickupAndLocationLabel: {
     fontSize: normalize(14),
@@ -96,7 +99,8 @@ const styles = StyleSheet.create({
     height: normalize(71),
     backgroundColor: '#1E3040',
     borderRadius: normalize(15),
-    paddingVertical: normalize(10)
+    paddingTop: normalize(10),
+    paddingBottom:normalize(35)
   },
   packageDescriptionLabel: {
     color: '#DADADA',
@@ -119,7 +123,9 @@ const styles = StyleSheet.create({
 export default function ActiveMooveDetailsScreen({ navigation }) {
   const trip = useSelector(state => state.trip);
   const auth = useSelector(state => state.auth);
-
+  const riderName = trip.riderDetails.riderName;
+  const riderPhone = trip.riderDetails.riderPhone;
+  const mooveId = trip.mooveId;
   const onContinue = () => {
     navigation.navigate("TrackActiveMoove")
   }
@@ -132,19 +138,17 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
         <Title
           showBackButton={true}
           statusBarStyle="light-content"
-          fontIcon="arrow_back_light"
           title={"active moove"}
-          orderId={"Moove - MV100002"}
-					headerOptionHandler={() => navigation.goBack()}
           subTitle={"Your moove champion is enroute"}
-          subTitleStyle={{ fontSize: normalize(22) }}
+          subTitleStyle={{ fontSize: normalize(22), paddingTop:normalize(10) }}
+          titleStyle={{paddingTop:normalize(10)}}
           containerStyle={{ paddingHorizontal: normalize(18) }} />
 
         <View style={styles.content}>
 
           <View style={styles.phoneContainer}>
-            <Text style={styles.nameLabel}>Champion: {auth.name} </Text>
-            <Text style={styles.phone}>{auth.phone}</Text>
+            <Text style={styles.nameLabel}>Champion: {riderName} </Text>
+            <Text style={styles.phone}>{riderPhone}</Text>
             <TouchableOpacity onPress={() => Linking.openURL(`tel:${auth.phone}`)}>
               <Text style={styles.telLabel }>tap to call or text</Text>
             </TouchableOpacity>

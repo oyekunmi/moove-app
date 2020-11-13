@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { State } from 'react-native-gesture-handler';
 import { baseURL } from '../constants';
 
 export const userSignUp = async (
@@ -57,7 +58,7 @@ export const resetNewPassword = async (otpCode, newPassword, confirmNewPassword)
 	await axios.post(`${baseURL}/auth/password/reset/${otpCode}`, {'new_password': newPassword, 'new_password_confirmation': confirmNewPassword });
 }
 
-export const calculateCost = async (recipient_name, recipient_phone_number, package_description, who_pays = "RECIPIENT", start_location, end_location, payment_method = "card", km, time) => {
+export const calculateCost = async (recipient_name, recipient_phone_number, package_description, who_pays = "REQUESTER", start_location, end_location, payment_method = "card", km, time) => {
 	const { data: { data: cost } } = await axios.post(`${baseURL}/cost`, { recipient_name, recipient_phone_number, package_description, who_pays, start_location, end_location, payment_method, km, time });
 
 	return cost;
@@ -69,9 +70,40 @@ export const mooveHistory = (token) => {
 	return axios.get(`${baseURL}/customer-history`, config);
 }
 
+export const findRider = async (recipient_name, recipient_phone_number, start_location, end_location,package_description, who_pays, latitude, longitude,paymentMethod, token)=>{
+	// console.info(payLoad + ' in api');
+	const config = {
+		headers: { Authorization: `Bearer ${token}` }
+	};
+	const response = await axios.post(`${baseURL}/request-rider`,
+	{	recipient_name: recipient_name,
+		recipient_phone_number: recipient_phone_number, 
+		start_location: start_location,
+		end_location: end_location, 
+		package_description: package_description,
+		who_pays: who_pays, 
+		latitude:latitude, 
+		longitude : longitude, 
+		payment_method: paymentMethod}, config
+	);
+	const trip = response.data.data.trip;
+	const mooveId = response.data.data.trip.moove_id;
+	const date = response.data.data.trip.created_at;
+	const  riderDetails  = response.data.data.rider;
+	const  riderName = response.data.data.rider.profile.first_name + " "+ response.data.data.rider.profile.last_name;
+	// console.log(trip + ' in api');
+	return {mooveId, riderDetails, riderName, date, trip};  
+}
+
+export const cancelTrip = async (tripId, riderId)=>{
+	
+	await axios.post(`${baseURL}/cancel-trip/${tripId}/${riderId}`);
+	
+}
+
 export const verifyOTP = (otpCode)=>{
 	
-	return axios.post(`${baseURL}/auth/token/validate`, {
+	 axios.post(`${baseURL}/auth/token/validate`, {
 		otp: otpCode
 	  });
 	

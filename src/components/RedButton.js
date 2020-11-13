@@ -8,11 +8,16 @@ const styles = StyleSheet.create({
   text: {
     color: "#FFFFFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(18),
+    fontSize: normalize(15.5),
     fontWeight: 'bold',
   },
   button: {
-    marginBottom: normalize(5)
+    marginBottom: normalize(5),
+    height: normalize(48),
+    borderRadius: 21,
+    paddingLeft:normalize(20),
+    paddingRight:normalize(20),
+    width: '90%',
   }
 })
 

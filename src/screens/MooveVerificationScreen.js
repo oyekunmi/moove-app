@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Keyboard, Text, TextInput, StatusBar, ScrollView } from 'react-native';
+import { View, StyleSheet, Keyboard, Text, TextInput, StatusBar, ScrollView, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { cancelTripRequest } from '../redux/actions';
 import AddressField from '../components/AddressField';
-import PlainButton from '../components/PlainButton';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
@@ -12,6 +10,7 @@ import currency from '../currency';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#132535',
+    paddingTop: normalize(20)
   },
   content: {
     paddingHorizontal: normalize(18),
@@ -81,25 +80,55 @@ const styles = StyleSheet.create({
     color: '#D1D1D1',
     fontSize: normalize(13),
     fontWeight: 'normal',
+    marginBottom:normalize(10)
+  },
+  deliveryLocation: {
+    height: normalize(80),
+    marginTop: normalize(7),
+    borderRadius: normalize(15),
+    display: 'flex',
+    backgroundColor: "#1E3040"
+  },
+  deliveryContent: {
+    height: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    paddingHorizontal: normalize(14),
+    paddingTop: normalize(30),
+    paddingBottom:normalize(35),
+  },
+  deliveryLocationLabel: {
+    fontSize: normalize(14),
+    fontFamily: 'Roboto_500Medium',
+    marginBottom: normalize(10),
+    marginTop: normalize(18),
+    color:'#DADADA'
+  },
+  deliveryLocationDetails: {
+    fontSize: normalize(13),
+    color:'#DADADA',
+    fontFamily: 'Roboto_400Regular',
+    lineHeight: normalize(15)
   },
   mb9: {
     marginBottom: normalize(9),
   }
 })
 
-export default function MooveVerificationScreen({ navigation }) {
-  const dispatch = useDispatch()
-  const trip = useSelector(state => state.trip)
+export default function MooveVerificationScreen({ navigation, route }) {
+  const trip = useSelector(state => state.trip);
+  const auth = useSelector(state=>state.auth);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  const onContinue = () => {
-    navigation.navigate("PaymentMethod")
+  
+  const onContinue = async () => {
+    navigation.navigate("PaymentMethod", {
+      recipient_name: auth.name, recipient_phone_number: auth.phone, start_location : trip.source, 
+      end_location: trip.destination, package_description: trip.package, who_pays: "REQUESTER",
+      latitude :trip.sourceCoord.latitude, longitude :trip.sourceCoord.longitude
+    })
+    
   }
 
-  const onCancelTripRequest = () => {
-    dispatch(cancelTripRequest())
-    navigation.push('Home')
-  }
 
   useEffect(() => {
 
@@ -134,26 +163,32 @@ export default function MooveVerificationScreen({ navigation }) {
           fontIcon="arrow_back_light"
           headerOptionHandler={() => navigation.goBack()}
           subTitle={"Are the details below correct?"}
-          subTitleStyle={{ fontSize: normalize(22) }}
+          subTitleStyle={{ fontSize: normalize(20,) }}
           containerStyle={{ paddingHorizontal: normalize(18), }} />
 
         <View style={styles.content}>
           <View>
-            <View style={styles.mb9}>
-              <AddressField
-                value={trip.source}
-                label="Pick-up Location"
-                editable={false}
-                multiline={true}
-                customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
-                labelStyle={{ color: '#DADADA' }}
-                placeholder="enter source address"
-              />
+          <View style={styles.mb9}>
+              <View style={styles.deliveryLocation}>
+                <View style={styles.deliveryContent}>
+                <Text style={styles.deliveryLocationLabel} >Pick-up Location</Text>
+                <Text style={styles.deliveryLocationDetails}>{trip.source}</Text>
+                </View>
+              </View>
             </View>
             <View style={styles.mb9}>
+              <View style={styles.deliveryLocation}>
+                <View style={styles.deliveryContent}>
+                <Text style={styles.deliveryLocationLabel} >Delivery Location</Text>
+                <Text style={styles.deliveryLocationDetails}>{trip.destination}</Text>
+                </View>
+              </View>
+            </View>
+            
+            <View style={styles.mb9}>
               <AddressField
-                value={trip.destination}
-                label="Delivery Location"
+                value={trip.recipientPhone}
+                label="Recipient Phone Number"
                 editable={false}
                 multiline={true}
                 customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
@@ -171,23 +206,17 @@ export default function MooveVerificationScreen({ navigation }) {
                   value={trip.package}
                   editable={false} />
             </View>
-
-            <View style={styles.costContainer}>
-              <Text style={styles.costLabel}>Your delivery cost</Text>
-              <Text style={styles.costValue}>{currency(trip.cost)}</Text>
-            </View>
           </View>
           <View>
             <RedButton
-              title="Yes! Start My Moovee"
+              title="Proceed"
               buttonStyle={styles.button}
               onPress={onContinue} />
-
-            <PlainButton
+            {/* <PlainButton
               title="Cancel/Reset Moove"
               titleStyle={styles.cancelButtonStyle}
               buttonStyle={styles.button}
-              onPress={onCancelTripRequest} />
+              onPress={onCancelTripRequest} /> */}
           </View>
 
         </View>
