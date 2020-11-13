@@ -78,7 +78,8 @@ export default function ForgotPasswordScreen({ navigation }) {
       flex: 2,
     },
     lastButton: {
-      marginBottom: normalize(20)
+      marginBottom: normalize(20),
+      width:'100%'
     },
     lockLogo: {
       width: normalize(115),

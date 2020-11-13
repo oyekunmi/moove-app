@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
    
     lastButton: {
       marginBottom: normalize(20),
+      width:'100%'
     },
 
     links: {

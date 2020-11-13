@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     },
     lastButton: {
         marginVertical: normalize(75),
+        width:'100%'
        
         
     },
