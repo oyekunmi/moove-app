@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
         fontSize: normalize(14),
         color: '#F1F1F1',
         fontFamily: 'Roboto_400Regular',
+        paddingTop: normalize(20)
     },
     subTitle: {
         fontSize: normalize(28),
@@ -40,9 +41,8 @@ const styles = StyleSheet.create({
         marginTop: normalize(85),
     },
     lastButton: {
-        marginVertical: normalize(75),
-        width:'100%'
-       
+        width:'100%',
+        marginTop:normalize(69)       
         
     },
 })
