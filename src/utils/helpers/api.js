@@ -101,9 +101,9 @@ export const cancelTrip = async (tripId, riderId)=>{
 	
 }
 
-export const verifyOTP = (otpCode)=>{
+export const verifyOTP = async (otpCode)=>{
 	
-	 axios.post(`${baseURL}/auth/token/validate`, {
+	await axios.post(`${baseURL}/auth/token/validate`, {
 		otp: otpCode
 	  });
 	

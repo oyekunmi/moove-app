@@ -86,7 +86,7 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 				fontIcon='arrow_back_light'
 				subTitle='Let’s verify your email address'
 				fontIcon='arrow_back_light'
-				subTitleStyle={{ fontSize: normalize(22) }}
+				subTitleStyle={{ fontSize: normalize(20) }}
 				headerOptionHandler={() => navigation.goBack()}
 				titleStyle={styles.title}
 			/>
@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
 		color: '#ffffff',
 		fontFamily: 'Roboto_400Regular',
 		lineHeight: normalize(21),
+		paddingTop:normalize(35)
 	},
 
 	otpEmail: {
@@ -186,7 +187,8 @@ const styles = StyleSheet.create({
 		display: 'flex',
 		flexDirection: 'row',
 		justifyContent: 'center',
-		marginTop: normalize(30)
+		marginTop: normalize(60),
+		paddingTop:normalize(15)
 	},
 	resendCodeOrEmailText: {
 		color: '#ffffff',
@@ -205,7 +207,8 @@ const styles = StyleSheet.create({
 		color:'#ffffff',
 		fontSize: normalize(50),
 		paddingHorizontal: normalize(25),
-		marginHorizontal: normalize(60)
+		marginHorizontal: normalize(60),
+		paddingTop:normalize(25)
 	},
 	title:{
 		color:'#f1f1f1',

@@ -140,9 +140,9 @@ export default function ForgotPasswordScreen({ navigation }) {
 
       <Title
         title="forgot password"
-        fontIcon="arrow_back"
         subTitle="Oops! You’re only human everyone forgets"
         subTitleStyle={{ fontSize: normalize(21) }}
+        titleStyle={{paddingTop:normalize(15)}}
         headerOptionHandler={() => {
           setError({})
           navigation.goBack() }}
