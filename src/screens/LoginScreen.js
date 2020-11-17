@@ -110,7 +110,8 @@ export default function LoginScreen({navigation}) {
 
           <View style={styles.contentInputContainer}>
             <TextField
-              label="Phone No/Email Address"
+              label="Username"
+              placeholder="Phone No or Email Address"
               value={phoneOrEmail}
               onChangeText={setPhoneOrEmail}
               returnKeyType ="next"

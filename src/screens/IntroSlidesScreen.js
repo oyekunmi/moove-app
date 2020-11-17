@@ -119,21 +119,22 @@ export default function IntroSlidersScreen() {
           <Text style={item.textStyle}>{item.text}</Text>
         </View>
 
-      </View>
+      </View> 
     );
   }
 
   return (
     <>
-    <StatusBar translucent backgroundColor="transparent" barStyle="dark-content"/>
-    <AppIntroSlider
-      activeDotStyle={styles.activeDotStyle}
-      dotStyle={styles.dotStyle}
-      showNextButton={false}
-      renderItem={_renderItem}
-      data={slides}
-      onSlideChange={_onSlideChange}
-      onDone={onDone} />
-   </>
+      <StatusBar translucent backgroundColor="transparent" barStyle="light-content"/>
+      <AppIntroSlider
+        activeDotStyle={styles.activeDotStyle}
+        dotStyle={styles.dotStyle}
+        showNextButton={false}
+        renderItem={_renderItem}
+        data={slides}
+        onSlideChange={_onSlideChange}
+        onDone={onDone} 
+      />
+    </>
   )
 }

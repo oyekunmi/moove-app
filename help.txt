@@ -1,0 +1,3 @@
+/* another adb process already running or port in use */
+ps -ef | grep 5037
+kill -9 <process id>

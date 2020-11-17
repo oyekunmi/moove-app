@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: normalize(13),
-    color: '#545252',
+    color: '#908F8F',
     fontFamily: 'Roboto_400Regular',
     fontStyle: 'normal',
     lineHeight: normalize(15)
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     lineHeight: normalize(25),
     marginTop: normalize(10),
     fontFamily: 'Roboto_900Black',
-    fontStyle: 'normal',
+    fontStyle: 'normal',  
     fontWeight: 'bold',
     color: '#181818',
   },
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
 
 export default function Title({ subTitle, subTitleStyle, title, titleStyle, containerStyle, statusBarStyle, fontIcon, headerOptionHandler,orderId }) {
 
-  const titleColor = statusBarStyle === 'light-content' ? '#918F8F' : styles.title.color
+  const titleColor = statusBarStyle === 'light-content' ? '#OOOOOO' : styles.title.color
   const subTitleColor = statusBarStyle === 'light-content' ? '#FFFFFF' : styles.subTitle.color
 
   const _titleStyle = [styles.title, { color: titleColor }, titleStyle]
