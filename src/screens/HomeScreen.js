@@ -17,7 +17,6 @@ import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: normalize(20)
   },
   map: {
     height: '80%',
@@ -43,8 +42,8 @@ const styles = StyleSheet.create({
     top: normalize(17),
   },
   button:{
-    marginTop:normalize(5),
-    marginBottom: normalize(18),
+    marginTop:normalize(30),
+    marginBottom: normalize(15),
     width:'100%'
   }
 });

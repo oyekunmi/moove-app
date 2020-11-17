@@ -17,7 +17,6 @@ import { riderFound, isAppLoading,tripCreated} from '../redux/actions';
 const styles = StyleSheet.create({
 	container: {
 		backgroundColor: '#132535',
-		paddingTop: normalize(20)
 	},
 	content: {
 		paddingHorizontal: normalize(18),

@@ -10,7 +10,6 @@ import currency from '../currency';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#132535',
-    paddingTop: normalize(20)
   },
   content: {
     paddingHorizontal: normalize(18),
@@ -163,6 +162,7 @@ export default function MooveVerificationScreen({ navigation, route }) {
           fontIcon="arrow_back_light"
           headerOptionHandler={() => navigation.goBack()}
           subTitle={"Are the details below correct?"}
+          titleStyle ={{color: '#908F8F'}}
           subTitleStyle={{ fontSize: normalize(20,) }}
           containerStyle={{ paddingHorizontal: normalize(18), }} />
 

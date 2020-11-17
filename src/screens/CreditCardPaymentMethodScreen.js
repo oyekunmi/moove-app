@@ -13,7 +13,6 @@ import { findRider } from '../utils/helpers/api';
 const styles = StyleSheet.create({
   container: {
 	backgroundColor: '#132535',
-	paddingTop: normalize(25)
   },
   content: {
 		paddingHorizontal: normalize(18),
@@ -122,6 +121,7 @@ export default function CreditCardPayment({ navigation, route }) {
 					title={'make card payment'}
 					headerOptionHandler={() => navigation.goBack()}
 					subTitle={'Enter your card details'}
+					titleStyle ={{color: '#908F8F'}}
 					subTitleStyle={{ fontSize: normalize(22) }}
 					containerStyle={{ paddingHorizontal: normalize(18) }}
 				/>

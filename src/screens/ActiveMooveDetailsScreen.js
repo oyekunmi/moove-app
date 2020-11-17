@@ -9,7 +9,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#132535',
-    paddingTop: normalize(30)
   },
   content: {
     paddingHorizontal: normalize(18),
@@ -141,7 +140,7 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
           title={"active moove"}
           subTitle={"Your moove champion is enroute"}
           subTitleStyle={{ fontSize: normalize(22), paddingTop:normalize(10) }}
-          titleStyle={{paddingTop:normalize(10)}}
+          titleStyle ={{color: '#908F8F'}}
           containerStyle={{ paddingHorizontal: normalize(18) }} />
 
         <View style={styles.content}>

@@ -15,11 +15,9 @@ import { calculateCost } from '../utils/helpers/api';
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#ffffff",
-    paddingTop: normalize(20)
   },
   content: {
     paddingHorizontal: normalize(18),
-    paddingTop: normalize(10),
     justifyContent: 'space-between',
     flexGrow: 2,
 
@@ -80,8 +78,8 @@ const styles = StyleSheet.create({
     lineHeight: normalize(15)
   },
   button: {
-    marginBottom: normalize(10),
-    marginTop: normalize(20),
+    marginBottom: normalize(15),
+    marginTop: normalize(15),
     alignSelf: "center",
     width: '100%',
   },
