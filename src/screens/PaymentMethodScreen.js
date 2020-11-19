@@ -163,7 +163,7 @@ export default function PaymentMethodScreen({ navigation, route }) {
 					headerOptionHandler={() => navigation.goBack()}
 					subTitle={'Choose your payment method'}
 					subTitleStyle={{ fontSize: normalize(20),paddingTop:normalize(10) }}
-					titleStyle ={{color: '#908F8F'}}
+					titleStyle ={{color: '#F1F1F1'}}
 					containerStyle={{ paddingHorizontal: normalize(18) }}
 				/>
 

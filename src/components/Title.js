@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const styles = StyleSheet.create({
   titleContainer: {
     paddingBottom: normalize(16),
-    marginTop: normalize(20),
+    marginTop: normalize(40),
   },
   title: {
     fontSize: normalize(13),

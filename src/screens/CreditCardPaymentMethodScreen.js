@@ -121,7 +121,7 @@ export default function CreditCardPayment({ navigation, route }) {
 					title={'make card payment'}
 					headerOptionHandler={() => navigation.goBack()}
 					subTitle={'Enter your card details'}
-					titleStyle ={{color: '#908F8F'}}
+					titleStyle ={{color: '#F1F1F1'}}
 					subTitleStyle={{ fontSize: normalize(22) }}
 					containerStyle={{ paddingHorizontal: normalize(18) }}
 				/>

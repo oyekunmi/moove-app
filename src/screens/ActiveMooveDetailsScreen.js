@@ -6,6 +6,7 @@ import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#132535',
@@ -49,11 +50,16 @@ const styles = StyleSheet.create({
     fontSize: normalize(13),
     fontFamily: 'Roboto_400Regular',
     lineHeight: normalize(15),
+    shadowColor:'#908F8F',
+    shadowOffset:{
+      width: 0,
+      height: 2,
+    }
   },
   phone: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
-    fontSize: normalize(44),
+    fontSize: normalize(40),
     fontWeight: 'bold',
     paddingTop: normalize(10)
   },
@@ -95,7 +101,7 @@ const styles = StyleSheet.create({
     lineHeight: normalize(15)
   },
   DeliveryItemDescription: {
-    height: normalize(71),
+    height: normalize(75),
     backgroundColor: '#1E3040',
     borderRadius: normalize(15),
     paddingTop: normalize(10),
@@ -140,7 +146,7 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
           title={"active moove"}
           subTitle={"Your moove champion is enroute"}
           subTitleStyle={{ fontSize: normalize(22), paddingTop:normalize(10) }}
-          titleStyle ={{color: '#908F8F'}}
+          titleStyle ={{color: '#F1F1F1', paddingTop: normalize(10)}}
           containerStyle={{ paddingHorizontal: normalize(18) }} />
 
         <View style={styles.content}>
@@ -149,21 +155,33 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
             <Text style={styles.nameLabel}>Champion: {riderName} </Text>
             <Text style={styles.phone}>{riderPhone}</Text>
             <TouchableOpacity onPress={() => Linking.openURL(`tel:${auth.phone}`)}>
-              <Text style={styles.telLabel }>tap to call or text</Text>
+              <Text style={styles.telLabel }>tap to call or text</Text> 
             </TouchableOpacity>
           </View>
 
           <View style={[styles.packageContainer, styles.mb9]}>
 
-          <View style={[styles.locationDetails, styles.mb9]}>
+          <View style={[styles.DeliveryItemDescription, styles.mb9 ]}>
             <View style={styles.pickUpandDelivery}>
               <Text style={styles.pickupAndLocationLabel}>Pick-up Location</Text>
               <Text style={styles.pickUpAndLocationDetails}>{trip.source}</Text>
             </View>
-            <View style={styles.pickUpandDelivery}>
-            <Text style={styles.pickupAndLocationLabel} >Delivery Location</Text>
-            <Text style={styles.pickUpAndLocationDetails}>{trip.destination}</Text>
+            
+          </View>
+          
+          <View style={[styles.DeliveryItemDescription, styles.mb9 , {height: normalize(100)} ]}>
+            <View style={[styles.pickUpandDelivery, {paddingTop:normalize(45)}]}>
+              <Text style={styles.pickupAndLocationLabel}>Delivery Location</Text>
+              <Text style={[styles.pickUpAndLocationDetails,{paddingBottom:normalize(15)}]}>{trip.destination}</Text>
             </View>
+            
+          </View>
+          <View style={[styles.DeliveryItemDescription, styles.mb9 ]}>
+            <View style={styles.pickUpandDelivery}>
+              <Text style={styles.pickupAndLocationLabel}>Recipient Phone Number</Text>
+              <Text style={styles.pickUpAndLocationDetails}>{trip.recipientPhone}</Text>
+            </View>
+            
           </View>
 
 
