@@ -118,10 +118,11 @@ export default function MooveVerificationScreen({ navigation, route }) {
   const trip = useSelector(state => state.trip);
   const auth = useSelector(state=>state.auth);
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
   
   const onContinue = async () => {
     navigation.navigate("PaymentMethod", {
-      recipient_name: auth.name, recipient_phone_number: auth.phone, start_location : trip.source, 
+      recipient_name: auth.name, recipient_phone_number: trip.recipientPhone, start_location : trip.source, 
       end_location: trip.destination, package_description: trip.package, who_pays: "REQUESTER",
       latitude :trip.sourceCoord.latitude, longitude :trip.sourceCoord.longitude
     })
@@ -130,7 +131,7 @@ export default function MooveVerificationScreen({ navigation, route }) {
 
 
   useEffect(() => {
-
+    
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => {

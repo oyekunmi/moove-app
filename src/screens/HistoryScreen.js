@@ -152,7 +152,7 @@ function HistoryScreen({ navigation }) {
         fontIcon="side_menu"
         headerOptionHandler={toggleDrawerHandler}
         subTitle={"Moove history "}
-        subTitleStyle={{ fontSize: normalize(26) }}
+        subTitleStyle={{ fontSize: normalize(21) }}
         containerStyle={{ paddingHorizontal: normalize(18) }} />
       <View style={styles.content}>
 
@@ -174,7 +174,8 @@ function HistoryScreen({ navigation }) {
                 <Text>{x.created_at}</Text><View ><TouchableOpacity onPress={() => {
                   navigation.navigate('HistoryDetails', {
                     moove_id: x.moove_id, pick_up: x.start_location, delivery_location: x.end_location,
-                    date: x.created_at, cost: x.cost_of_trip
+                    date: x.created_at, cost: x.cost_of_trip, recipientPhone:x.recipient_phone_number,
+                    packageDescription:x.package_description, tripStatus:x.trip_status
                   })
                 }} style={styles.viewDetails}><Text style={styles.viewText}>View</Text></TouchableOpacity></View>
                 <Text style={styles.tripCost}>{currency(x.cost_of_trip)}</Text>

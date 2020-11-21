@@ -7,9 +7,6 @@ import GreenButton from '../components/GreenButton';
 import currency from '../currency';
 
 
-
-
-
 const styles = StyleSheet.create({
     content: {
         paddingHorizontal: normalize(2),
@@ -37,8 +34,14 @@ const styles = StyleSheet.create({
     tripCost: {
         fontSize: normalize(19),
         fontWeight: 'bold',
-        marginTop: normalize(130),
+        marginTop: normalize(15),
         marginBottom: normalize(14)
+    },
+    tripStatus:{
+        fontWeight: 'bold',
+        color:'#D65A5A',
+        alignSelf:'center',
+        marginVertical: normalize(30)
     },
     date: {
         fontWeight: 'bold',
@@ -52,7 +55,6 @@ const styles = StyleSheet.create({
 
     },
     button: {
-        marginTop: normalize(15),
         alignSelf: "center",
         width: '90%',
         height: '7%'
@@ -64,8 +66,8 @@ const styles = StyleSheet.create({
 
 
 export default function HistoryDetailScreen({ navigation, route }) {
-    const { moove_id, pick_up, delivery_location, date, cost } = route.params;
-
+    const { moove_id, pick_up, delivery_location,tripStatus, date, cost,recipientPhone, packageDescription } = route.params;
+   
     return (
 
         <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps='always'>
@@ -74,9 +76,9 @@ export default function HistoryDetailScreen({ navigation, route }) {
                 title={"past mooves"}
                 fontIcon='arrow_back'
                 headerOptionHandler={() => navigation.goBack()}
-                subTitle={"Moove MV" + moove_id}
+                subTitle={"Moove MV" + moove_id +"\ndetails"}
                 subTitleStyle={{ fontSize: normalize(22), flex: 1 }}
-                containerStyle={{ paddingHorizontal: normalize(10) }} />
+                containerStyle={{ paddingHorizontal: normalize(20) }} />
             <View style={styles.historyInput}>
                 <Text style={styles.date}>
                     {date}
@@ -89,18 +91,23 @@ export default function HistoryDetailScreen({ navigation, route }) {
                     Delivery Location
                 </Text>
                 <Text style={styles.descriptionDetails}>{delivery_location}</Text>
+                <Text style={styles.descriptionTitles}>
+                    Recipient Phone Number
+                </Text>
+                <Text style={styles.descriptionDetails}>{recipientPhone}</Text>
+                <Text style={styles.descriptionTitles}>
+                    Package description
+                </Text>
+                <Text style={styles.descriptionDetails}>{packageDescription}</Text>
                 <Text style={styles.tripCost}>
                     You Paid - {currency(cost)}
                 </Text>
-
+                
             </View>
-            <GreenButton
-                title="Back to History"
-                buttonStyle={styles.button}
-                onPress={() => {
-                    navigation.goBack();
-                }}>
-            </GreenButton>
+                <Text style={styles.tripStatus}>
+                        {tripStatus}
+                </Text>
+
             <RedButton
                 title="Go to Dashboard"
                 buttonStyle={styles.button}
