@@ -71,7 +71,8 @@ const styles = StyleSheet.create({
   viewDetails: {
     backgroundColor: '#2B4257',
     borderRadius: 15,
-    width: 50,
+    width: 55,
+    height: 30,
     paddingHorizontal: normalize(7),
     position: "absolute",
     right: '4%',
@@ -80,6 +81,8 @@ const styles = StyleSheet.create({
   },
   viewText: {
     color: '#DADADA',
+    alignSelf: 'center',
+    paddingTop:normalize(4)
   },
   enrouteButton: {
     position: "absolute",

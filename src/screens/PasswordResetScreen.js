@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
 		marginVertical: normalize(5),
 	},
 	lastButton: {
-		marginVertical: normalize(130),
+		marginVertical: normalize(110),
 	},
 	lockLogo: {
 		width: normalize(115),

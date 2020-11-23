@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     },
     lastButton: {
         width:'100%',
-        marginTop:normalize(69)       
+        marginVertical:normalize(50)       
         
     },
 })

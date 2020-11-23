@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    height: '80%',
+    height: '81.5%',
     width: '100%',
     minHeight: normalize(230),
   },
@@ -42,8 +42,8 @@ const styles = StyleSheet.create({
     top: normalize(17),
   },
   button:{
-    marginTop:normalize(30),
-    marginBottom: normalize(15),
+    marginTop:normalize(33),
+    marginBottom: normalize(12),
     width:'100%'
   }
 });

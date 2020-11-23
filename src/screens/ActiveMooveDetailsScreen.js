@@ -50,11 +50,7 @@ const styles = StyleSheet.create({
     fontSize: normalize(13),
     fontFamily: 'Roboto_400Regular',
     lineHeight: normalize(15),
-    shadowColor:'#908F8F',
-    shadowOffset:{
-      width: 0,
-      height: 2,
-    }
+    textDecorationLine: 'underline'
   },
   phone: {
     color: "#FFF",
