@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, StatusBar, Text, Image, AsyncStorage , Alert} from 'react-native';
+import { View, StyleSheet, StatusBar, Text, Image, Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import * as LocalAuthentication from 'expo-local-authentication';
 import { signIn, isAppLoading, isBtnDisabled } from '../redux/actions';
