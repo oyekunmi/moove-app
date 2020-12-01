@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, TextInput, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TextInput, Image, TouchableOpacity, Alert } from 'react-native';
 import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   button: {
     alignSelf: "center",
     position: "absolute",
-    bottom : "1%",
+    bottom: '0%',
     zIndex:1,
     shadowColor: "#000",
     shadowOffset: {
@@ -63,7 +63,8 @@ const styles = StyleSheet.create({
     fontSize: normalize(14),
     fontFamily: 'Roboto_400Regular',
     textAlign: 'center',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    marginTop: normalize(50)
   },
   tripCost: {
     fontSize: normalize(17),
@@ -100,6 +101,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: normalize(12),
     fontFamily: 'Roboto'
+  },
+  dashboardButton:{ 
+    marginTop: normalize(200),
+    alignSelf: "center",
+    width: '100%',  
   }
 });
 
@@ -111,7 +117,7 @@ function HistoryScreen({ navigation }) {
   const [ShowErrorMessage, setShowErrorMessage] = useState(true);
   const history = useSelector(state => state.trip.historyDetails);
 
-  console.log(history);
+  // console.log(history);
 
   useEffect(() => {
     try {
@@ -126,6 +132,7 @@ function HistoryScreen({ navigation }) {
     } catch (error) {
       if (error.response) {
         if(error.response.data.message){
+          console.log(error.response.data.message);
           Alert.alert('An error has occurred', error.response.data.message);
         }	
       } else if (error.request) {
@@ -137,14 +144,7 @@ function HistoryScreen({ navigation }) {
       }
       setShowErrorMessage(true);
     }
-  }, [])
-
-
-
-
-
-
-  console.log(token);
+  }, []);
 
   const toggleDrawerHandler = () => {
     // The drawer should be toggled here
@@ -164,11 +164,21 @@ function HistoryScreen({ navigation }) {
           subTitleStyle={{ fontSize: normalize(21) }}
           containerStyle={{ paddingHorizontal: normalize(18) }} />
         <View style={styles.content}>
+        {ShowErrorMessage && 
+          <View>
+            <Text style={styles.errorMsg}>You have no History Yet.</Text>
+            <RedButton
+              title="Go to Dashboard"
+              buttonStyle={styles.dashboardButton}
+              onPress={() => {
+                navigation.navigate('Home')
+              }}>
+            </RedButton>
+          </View>
+        }
 
-          <View style={styles.historyContainer}>
-            {ShowErrorMessage && <View>
-              <Text style={styles.errorMsg}>You have no History Yet.</Text>
-            </View>}
+        <View style={styles.historyContainer}>
+            
             {!ShowErrorMessage && history.map(x => <View key={x.id}>{
               x.trip_status === "IN_PROGRESS" ? <View style={styles.enrouteDetails}>
                 <Text style={styles.mooveId}>Moove - MV{x.moove_id}</Text>
@@ -195,13 +205,14 @@ function HistoryScreen({ navigation }) {
           </View>
         </View>
       </ScrollView>
+      {!ShowErrorMessage &&
       <RedButton
       title="Go to Dashboard"
       buttonStyle={styles.button}
       onPress={() => {
         navigation.navigate('Home')
       }}>
-      </RedButton>
+      </RedButton>}
     </View>
   );
 }
