@@ -45,13 +45,18 @@ const styles = StyleSheet.create({
     marginTop: normalize(15),
   },
   button: {
-    marginBottom: normalize(10),
-    marginTop: normalize(20),
     alignSelf: "center",
-    width: '90%',
-    // position: "absolute",
-    // bottom : "5%",
-    // zIndex:1
+    position: "absolute",
+    bottom : "1%",
+    zIndex:1,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   errorMsg: {
     color: '#CE0303',
@@ -149,62 +154,55 @@ function HistoryScreen({ navigation }) {
 
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps='always'>
-      <Title
-        title={"past mooves"}
-        fontIcon="side_menu"
-        headerOptionHandler={toggleDrawerHandler}
-        subTitle={"Moove history "}
-        subTitleStyle={{ fontSize: normalize(21) }}
-        containerStyle={{ paddingHorizontal: normalize(18) }} />
-      <View style={styles.content}>
+    <View>
+      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps='always'>
+        <Title
+          title={"past mooves"}
+          fontIcon="side_menu"
+          headerOptionHandler={toggleDrawerHandler}
+          subTitle={"Moove history "}
+          subTitleStyle={{ fontSize: normalize(21) }}
+          containerStyle={{ paddingHorizontal: normalize(18) }} />
+        <View style={styles.content}>
 
-        <View style={styles.historyContainer}>
-          {ShowErrorMessage && <View>
-            <Text style={styles.errorMsg}>You have no History Yet.</Text>
-          </View>}
-          {!ShowErrorMessage && history.map(x => <View key={x.id}>{
-            x.trip_status === "IN_PROGRESS" ? <View style={styles.enrouteDetails}>
-              <Text style={styles.mooveId}>Moove - MV{x.moove_id}</Text>
-              <Text>{x.created_at}</Text>
-              <TouchableOpacity onPress={() => {
-                navigation.navigate("TrackActiveMoove")
-              }} style={styles.enrouteButton}><Text style={styles.enrouteText}>En-Route</Text>
-              </TouchableOpacity>
-              <Text style={styles.tripCost}>{currency(x.cost_of_trip)}</Text>
-            </View> : <View style={styles.historyInput}>
+          <View style={styles.historyContainer}>
+            {ShowErrorMessage && <View>
+              <Text style={styles.errorMsg}>You have no History Yet.</Text>
+            </View>}
+            {!ShowErrorMessage && history.map(x => <View key={x.id}>{
+              x.trip_status === "IN_PROGRESS" ? <View style={styles.enrouteDetails}>
                 <Text style={styles.mooveId}>Moove - MV{x.moove_id}</Text>
-                <Text>{x.created_at}</Text><View ><TouchableOpacity onPress={() => {
-                  navigation.navigate('HistoryDetails', {
-                    moove_id: x.moove_id, pick_up: x.start_location, delivery_location: x.end_location,
-                    date: x.created_at, cost: x.cost_of_trip, recipientPhone:x.recipient_phone_number,
-                    packageDescription:x.package_description, tripStatus:x.trip_status
-                  })
-                }} style={styles.viewDetails}><Text style={styles.viewText}>View</Text></TouchableOpacity></View>
+                <Text>{x.created_at}</Text>
+                <TouchableOpacity onPress={() => {
+                  navigation.navigate("TrackActiveMoove")
+                }} style={styles.enrouteButton}><Text style={styles.enrouteText}>En-Route</Text>
+                </TouchableOpacity>
                 <Text style={styles.tripCost}>{currency(x.cost_of_trip)}</Text>
-              </View>
-          }
+              </View> : <View style={styles.historyInput}>
+                  <Text style={styles.mooveId}>Moove - MV{x.moove_id}</Text>
+                  <Text>{x.created_at}</Text><View ><TouchableOpacity onPress={() => {
+                    navigation.navigate('HistoryDetails', {
+                      moove_id: x.moove_id, pick_up: x.start_location, delivery_location: x.end_location,
+                      date: x.created_at, cost: x.cost_of_trip, recipientPhone:x.recipient_phone_number,
+                      packageDescription:x.package_description, tripStatus:x.trip_status
+                    })
+                  }} style={styles.viewDetails}><Text style={styles.viewText}>View</Text></TouchableOpacity></View>
+                  <Text style={styles.tripCost}>{currency(x.cost_of_trip)}</Text>
+                </View>
+            }
 
-          </View>)}
+            </View>)}
+          </View>
         </View>
-      </View>
+      </ScrollView>
       <RedButton
-        title="Go to Dashboard"
-        buttonStyle={styles.button}
-        onPress={() => {
-          navigation.navigate('Home')
-        }}>
+      title="Go to Dashboard"
+      buttonStyle={styles.button}
+      onPress={() => {
+        navigation.navigate('Home')
+      }}>
       </RedButton>
-
-
-
-
-
-
-
-
-
-    </ScrollView>
+    </View>
   );
 }
 
