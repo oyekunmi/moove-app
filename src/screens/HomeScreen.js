@@ -245,13 +245,15 @@ function HomeScreen({ navigation, route }) {
                   description="My location 2"
                 />
 
-                <MapViewDirections
+                {trip.destinationCoord ?  <MapViewDirections
                   origin={{...trip.sourceCoord}}
                   destination={{...trip.destinationCoord}}
                   apikey={GOOGLE_PLACES_API_KEY}
                   strokeWidth={3}
                   strokeColor="#CE0303"
-                />
+                />:<></>
+                }
+               
 
               </MapView>
             </View>
