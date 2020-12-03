@@ -1,0 +1,22 @@
+{
+  "name": "Moovelogic",
+  "displayName": "Moovelogic",
+  "expo": {
+    "name": "Moovelogic",
+    "slug": "Moovelogic",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "android": {
+      "package": "com.oyekunmi.moovelogic",
+      "versionCode": 1
+    }
+  }
+}
