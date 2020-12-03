@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { View,Image, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
 
-import { FontAwesome } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Title from '../components/Title';
 import { normalize } from '../normalizeFont';

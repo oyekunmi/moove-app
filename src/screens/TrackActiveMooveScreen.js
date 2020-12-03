@@ -69,22 +69,11 @@ export default function TrackActiveMooveScreen({ navigation }) {
       dispatch(cancelTripRequest())
     }
 		catch(error){
-		  console.log('in catch')
-		  if (error.response) {
-		    console.log('i have a response')
-		    if(error.response.data.message){
-		      console.log('i have an error message :')
-		      console.log(error.response.data)
+      if (error.response && error.response.data.message) {
 		      Alert.alert('Opps! sorry, ', error.response.data.message);
-		    }	
-		  } else if (error.request) {
-		    console.log(error.request);
-		    Alert.alert('An error has occurred', 'Network error, Please try again.');
 		  } else {
-		    console.log('Error', error.message);
-		    Alert.alert('An error has occurred', error.message);
-		  }
-	
+		    Alert.alert('An error has occurred', 'Network error, Please try again.');
+      } 
 		}
     navigation.push('Home')
   }
@@ -92,7 +81,7 @@ export default function TrackActiveMooveScreen({ navigation }) {
 
   StatusBar.setBarStyle("dark-content");
   StatusBar.setBackgroundColor("#fff");
-  console.log(trip.sourceCoord);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 

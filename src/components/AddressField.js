@@ -1,10 +1,8 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { TextInput } from 'react-native-gesture-handler';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
-import { setSourceCoordinates } from '../redux/actions';
 import { normalize } from '../normalizeFont';
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 
@@ -54,7 +52,7 @@ const AddressField = (props) => {
 
           }}
           getDefaultValue={() => props.value}
-          onChangeText={() => { console.log('CHANGING LOCATION TEXT ----------->')}}
+          onChangeText={() => { }}
           styles={{
             listView: {
               zIndex: 500,
