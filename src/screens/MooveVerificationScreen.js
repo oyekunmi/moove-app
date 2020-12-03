@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: normalize(10),
-    marginTop: normalize(5),
+    marginTop: normalize(15),
     alignSelf: "center",
     width: '100%',
   },
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   deliveryLocation: {
     height: normalize(80),
-    marginTop: normalize(7),
+    marginVertical: normalize(7),
     borderRadius: normalize(15),
     display: 'flex',
     backgroundColor: "#1E3040"
@@ -102,6 +102,33 @@ const styles = StyleSheet.create({
     marginBottom: normalize(10),
     marginTop: normalize(18),
     color:'#DADADA'
+  },
+  DeliveryItemDescription: {
+    height: normalize(75),
+    backgroundColor: '#1E3040',
+    borderRadius: normalize(15),
+    paddingTop: normalize(10),
+    paddingBottom:normalize(35)
+  },
+  pickUpandDelivery: {
+    height: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    paddingHorizontal: normalize(14),
+    paddingTop: normalize(30),
+    paddingBottom:normalize(35)
+  },
+  pickupAndLocationLabel: {
+    fontSize: normalize(14),
+    fontFamily: 'Roboto_500Medium',
+    color: '#DADADA',
+    marginBottom: normalize(10)
+  },
+  pickUpAndLocationDetails: {
+    fontSize: normalize(13),
+    color: '#D1D1D1',
+    fontFamily: 'Roboto_400Regular',
+    lineHeight: normalize(15)
   },
   deliveryLocationDetails: {
     fontSize: normalize(13),
@@ -169,7 +196,7 @@ export default function MooveVerificationScreen({ navigation, route }) {
 
         <View style={styles.content}>
           <View>
-          <View style={styles.mb9}>
+          <View >
               <View style={styles.deliveryLocation}>
                 <View style={styles.deliveryContent}>
                 <Text style={styles.deliveryLocationLabel} >Pick-up Location</Text>
@@ -187,15 +214,21 @@ export default function MooveVerificationScreen({ navigation, route }) {
             </View>
             
             <View style={styles.mb9}>
-              <AddressField
-                value={trip.recipientPhone}
-                label="Recipient Phone Number"
-                editable={false}
-                multiline={true}
-                customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
-                labelStyle={{ color: '#DADADA' }}
-                placeholder="enter destination address"
-              />
+              <View style={[styles.DeliveryItemDescription, styles.mb9 ]}>
+                <View style={styles.pickUpandDelivery}>
+                  <Text style={styles.pickupAndLocationLabel}>Recipient Phone Number</Text>
+                  <Text style={styles.pickUpAndLocationDetails}>{trip.recipientPhone}</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.mb9}>
+              <View style={[styles.DeliveryItemDescription, styles.mb9 ]}>
+                <View style={styles.pickUpandDelivery}>
+                  <Text style={styles.pickupAndLocationLabel}>Recipient Name</Text>
+                  <Text style={styles.pickUpAndLocationDetails}>{trip.recipientName}</Text>
+                </View>
+              </View>
             </View>
 
             <View style={styles.DeliveryItemDescription}>

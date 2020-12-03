@@ -1,5 +1,5 @@
 import {
-  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED,RECIPIENT_PHONE_ADDED, TRIP_CREATED, TRIP_CANCEL_REQUEST, PACKAGE_INFO_CHANGED, SIGN_OUT, SOURCE_COORDINATES_FETCHED,RIDER_DETAILS,TRIP_COST_CHANGED,SET_PAYMENT_METHOD,HISTORY_DETAILS
+  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED,RECIPIENT_PHONE_ADDED,RECIPIENT_NAME_ADDED, TRIP_CREATED, TRIP_CANCEL_REQUEST, PACKAGE_INFO_CHANGED, SIGN_OUT, SOURCE_COORDINATES_FETCHED,RIDER_DETAILS,TRIP_COST_CHANGED,SET_PAYMENT_METHOD,HISTORY_DETAILS
 } from "../actionTypes";
 
 const defaultState = {
@@ -9,6 +9,7 @@ const defaultState = {
   destinationCoord: null,
   package: '',
   recipientPhone:'',
+  recipientName:'',
   cost: 0,
   paymentMethod: '',
   historyDetails:[],
@@ -35,6 +36,11 @@ export default (state = defaultState, action) => {
         ...state,
         recipientPhone: action.value
       };
+    case RECIPIENT_NAME_ADDED:
+        return {
+          ...state,
+          recipientName: action.value
+        };
     case TRIP_COST_CHANGED:
       return {
         ...state,
