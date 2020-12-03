@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginBottom: normalize(10),
-    marginTop: normalize(5),
+    marginTop: normalize(15),
     alignSelf: "center",
     width: '100%',
   },
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   deliveryLocation: {
     height: normalize(80),
-    marginTop: normalize(7),
+    marginVertical: normalize(7),
     borderRadius: normalize(15),
     display: 'flex',
     backgroundColor: "#1E3040"
@@ -122,7 +122,7 @@ export default function MooveVerificationScreen({ navigation, route }) {
   
   const onContinue = async () => {
     navigation.navigate("PaymentMethod", {
-      recipient_name: auth.name, recipient_phone_number: trip.recipientPhone, start_location : trip.source, 
+      recipient_name: trip.recipientName, recipient_phone_number: trip.recipientPhone, start_location : trip.source, 
       end_location: trip.destination, package_description: trip.package, who_pays: "REQUESTER",
       latitude :trip.sourceCoord.latitude, longitude :trip.sourceCoord.longitude
     })
@@ -169,7 +169,7 @@ export default function MooveVerificationScreen({ navigation, route }) {
 
         <View style={styles.content}>
           <View>
-          <View style={styles.mb9}>
+          <View >
               <View style={styles.deliveryLocation}>
                 <View style={styles.deliveryContent}>
                 <Text style={styles.deliveryLocationLabel} >Pick-up Location</Text>
@@ -190,6 +190,17 @@ export default function MooveVerificationScreen({ navigation, route }) {
               <AddressField
                 value={trip.recipientPhone}
                 label="Recipient Phone Number"
+                editable={false}
+                multiline={true}
+                customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}
+                labelStyle={{ color: '#DADADA' }}
+                placeholder="enter destination address"
+              />
+            </View>
+            <View style={styles.mb9}>
+              <AddressField
+                value={trip.recipientName}
+                label="Recipient Name"
                 editable={false}
                 multiline={true}
                 customStyle={{ color: '#D1D1D1', backgroundColor: '#1E3040'}}

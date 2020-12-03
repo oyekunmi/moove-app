@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { normalize } from '../normalizeFont';
-import { changePackageInfo, setTripCost, isAppLoading,addRecipientPhone, isBtnDisabled } from '../redux/actions';
+import { changePackageInfo, setTripCost, isAppLoading,addRecipientPhone,addRecipientName, isBtnDisabled } from '../redux/actions';
 import RedButton from '../components/RedButton';
 import Title from '../components/Title';
 import AddressField from '../components/AddressField';
@@ -95,6 +95,7 @@ export default function PackageDescriptionScreen({ navigation }) {
   const [duration, setDuration] = useState('');
   const [packageDescription, setPackageDescription] = useState('');
   const [recipientPhone, setRecipientPhone] = useState('');
+  const [recipientName, setRecipientName] = useState('');
 
   const dispatch = useDispatch();
   
@@ -125,6 +126,7 @@ export default function PackageDescriptionScreen({ navigation }) {
   useEffect(() => {
     changePackageDescriptionHandler(packageDescription);
     changeRecipientPhoneHandler(recipientPhone);
+    changeRecipientNameHandler(recipientName);
     dispatch(changePackageInfo(packageDescription));
   }, [packageDescription, trip.package]);
 
@@ -142,6 +144,13 @@ export default function PackageDescriptionScreen({ navigation }) {
       dispatch(isBtnDisabled(false));
 
   };
+  const changeRecipientNameHandler = value => {
+
+    value.length === 0 ?
+      dispatch(isBtnDisabled(true)) :
+      dispatch(isBtnDisabled(false));
+
+  };
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -152,8 +161,9 @@ export default function PackageDescriptionScreen({ navigation }) {
 
     try {
 
-      const cost = await calculateCost(auth.name, recipientPhone, trip.package, null, trip.source, trip.destination, null, distance, duration);
+      const cost = await calculateCost(recipientName, recipientPhone, trip.package, null, trip.source, trip.destination, null, distance, duration);
       dispatch(addRecipientPhone(recipientPhone));
+      dispatch(addRecipientName(recipientName));
       dispatch(setTripCost(cost));
       dispatch(isAppLoading(false));
       navigation.navigate('MooveVerification');
@@ -224,6 +234,14 @@ export default function PackageDescriptionScreen({ navigation }) {
                   value={recipientPhone}
                   onChangeText={setRecipientPhone}
                   keyboardType='numeric'
+                  autoFocus />
+              </View>
+              <View style={styles.packageContainer}>
+                <Text style={styles.packageLabel}>Recipient Name:</Text>
+                <TextInput                 
+                  style={styles.phoneInput}
+                  value={recipientName}
+                  onChangeText={setRecipientName}
                   autoFocus />
               </View>
               <View style={styles.packageContainer}>
