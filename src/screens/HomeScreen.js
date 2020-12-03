@@ -232,20 +232,20 @@ function HomeScreen({ navigation, route }) {
                   longitudeDelta: 0.015,
                 }} >
 
-                <Marker
-                  coordinate={trip.destinationCoord || trip.sourceCoord}
+                {trip.destinationCoord ? <Marker
+                  coordinate={trip.destinationCoord}
                   title="Destination"
-                  description="Moove destination"
                   pinColor="blue"
-                />
+                />:<></>
+                }
 
-                <Marker
+                {trip.sourceCoord ? <Marker
                   coordinate={trip.sourceCoord}
-                  title="My location"
-                  description="My location 2"
-                />
+                  title="Current Location"
+                />:<></>
+                }
 
-                {trip.destinationCoord ?  <MapViewDirections
+                {(trip.sourceCoord && trip.destinationCoord) ?  <MapViewDirections
                   origin={{...trip.sourceCoord}}
                   destination={{...trip.destinationCoord}}
                   apikey={GOOGLE_PLACES_API_KEY}
