@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { State } from 'react-native-gesture-handler';
 import { baseURL } from '../constants';
 
 export const userSignUp = async (

@@ -69,22 +69,11 @@ export default function TrackActiveMooveScreen({ navigation }) {
       dispatch(cancelTripRequest())
     }
 		catch(error){
-		  console.log('in catch')
-		  if (error.response) {
-		    console.log('i have a response')
-		    if(error.response.data.message){
-		      console.log('i have an error message :')
-		      console.log(error.response.data)
+      if (error.response && error.response.data.message) {
 		      Alert.alert('Opps! sorry, ', error.response.data.message);
-		    }	
-		  } else if (error.request) {
-		    console.log(error.request);
-		    Alert.alert('An error has occurred', 'Network error, Please try again.');
 		  } else {
-		    console.log('Error', error.message);
-		    Alert.alert('An error has occurred', error.message);
-		  }
-	
+		    Alert.alert('An error has occurred', 'Network error, Please try again.');
+      } 
 		}
     navigation.push('Home')
   }
@@ -92,7 +81,7 @@ export default function TrackActiveMooveScreen({ navigation }) {
 
   StatusBar.setBarStyle("dark-content");
   StatusBar.setBackgroundColor("#fff");
-  console.log(trip.sourceCoord);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
 
@@ -108,20 +97,19 @@ export default function TrackActiveMooveScreen({ navigation }) {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA,
               }} >
-              <Marker
-                coordinate={origin}
-              />
-              <Marker
-                coordinate={destination}
-              />
 
-              <MapViewDirections
+            {origin ? <Marker coordinate={origin} />:<></> }
+            {destination ? <Marker coordinate={destination} />:<></>}  
+            {(origin&&destination)? <MapViewDirections
                 origin={origin}
                 destination={destination}
                 apikey={GOOGLE_PLACES_API_KEY}
                 strokeWidth={3}
                 strokeColor="#CE0303"
-              />
+              />:<></>
+            }
+            
+              
             </MapView>
             <Text style={styles.mapText}>Your delivery is on its way</Text>
             <Text style={styles.mooveText}>Moove - MV{trip.tripDetails.moove_id}</Text>

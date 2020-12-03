@@ -140,8 +140,6 @@ export default function PaymentMethodScreen({ navigation, route }) {
 	];
 
 	useEffect(()=>{
-		console.log(trip);
-		console.log(token);
 		radio_props[cashInputIndex].label === 'CASH' ?
 		[setPaymentMethod('CASH'),  setShowProceedButton(false)]
 		 :[setPaymentMethod('CARD'),setShowProceedButton(true)];

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { View,Image, StyleSheet, Keyboard, ActivityIndicator, ScrollView, StatusBar, Alert } from 'react-native';
 import MapViewDirections from 'react-native-maps-directions';
 
-import { FontAwesome } from '@expo/vector-icons';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
@@ -232,26 +231,28 @@ function HomeScreen({ navigation, route }) {
                   longitudeDelta: 0.015,
                 }} >
 
-                <Marker
-                  coordinate={trip.destinationCoord || trip.sourceCoord}
+                {trip.destinationCoord ? <Marker
+                  coordinate={trip.destinationCoord}
                   title="Destination"
-                  description="Moove destination"
                   pinColor="blue"
-                />
+                />:<></>
+                }
 
-                <Marker
+                {trip.sourceCoord ? <Marker
                   coordinate={trip.sourceCoord}
-                  title="My location"
-                  description="My location 2"
-                />
+                  title="Current Location"
+                />:<></>
+                }
 
-                <MapViewDirections
+                {(trip.sourceCoord && trip.destinationCoord) ?  <MapViewDirections
                   origin={{...trip.sourceCoord}}
                   destination={{...trip.destinationCoord}}
                   apikey={GOOGLE_PLACES_API_KEY}
                   strokeWidth={3}
                   strokeColor="#CE0303"
-                />
+                />:<></>
+                }
+               
 
               </MapView>
             </View>
