@@ -1,5 +1,5 @@
 import {
-  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED,RECIPIENT_PHONE_ADDED,RECIPIENT_NAME_ADDED, TRIP_CREATED, TRIP_CANCEL_REQUEST, PACKAGE_INFO_CHANGED, SIGN_OUT, SOURCE_COORDINATES_FETCHED,RIDER_DETAILS,TRIP_COST_CHANGED,SET_PAYMENT_METHOD,HISTORY_DETAILS
+  SOURCE_ADDRESS_CHANGED, DESTINATION_ADDRESS_CHANGED, RECIPIENT_PHONE_ADDED, RECIPIENT_NAME_ADDED, TRIP_CREATED, TRIP_CANCEL_REQUEST, PACKAGE_INFO_CHANGED, SIGN_OUT, SOURCE_COORDINATES_FETCHED, RIDER_DETAILS, TRIP_COST_CHANGED, SET_PAYMENT_METHOD, HISTORY_DETAILS
 } from "../actionTypes";
 
 const defaultState = {
@@ -8,12 +8,12 @@ const defaultState = {
   sourceCoord: null,
   destinationCoord: null,
   package: '',
-  recipientPhone:'',
-  recipientName:'',
+  recipientPhone: '',
+  recipientName: '',
   cost: 0,
   paymentMethod: '',
-  historyDetails:[],
-  riderDetails:'',
+  historyDetails: [],
+  riderDetails: '',
   tripDetails: {},
 }
 
@@ -37,10 +37,10 @@ export default (state = defaultState, action) => {
         recipientPhone: action.value
       };
     case RECIPIENT_NAME_ADDED:
-        return {
-          ...state,
-          recipientName: action.value
-        };
+      return {
+        ...state,
+        recipientName: action.value
+      };
     case TRIP_COST_CHANGED:
       return {
         ...state,
@@ -63,25 +63,25 @@ export default (state = defaultState, action) => {
         source: state.source,
         destination: '',
         package: '',
-        recipientPhone:'',
+        recipientPhone: '',
       };
     case HISTORY_DETAILS:
       return {
         ...state,
-        historyDetails : action.value
+        historyDetails: action.value
       };
     case SET_PAYMENT_METHOD:
       return {
         ...state,
-        paymentMethod : action.value
+        paymentMethod: action.value
       };
     case TRIP_CREATED:
       return {
         ...state,
-        tripDetails : action.value
+        tripDetails: action.value
       }
     case RIDER_DETAILS:
-      return{
+      return {
         ...state,
         riderDetails: action.value,
       }

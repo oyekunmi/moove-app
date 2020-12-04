@@ -1,11 +1,12 @@
 import React from 'react';
-import AddressField from './AddressField';
 import { useSelector } from 'react-redux';
 import { StyleSheet } from 'react-native';
+import { changeDestinationAddress } from '../redux/actions';
+import AddressField from './AddressField';
 
 const styles = StyleSheet.create({
   label: {
-    color: "#FFF",
+    // color: "#FFF",
   },
   input: {
     color: "#D1D1D1",
@@ -31,11 +32,11 @@ export default function DeliveryAddress(props) {
     <AddressField
       defaultValue={trip.destination}
       label="Delivery address"
-      isEditable={true}
       editable={props.editable??false}
       labelStyle={labelStyle}
       inputStyle={inputStyle}
       containerStyle={containerStyle}
+      event={changeDestinationAddress}
     />
   )
 }

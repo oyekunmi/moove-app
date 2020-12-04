@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import { normalize } from '../normalizeFont';
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
+
+navigator.geolocation = require('react-native-geolocation-service');
 
 const styles = StyleSheet.create({
 
@@ -30,6 +32,11 @@ const styles = StyleSheet.create({
 
 const AddressField = (props) => {
   const dispatch = useDispatch();
+  const ref = useRef();
+
+  useEffect(() => {
+    ref.current?.setAddressText(props.value || props.defaultValue);
+  }, [props.value, props.defaultValue]);
 
   return (
     <>
@@ -37,60 +44,62 @@ const AddressField = (props) => {
         {props.label && <Text style={[styles.label, props.labelStyle]}>{props.label}</Text>}
       </View>
 
-        <GooglePlacesAutocomplete
-          placeholder={props.placeholder}
-          minLength={2}
-          editable={props.editable ?? true}
-          onPress={(data, details = null) => {
-            // 'details' is provided when fetchDetails = true
+      <GooglePlacesAutocomplete
+        ref={ref}
+        placeholder={props.placeholder}
+        minLength={2}
+        editable={props.editable ?? true}
+        onPress={(data, details = null) => {
+          // 'details' is provided when fetchDetails = true
 
-            const { lat: latitude, lng: longitude } = details.geometry.location;
+          const { lat: latitude, lng: longitude } = details.geometry.location;
 
-            const address = data.description;
+          const address = data.description;
 
-            dispatch(props.event( address, { latitude, longitude }));
+          dispatch(props.event(address, { latitude, longitude }));
 
-          }}
-          getDefaultValue={() => props.value}
-          onChangeText={() => { }}
-          styles={{
-            listView: {
-              zIndex: 500,
-              backgroundColor: '#EFEFEF',
-              position: 'absolute',
-              top: '95%',
-              zIndex: 500,
-            },
-            textInputContainer: {
-              backgroundColor: props.customStyle ? props.customStyle.backgroundColor : '#EFEFEF',
-              borderTopWidth: 0,
-              borderBottomWidth: 0,
-              height: normalize(80),
-              display:'flex',
-              borderRadius: normalize(20),
-              marginBottom: normalize(6),
-              paddingLeft: normalize(8),
-              width: '100%',
-            },
-            textInput: {
-              alignSelf: 'flex-end',
-              marginBottom: normalize(8),
-              backgroundColor: props.customStyle ? props.backgroundColor : '#EFEFEF',
-              color: props.customStyle ? props.customStyle.color: '#545252',
-              fontSize: normalize(13),
-              height: normalize(37),
-              paddingLeft: 0,
-             
-            },
-          }}
-          query={{
-            key: `${GOOGLE_PLACES_API_KEY}`,
-            language: 'en',
-          }}
-          fetchDetails={true}
-          nearbyPlacesAPI="GooglePlacesSearch"
-          debounce={200}
-        />
+        }}
+        styles={{
+          listView: {
+            zIndex: 500,
+            backgroundColor: '#EFEFEF',
+            position: 'absolute',
+            top: '95%',
+            zIndex: 500,
+          },
+          textInputContainer: {
+            backgroundColor: props.customStyle ? props.customStyle.backgroundColor : '#EFEFEF',
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+            height: normalize(80),
+            display: 'flex',
+            borderRadius: normalize(20),
+            marginBottom: normalize(6),
+            paddingLeft: normalize(8),
+            width: '100%',
+          },
+          textInput: {
+            alignSelf: 'flex-end',
+            marginBottom: normalize(8),
+            backgroundColor: props.customStyle ? props.backgroundColor : '#EFEFEF',
+            color: props.customStyle ? props.customStyle.color : '#545252',
+            fontSize: normalize(13),
+            height: normalize(37),
+            paddingLeft: normalize(10),
+
+          },
+        }}
+        query={{
+          key: `${GOOGLE_PLACES_API_KEY}`,
+          language: 'en',
+          components: 'country:ng',
+        }}
+        fetchDetails={true}
+        nearbyPlacesAPI="GooglePlacesSearch"
+        debounce={200}
+        // currentLocation={true}
+        // currentLocationLabel='Current location'
+      />
     </>
   )
 }
