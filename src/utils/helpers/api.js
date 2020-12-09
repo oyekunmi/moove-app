@@ -70,7 +70,7 @@ export const mooveHistory = (token) => {
 }
 
 export const findRider = async (recipient_name, recipient_phone_number, start_location, end_location,package_description, who_pays, latitude, longitude,paymentMethod, token)=>{
-	// console.info(payLoad + ' in api');
+	
 	const config = {
 		headers: { Authorization: `Bearer ${token}` }
 	};
@@ -106,4 +106,9 @@ export const verifyOTP = async (otpCode)=>{
 		otp: otpCode
 	  });
 	
+}
+
+export const getRiderLocation = async(riderId, tripId)=>{
+	const response = await axios.get(`${baseURL}/rider/current/location/${riderId}/${tripId}`)
+	return response;
 }

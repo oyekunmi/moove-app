@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, ActivityIndicator, ScrollView,Alert, Linking, StatusBar, Text, Dimensions } from 'react-native';
@@ -6,7 +6,7 @@ import MapViewDirections from 'react-native-maps-directions';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
-import { cancelTrip } from '../utils/helpers/api';
+import { cancelTrip , getRiderLocation } from '../utils/helpers/api';
 import { cancelTripRequest } from '../redux/actions';
 import PlainButton from '../components/PlainButton';
 
@@ -63,6 +63,24 @@ export default function TrackActiveMooveScreen({ navigation }) {
   const tripId = trip.tripDetails.id;
   const riderId = trip.tripDetails.rider_id;
   
+  
+  console.log(origin);
+
+  useEffect(()=>{
+    async function trackRiderLocation(){
+      try{
+        const response = await getRiderLocation(riderId,tripId);
+        console.log(response);
+      } catch(error){
+        Alert.alert("Opps! hold on", "The rider is not enroute yet")
+        console.log(riderId);
+        console.log(tripId);
+        console.log(error);
+      }
+    }
+    trackRiderLocation();
+  });
+
   const onCancelTripRequest = async () => {
     try{
       await cancelTrip(tripId,riderId);
