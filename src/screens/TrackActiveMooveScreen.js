@@ -7,7 +7,7 @@ import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 import { cancelTrip , getRiderLocation } from '../utils/helpers/api';
-import { cancelTripRequest } from '../redux/actions';
+import { cancelTripRequest, getRiderCoords } from '../redux/actions';
 import PlainButton from '../components/PlainButton';
 
 const styles = StyleSheet.create({
@@ -54,7 +54,8 @@ export default function TrackActiveMooveScreen({ navigation }) {
 
   const dispatch = useDispatch()
   const trip = useSelector(state => state.trip);
-  const origin = trip.sourceCoord;
+  // const origin = trip.sourceCoord;
+  const origin = trip.riderCoords;
   const destination = trip.destinationCoord;
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / 320;
@@ -64,17 +65,16 @@ export default function TrackActiveMooveScreen({ navigation }) {
   const riderId = trip.tripDetails.rider_id;
   
   
-  console.log(origin);
+  // console.log(riderOrigin);
 
   useEffect(()=>{
     async function trackRiderLocation(){
       try{
         const response = await getRiderLocation(riderId,tripId);
-        console.log(response);
+        dispatch(getRiderCoords(response.data.data))
+       // console.log(response.data.data);
       } catch(error){
-        Alert.alert("Opps! hold on", "The rider is not enroute yet")
-        console.log(riderId);
-        console.log(tripId);
+        Alert.alert("Opps! hold on", "The rider is not enroute yet");
         console.log(error);
       }
     }
