@@ -55,7 +55,7 @@ export default function TrackActiveMooveScreen({ navigation }) {
   const dispatch = useDispatch()
   const trip = useSelector(state => state.trip);
   // const origin = trip.sourceCoord;
-  const origin = trip.riderCoords;
+  const origin = trip.riderCoords == null ? trip.sourceCoord : trip.riderCoords;
   const destination = trip.destinationCoord;
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / 320;
@@ -66,20 +66,19 @@ export default function TrackActiveMooveScreen({ navigation }) {
   
   
   // console.log(riderOrigin);
-
-  useEffect(()=>{
-    async function trackRiderLocation(){
-      try{
-        const response = await getRiderLocation(riderId,tripId);
-        dispatch(getRiderCoords(response.data.data))
-       // console.log(response.data.data);
-      } catch(error){
-        Alert.alert("Opps! hold on", "The rider is not enroute yet");
-        console.log(error);
-      }
+  async function trackRiderLocation(){
+    try{
+      const response = await getRiderLocation(riderId,288);
+      dispatch(getRiderCoords(response.data.data))
+      console.log(response.data.data);
+    } catch(error){
+      // Alert.alert("Opps! hold on", "The rider is not enroute yet");
+      console.log(error);
     }
-    trackRiderLocation();
-  });
+  }
+  
+ setInterval(async ()=>{await trackRiderLocation()}, 18000);
+ 
 
   const onCancelTripRequest = async () => {
     try{
