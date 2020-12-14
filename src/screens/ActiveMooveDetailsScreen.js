@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, StyleSheet, Text, TextInput, StatusBar, ScrollView, Linking } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { getRiderLocation } from '../utils/helpers/api';
+import { getRiderCoords } from '../redux/actions';
 
 
 const styles = StyleSheet.create({
@@ -126,7 +128,25 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
   const auth = useSelector(state => state.auth);
   const riderName = trip.riderDetails.riderName;
   const riderPhone = trip.riderDetails.riderPhone;
-  const mooveId = trip.mooveId;
+  const riderId = trip.tripDetails.rider_id;
+  const tripId = trip.tripDetails.id;
+  const dispatch = useDispatch();
+  
+  async function trackRiderLocation(){
+    try{
+      const response = await getRiderLocation(riderId,tripId);
+      dispatch(getRiderCoords(response.data.data))
+      console.log(response.data.data);
+    } catch(error){
+      // Alert.alert("Opps! hold on", "The rider is not enroute yet");
+      console.log(error);
+    }
+  }
+
+  useEffect(()=>{
+    trackRiderLocation();
+  },[]);
+
   const onContinue = () => {
     navigation.navigate("TrackActiveMoove")
   }

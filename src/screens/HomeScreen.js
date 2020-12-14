@@ -72,9 +72,9 @@ function HomeScreen({ navigation, route }) {
 
     navigation.navigate('PackageDescription');
   }
-
+ 
   useEffect(() => {
-
+    
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
       () => {
