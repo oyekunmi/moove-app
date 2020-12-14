@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, ActivityIndicator, ScrollView,Alert, Linking, StatusBar, Text, Dimensions } from 'react-native';
@@ -6,8 +6,8 @@ import MapViewDirections from 'react-native-maps-directions';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
-import { cancelTrip } from '../utils/helpers/api';
-import { cancelTripRequest } from '../redux/actions';
+import { cancelTrip , getRiderLocation } from '../utils/helpers/api';
+import { cancelTripRequest,isAppLoading, getRiderCoords } from '../redux/actions';
 import PlainButton from '../components/PlainButton';
 
 const styles = StyleSheet.create({
@@ -50,11 +50,12 @@ const styles = StyleSheet.create({
   }
 });
 
-export default function TrackActiveMooveScreen({ navigation }) {
+export default function TrackActiveMooveScreen({ navigation , route }) {
 
   const dispatch = useDispatch()
   const trip = useSelector(state => state.trip);
-  const origin = trip.sourceCoord;
+  const common = useSelector(state => state.common);
+  const origin = trip.riderCoords == null ? trip.sourceCoord : trip.riderCoords;
   const destination = trip.destinationCoord;
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / 320;
@@ -63,10 +64,31 @@ export default function TrackActiveMooveScreen({ navigation }) {
   const tripId = trip.tripDetails.id;
   const riderId = trip.tripDetails.rider_id;
   
-  const onCancelTripRequest = async () => {
+  
+  // console.log(origin + 'in track');
+  async function trackRiderLocation(){
     try{
+      const response = await getRiderLocation(riderId,tripId);
+      dispatch(getRiderCoords(response.data.data))
+      console.log(response.data.data);
+    } catch(error){
+      // Alert.alert("Opps! hold on", "The rider is not enroute yet");
+      console.log(error);
+    }
+  }
+  
+  useEffect(()=>{
+    var request = setInterval(async ()=> await trackRiderLocation(), 60000)
+    console.log(new Date())
+    return () => clearInterval(request);
+  },[]);
+
+  const onCancelTripRequest = async () => {
+    dispatch(isAppLoading(true));
+    try{
+      dispatch(cancelTripRequest());
       await cancelTrip(tripId,riderId);
-      dispatch(cancelTripRequest())
+     
     }
 		catch(error){
       if (error.response && error.response.data.message) {
@@ -74,10 +96,14 @@ export default function TrackActiveMooveScreen({ navigation }) {
 		  } else {
 		    Alert.alert('An error has occurred', 'Network error, Please try again.');
       } 
-		}
+    }
+    dispatch(isAppLoading(false));
     navigation.push('Home')
   }
 
+  const goHome = () => {
+    navigation.navigate("Home")
+  }
 
   StatusBar.setBarStyle("dark-content");
   StatusBar.setBackgroundColor("#fff");
@@ -119,9 +145,14 @@ export default function TrackActiveMooveScreen({ navigation }) {
 
       </View>
         <PlainButton
-						title='Cancel'
+						title={common.isLoading ? 'Cancelling' : 'Cancel Moove'}
 						titleStyle={{color:'#EA5858'}}
 						onPress={onCancelTripRequest}
+        />
+        <PlainButton
+						title ='Dashboard'
+						titleStyle={{color:'#EA5858'}}
+						onPress={goHome}
         />
         <RedButton
 						title='Contact Moove Champion'
