@@ -57,6 +57,12 @@ function HomeScreen({ navigation, route }) {
 
   const sourceCoord = useSelector(state => state.trip.sourceCoord);
   const destinationCoord = useSelector(state => state.trip.destinationCoord);
+  const trip = useSelector(state => state.trip);
+  // console.log("In home screen " + new Date);
+  // console.log(sourceCoord)
+  // console.log(destinationCoord);
+  // console.log("trip in home");
+  // console.log(trip);
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 

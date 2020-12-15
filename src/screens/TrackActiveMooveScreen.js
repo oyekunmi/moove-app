@@ -55,7 +55,7 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
   const dispatch = useDispatch()
   const trip = useSelector(state => state.trip);
   const common = useSelector(state => state.common);
-  const origin = trip.riderCoords == null ? trip.sourceCoord : trip.riderCoords;
+  const origin = trip.riderCoords == null ? trip.sourceCoord : trip.riderCoords.riderLocation;
   const destination = trip.destinationCoord;
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / 320;
@@ -63,9 +63,10 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
   const LONGITUDE_DELTA = 0.015;
   const tripId = trip.tripDetails.id;
   const riderId = trip.tripDetails.rider_id;
+  const tripStatus = trip.riderCoords == null ? '' : trip.riderCoords.trip.trip_status;
   
-  
-  // console.log(origin + 'in track');
+  // console.log(trip.riderCoords.riderLocation.latitude + ' in track');
+  // console.log(trip.riderCoords.trip.trip_status + ' status');
   async function trackRiderLocation(){
     try{
       const response = await getRiderLocation(riderId,tripId);
@@ -79,7 +80,10 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
   
   useEffect(()=>{
     var request = setInterval(async ()=> await trackRiderLocation(), 60000)
-    console.log(new Date())
+    console.log(new Date());
+    if(tripStatus === "ENDED"){
+      Alert.alert("Moove Ended", "Your package has been delivered.");
+    }
     return () => clearInterval(request);
   },[]);
 
@@ -88,7 +92,7 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
     try{
       dispatch(cancelTripRequest());
       await cancelTrip(tripId,riderId);
-     
+      navigation.push('Home');     
     }
 		catch(error){
       if (error.response && error.response.data.message) {
@@ -98,7 +102,6 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
       } 
     }
     dispatch(isAppLoading(false));
-    navigation.push('Home')
   }
 
   const goHome = () => {
@@ -137,23 +140,32 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
             
               
             </MapView>
-            <Text style={styles.mapText}>Your delivery is on its way</Text>
+            {tripStatus=="ENDED" ? 
+             <Text style={styles.mapText}>Your Moove has ended.</Text>
+            :
+            <Text style={styles.mapText}>Your delivery is on its way.</Text>
+            }
+           
             <Text style={styles.mooveText}>Moove - MV{trip.tripDetails.moove_id}</Text>
             <Text style={styles.mapText}>{trip.tripDetails.created_at}</Text>
           </>
         }
 
       </View>
-        <PlainButton
-						title={common.isLoading ? 'Cancelling' : 'Cancel Moove'}
-						titleStyle={{color:'#EA5858'}}
-						onPress={onCancelTripRequest}
-        />
+        {tripStatus == "ENDED" ?
         <PlainButton
 						title ='Dashboard'
 						titleStyle={{color:'#EA5858'}}
 						onPress={goHome}
         />
+        :
+        <PlainButton
+        title={common.isLoading ? 'Cancelling' : 'Cancel Moove'}
+        titleStyle={{color:'#EA5858'}}
+        onPress={onCancelTripRequest}
+        />
+        }
+        
         <RedButton
 						title='Contact Moove Champion'
 						buttonStyle={styles.button}

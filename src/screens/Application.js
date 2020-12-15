@@ -11,9 +11,7 @@ import {
   Roboto_500Medium
 } from '@expo-google-fonts/roboto';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import HistoryScreen from './/HistoryScreen';
 import LoginScreen from './LoginScreen';
 import IntroSlidersScreen from './IntroSlidesScreen';
 import PackageDescriptionScreen from './PackageDescriptionScreen';
@@ -34,7 +32,7 @@ import SuccessScreen from './SuccessScreen';
 import HomeDrawerScreen from './HomeDrawerScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
 import PasswordResetEmailSentScreen from './PasswordResetEmailSentScreen';
-import HistoryDetailScreen from './HistoryDetailScreen';
+
 
 const Stack = createStackNavigator();
 

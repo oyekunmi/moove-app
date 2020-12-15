@@ -80,13 +80,14 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         riderDetails: action.value,
-      }
+      };
     case GET_RIDER_COORDS:
       return {
         ...state,
         riderCoords: action.value,
-      }
-    case SIGN_OUT || TRIP_CANCEL_REQUEST:
+      };
+    case TRIP_CANCEL_REQUEST:
+    case SIGN_OUT:
       return defaultState;
     default:
       return state;

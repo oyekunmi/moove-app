@@ -88,15 +88,13 @@ const styles = StyleSheet.create({
 export default function PackageDescriptionScreen({ navigation }) {
 
   let trip = useSelector(state => state.trip);
-  let auth = useSelector(state => state.auth);
   let common = useSelector(state => state.common);
 
   const [distance, setDistance ] = useState('');
   const [duration, setDuration] = useState('');
-  const [packageDescription, setPackageDescription] = useState('');
-  const [recipientPhone, setRecipientPhone] = useState('');
-  const [recipientName, setRecipientName] = useState('');
-
+  const recipientPhone = trip.recipientPhone;
+  const recipientName = trip.recipientName;
+  const packageDescription = trip.package;
   const dispatch = useDispatch();
   
 
@@ -123,35 +121,6 @@ export default function PackageDescriptionScreen({ navigation }) {
 
   }, []);
 
-  useEffect(() => {
-    changePackageDescriptionHandler(packageDescription);
-    changeRecipientPhoneHandler(recipientPhone);
-    changeRecipientNameHandler(recipientName);
-    dispatch(changePackageInfo(packageDescription));
-  }, [packageDescription, trip.package]);
-
-  const changePackageDescriptionHandler = value => {
-
-    value.length === 0 ?
-      dispatch(isBtnDisabled(true)) :
-      dispatch(isBtnDisabled(false));
-
-  };
-  const changeRecipientPhoneHandler = value => {
-
-    value.length === 0 ?
-      dispatch(isBtnDisabled(true)) :
-      dispatch(isBtnDisabled(false));
-
-  };
-  const changeRecipientNameHandler = value => {
-
-    value.length === 0 ?
-      dispatch(isBtnDisabled(true)) :
-      dispatch(isBtnDisabled(false));
-
-  };
-
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const onContinue = async () => {
@@ -162,8 +131,6 @@ export default function PackageDescriptionScreen({ navigation }) {
     try {
 
       const cost = await calculateCost(recipientName, recipientPhone, trip.package, null, trip.source, trip.destination, null, distance, duration);
-      dispatch(addRecipientPhone(recipientPhone));
-      dispatch(addRecipientName(recipientName));
       dispatch(setTripCost(cost));
       dispatch(isAppLoading(false));
       navigation.navigate('MooveVerification');
@@ -172,6 +139,25 @@ export default function PackageDescriptionScreen({ navigation }) {
       Alert.alert('An error has occurred', 'Please verify your input', null, { cancelable: true });
       dispatch(isAppLoading(false));
     }
+  }
+
+  const onChangeRecipientPhone = (recipientPhone)=>{
+      recipientPhone.length === 0 ?
+      dispatch(isBtnDisabled(true)) :
+      dispatch(isBtnDisabled(false));
+    dispatch(addRecipientPhone(recipientPhone));
+  }
+  const onChangeRecipientName = (recipientName)=>{
+    recipientName.length === 0 ?
+    dispatch(isBtnDisabled(true)) :
+    dispatch(isBtnDisabled(false));
+    dispatch(addRecipientName(recipientName));
+  }
+  const onChangePackageDescription = (packageDescription)=>{
+    packageDescription.length === 0 ?
+    dispatch(isBtnDisabled(true)) :
+    dispatch(isBtnDisabled(false));
+    dispatch(changePackageInfo(packageDescription));
   }
 
   useEffect(() => {
@@ -231,8 +217,8 @@ export default function PackageDescriptionScreen({ navigation }) {
                 <Text style={styles.packageLabel}>Recipient Phone Number</Text>
                 <TextInput                 
                   style={styles.phoneInput}
-                  value={recipientPhone}
-                  onChangeText={setRecipientPhone}
+                  value = {recipientPhone}
+                  onChangeText={onChangeRecipientPhone}
                   keyboardType='numeric'
                   autoFocus />
               </View>
@@ -241,7 +227,7 @@ export default function PackageDescriptionScreen({ navigation }) {
                 <TextInput                 
                   style={styles.phoneInput}
                   value={recipientName}
-                  onChangeText={setRecipientName}
+                  onChangeText={onChangeRecipientName}
                   autoFocus />
               </View>
               <View style={styles.packageContainer}>
@@ -251,7 +237,7 @@ export default function PackageDescriptionScreen({ navigation }) {
                   numberOfLines={3}
                   style={styles.packageInput}
                   value={packageDescription}
-                  onChangeText={setPackageDescription}
+                  onChangeText={onChangePackageDescription}
                   autoFocus />
               </View>
             </View>

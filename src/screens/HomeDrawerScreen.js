@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-	AsyncStorage,
 	TouchableOpacity,
 	View,
 	StyleSheet,
@@ -13,6 +12,7 @@ import {
 	DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import { useSelector, useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import HomeScreen from './HomeScreen';
 import HistoryScreen from './HistoryScreen';
