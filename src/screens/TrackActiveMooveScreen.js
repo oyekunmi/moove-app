@@ -105,6 +105,7 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
   }
 
   const goHome = () => {
+    dispatch(cancelTripRequest());
     navigation.navigate("Home")
   }
 
