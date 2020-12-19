@@ -136,7 +136,7 @@ export default function PaymentMethodScreen({ navigation, route }) {
 
 	const radio_props = [
 		{ label: 'CASH', value: 0 },
-		{ label: 'VISA/MASTERCARD', value: 1 },
+		// { label: 'VISA/MASTERCARD', value: 1 },
 	];
 
 	useEffect(()=>{

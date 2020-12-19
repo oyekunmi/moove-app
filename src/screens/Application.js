@@ -1,5 +1,5 @@
 import React from 'react'
-import { AsyncStorage, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { restoreToken, signIn } from '../redux/actions';
 import { AppLoading } from 'expo';
@@ -13,6 +13,7 @@ import {
 import { createStackNavigator } from '@react-navigation/stack';
 
 import LoginScreen from './LoginScreen';
+import HistoryDetailsScreen from './HistoryDetailScreen';
 import IntroSlidersScreen from './IntroSlidesScreen';
 import PackageDescriptionScreen from './PackageDescriptionScreen';
 import MooveVerificationScreen from './MooveVerificationScreen';
@@ -32,6 +33,7 @@ import SuccessScreen from './SuccessScreen';
 import HomeDrawerScreen from './HomeDrawerScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
 import PasswordResetEmailSentScreen from './PasswordResetEmailSentScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Stack = createStackNavigator();
@@ -90,9 +92,10 @@ export default function Application() {
         {state.userToken != null && state.userToken != undefined ?
           <>
             <Stack.Screen name="History" component={HomeDrawerScreen} />
-            <Stack.Screen name = "HistoryDetails" component = {HomeDrawerScreen}/>
+            <Stack.Screen name = "HistoryDetails" component = {HistoryDetailsScreen}/>
             <Stack.Screen name="Home" component={HomeDrawerScreen} />
             <Stack.Screen name = "Wallet" component = {HomeDrawerScreen}/>
+
             <Stack.Screen name="PackageDescription" component={PackageDescriptionScreen} />
             <Stack.Screen name="MooveVerification" component={MooveVerificationScreen} />
             <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />

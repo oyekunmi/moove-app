@@ -32,6 +32,7 @@ export default function DeliveryAddress(props) {
     <AddressField
       defaultValue={trip.destination}
       label="Delivery address"
+      placeholder="Enter delivery address"
       editable={props.editable??false}
       labelStyle={labelStyle}
       inputStyle={inputStyle}
