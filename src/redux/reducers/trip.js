@@ -19,7 +19,8 @@ const defaultState = {
   historyDetails: [],
   riderDetails: '',
   tripDetails: {},
-  riderCoords: null
+  riderCoords: null,
+  tripStatus: ''
 }
 
 export default (state = defaultState, action) => {
@@ -84,7 +85,8 @@ export default (state = defaultState, action) => {
     case GET_RIDER_COORDS:
       return {
         ...state,
-        riderCoords: action.value,
+        riderCoords: action.value.riderLocation,
+        tripStatus: action.value.trip.trip_status
       };
     case TRIP_CANCEL_REQUEST:
     case SIGN_OUT:
