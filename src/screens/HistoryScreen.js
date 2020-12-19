@@ -166,9 +166,9 @@ function HistoryScreen({ navigation }) {
         <View style={styles.content}>
         {ShowErrorMessage && 
           <View>
-            <Text style={styles.errorMsg}>You have no History Yet.</Text>
+            <Text style={styles.errorMsg}>You have no moove history</Text>
             <RedButton
-              title="Go to Dashboard"
+              title="Start a moove"
               buttonStyle={styles.dashboardButton}
               onPress={() => {
                 navigation.navigate('Home')
@@ -205,14 +205,8 @@ function HistoryScreen({ navigation }) {
           </View>
         </View>
       </ScrollView>
-      {!ShowErrorMessage &&
-      <RedButton
-      title="Go to Dashboard"
-      buttonStyle={styles.button}
-      onPress={() => {
-        navigation.navigate('Home')
-      }}>
-      </RedButton>}
+      
+      
     </View>
   );
 }

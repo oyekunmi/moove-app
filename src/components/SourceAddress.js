@@ -58,6 +58,7 @@ export default function SourceAddress(props) {
     <AddressField
       defaultValue={trip.source}
       label="Pickup location"
+      placeholder="Enter pickup address"
       editable={props.editable??false}
       labelStyle={labelStyle}
       inputStyle={inputStyle}

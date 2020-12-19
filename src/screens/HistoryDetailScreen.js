@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         marginTop: normalize(15),
         width: '93%',
     },
-    
+
     descriptionDetails: {
         fontFamily: "Roboto",
         color: "#545252"
@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
         marginTop: normalize(15),
         marginBottom: normalize(14)
     },
-    tripStatus:{
+    tripStatus: {
         fontWeight: 'bold',
-        color:'#D65A5A',
-        alignSelf:'center',
+        color: '#D65A5A',
+        alignSelf: 'center',
         marginVertical: normalize(30)
     },
     date: {
@@ -58,65 +58,55 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         width: '90%',
         height: '7%'
-      
-      },
+
+    },
 
 
 });
 
 
 export default function HistoryDetailScreen({ navigation, route }) {
-    const { moove_id, pick_up, delivery_location,tripStatus, date, cost,recipientPhone, packageDescription } = route.params;
-   
+    const { moove_id, pick_up, delivery_location, tripStatus, date, cost, recipientPhone, packageDescription } = route.params;
+
     return (
 
         <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps='always'>
             <View style={styles.content}>
-            <Title
-                title={"past mooves"}
-                fontIcon='arrow_back'
-                headerOptionHandler={() => navigation.goBack()}
-                subTitle={"Moove MV" + moove_id +"\ndetails"}
-                subTitleStyle={{ fontSize: normalize(22), flex: 1 }}
-                containerStyle={{ paddingHorizontal: normalize(20) }} />
-            <View style={styles.historyInput}>
-                <Text style={styles.date}>
-                    {date}
+                <Title
+                    title={"past mooves"}
+                    fontIcon='arrow_back'
+                    headerOptionHandler={() => navigation.goBack()}
+                    subTitle={"Moove MV" + moove_id + "\ndetails"}
+                    subTitleStyle={{ fontSize: normalize(22), flex: 1 }}
+                    containerStyle={{ paddingHorizontal: normalize(20) }} />
+                <View style={styles.historyInput}>
+                    <Text style={styles.date}>
+                        {date}
+                    </Text>
+                    <Text style={styles.descriptionTitles}>
+                        Pick-up Location
                 </Text>
-                <Text style={styles.descriptionTitles}>
-                    Pick-up Location
+                    <Text style={styles.descriptionDetails}>{pick_up}</Text>
+                    <Text style={styles.descriptionTitles}>
+                        Delivery Location
                 </Text>
-                <Text style={styles.descriptionDetails}>{pick_up}</Text>
-                <Text style={styles.descriptionTitles}>
-                    Delivery Location
+                    <Text style={styles.descriptionDetails}>{delivery_location}</Text>
+                    <Text style={styles.descriptionTitles}>
+                        Recipient Phone Number
                 </Text>
-                <Text style={styles.descriptionDetails}>{delivery_location}</Text>
-                <Text style={styles.descriptionTitles}>
-                    Recipient Phone Number
+                    <Text style={styles.descriptionDetails}>{recipientPhone}</Text>
+                    <Text style={styles.descriptionTitles}>
+                        Package description
                 </Text>
-                <Text style={styles.descriptionDetails}>{recipientPhone}</Text>
-                <Text style={styles.descriptionTitles}>
-                    Package description
-                </Text>
-                <Text style={styles.descriptionDetails}>{packageDescription}</Text>
-                <Text style={styles.tripCost}>
-                    You Paid - {currency(cost)}
-                </Text>
-                
-            </View>
+                    <Text style={styles.descriptionDetails}>{packageDescription}</Text>
+                    <Text style={styles.tripCost}>
+                        You Paid - {currency(cost)}
+                    </Text>
+
+                </View>
                 <Text style={styles.tripStatus}>
-                        {tripStatus}
+                    {tripStatus}
                 </Text>
-
-            <RedButton
-                title="Go to Dashboard"
-                buttonStyle={styles.button}
-                onPress={() => {
-                    navigation.navigate('Home')
-                }}>
-            </RedButton>
-
-
 
             </View>
 
