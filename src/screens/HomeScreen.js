@@ -53,19 +53,12 @@ function HomeScreen({ navigation, route }) {
 
   }, [route.params])
 
-  const mapRef = useRef();
+  // const mapRef = useRef();
 
   const sourceCoord = useSelector(state => state.trip.sourceCoord);
   const destinationCoord = useSelector(state => state.trip.destinationCoord);
-  const trip = useSelector(state => state.trip);
-  // console.log("In home screen " + new Date);
-  // console.log(sourceCoord)
-  // console.log(destinationCoord);
-  // console.log("trip in home");
-  // console.log(trip);
-
+  
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
   const toggleDrawerHandler = () => {
     navigation.openDrawer();
   }
@@ -100,18 +93,6 @@ function HomeScreen({ navigation, route }) {
     };
   }, []);
 
-  const onMapLayout = () => {
-    if (sourceCoord) {
-      const { latitude, longitude } = sourceCoord;
-      mapRef.current.animateToRegion({
-        latitude: latitude,
-        longitude: longitude,
-        latitudeDelta: 0.1,
-        longitudeDelta: 0.1
-      });
-    }
-  }
-
   StatusBar.setBarStyle("dark-content");
   StatusBar.setBackgroundColor("#fff");
 
@@ -137,15 +118,13 @@ function HomeScreen({ navigation, route }) {
             <DeliveryAddress />
           </View>
           <MapView style={styles.map}
-            ref={mapRef}
-            onLayout={onMapLayout}
             loadingEnabled={true}
-            // showsUserLocation = {true}
-            initialRegion={{
-              latitude: 6.5244,
-              longitude: 3.3792,
-              latitudeDelta: 0.015,
-              longitudeDelta: 0.015,
+            showsUserLocation = {true}
+            region={{
+              latitude: sourceCoord?.latitude?? 6.5244,
+              longitude: sourceCoord?.longitude?? 3.3792,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
             }} >
 
             {sourceCoord ? <Marker coordinate={sourceCoord} title="Pickup Location" />:<></>}
