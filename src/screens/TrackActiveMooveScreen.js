@@ -54,8 +54,9 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
 
   const dispatch = useDispatch()
   const trip = useSelector(state => state.trip);
+  // const tripStatus = trip.t
   const common = useSelector(state => state.common);
-  const origin = trip.riderCoords == null ? trip.sourceCoord : trip.riderCoords.riderLocation;
+  const origin = trip.riderCoords == null ? trip.sourceCoord : trip.riderCoords;
   const destination = trip.destinationCoord;
   const { width, height } = Dimensions.get('window');
   const ASPECT_RATIO = width / 320;
@@ -63,8 +64,8 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
   const LONGITUDE_DELTA = 0.015;
   const tripId = trip.tripDetails.id;
   const riderId = trip.tripDetails.rider_id;
-  const tripStatus = trip.riderCoords == null ? '' : trip.riderCoords.trip.trip_status;
-  
+
+  console.log(trip);
   // console.log(trip.riderCoords.riderLocation.latitude + ' in track');
   // console.log(trip.riderCoords.trip.trip_status + ' status');
   async function trackRiderLocation(){
@@ -81,8 +82,11 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
   useEffect(()=>{
     var request = setInterval(async ()=> await trackRiderLocation(), 60000)
     console.log(new Date());
-    if(tripStatus === "ENDED"){
+    if(trip.tripStatus === "ENDED"){
       Alert.alert("Moove Ended", "Your package has been delivered.");
+    }
+    if(trip.tripStatus === "IN_PROGRESS"){
+      Alert.alert("Moove Started", "Your package is on it's way.");
     }
     return () => clearInterval(request);
   },[]);
@@ -141,9 +145,13 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
             
               
             </MapView>
-            {tripStatus=="ENDED" ? 
+            {trip.tripStatus=="PENDING" &&
+            <Text style={styles.mapText}>The rider is on the way to your location.</Text>
+            }
+            {trip.tripStatus=="ENDED" &&
              <Text style={styles.mapText}>Your Moove has ended.</Text>
-            :
+            }
+            {trip.tripStatus=="IN_PROGRESS" &&
             <Text style={styles.mapText}>Your delivery is on its way.</Text>
             }
            
@@ -153,7 +161,7 @@ export default function TrackActiveMooveScreen({ navigation , route }) {
         }
 
       </View>
-        {tripStatus == "ENDED" ?
+        {trip.tripStatus == "ENDED" ?
         <PlainButton
 						title ='Dashboard'
 						titleStyle={{color:'#EA5858'}}

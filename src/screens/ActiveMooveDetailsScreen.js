@@ -52,14 +52,15 @@ const styles = StyleSheet.create({
     fontSize: normalize(13),
     fontFamily: 'Roboto_400Regular',
     lineHeight: normalize(15),
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+    paddingTop:normalize(4)
   },
   phone: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(40),
     fontWeight: 'bold',
-    paddingTop: normalize(10)
+    
   },
   button: {
     alignSelf: "center",
@@ -128,25 +129,7 @@ export default function ActiveMooveDetailsScreen({ navigation }) {
   const auth = useSelector(state => state.auth);
   const riderName = trip.riderDetails.riderName;
   const riderPhone = trip.riderDetails.riderPhone;
-  const riderId = trip.tripDetails.rider_id;
-  const tripId = trip.tripDetails.id;
-  const dispatch = useDispatch();
   
-  async function trackRiderLocation(){
-    try{
-      const response = await getRiderLocation(riderId,tripId);
-      dispatch(getRiderCoords(response.data.data))
-      console.log(response.data.data);
-    } catch(error){
-      // Alert.alert("Opps! hold on", "The rider is not enroute yet");
-      console.log(error);
-    }
-  }
-
-  useEffect(()=>{
-    trackRiderLocation();
-  },[]);
-
   const onContinue = () => {
     navigation.navigate("TrackActiveMoove")
   }
