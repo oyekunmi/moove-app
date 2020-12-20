@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
 		fontSize: normalize(12),
 		color: '#2B4257',
 		fontFamily: 'Roboto_700Bold',
-		fontWeight: 'bold',
+		fontWeight: '700',
 		lineHeight: normalize(14),
 		textTransform: 'uppercase',
 	},
@@ -124,7 +124,8 @@ const styles = StyleSheet.create({
 	},
 	itemLabel: {
 		textTransform: 'uppercase',
-		fontFamily: 'Roboto_400Regular',
+		fontFamily: 'Roboto_900Black',
+		fontWeight: "900",
 	},
 	logoutContainer: {
 		alignItems: 'center',
