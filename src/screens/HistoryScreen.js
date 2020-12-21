@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
 
   itemContainer: {
-    backgroundColor: "#efefef",
+    backgroundColor: "#132535",
     borderRadius: normalize(20),
     padding: normalize(20),
     marginVertical: normalize(5),
@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
+    color: "#DADADA"
   },
 
 
@@ -80,16 +81,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#CE0303',
 
   },
+  statusText: {
+    color: "#DADADA"
 
-  // enrouteDetails: {
-  //   backgroundColor: '#C8F2A7',
-  //   borderRadius: normalize(20),
-  //   textAlignVertical: "top",
-  //   paddingVertical: normalize(10),
-  //   paddingHorizontal: normalize(15),
-  //   height: normalize(85),
-  //   marginTop: normalize(15),
-  // },
+  },
 
   errorMsg: {
     color: '#CE0303',
@@ -101,11 +96,18 @@ const styles = StyleSheet.create({
   },
   tripCost: {
     fontSize: normalize(17),
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: "#DADADA"
+  },
+  tripDate: {
+    color: "#DADADA",
+    marginVertical: normalize(5),
   },
   mooveId: {
     fontSize: normalize(15),
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: "#DADADA"
+
   },
 
 });
@@ -184,8 +186,6 @@ function HistoryScreen({ navigation }) {
       </View>
       }
 
-
-
     </ScrollView>
   );
 }
@@ -205,12 +205,12 @@ function RenderMooveItem({ item }) {
     <View style={styles.itemContainer}>
       <View style={styles.detailContainer}>
         <Text style={styles.mooveId}>Moove - MV{item.moove_id}</Text>
-        <Text style={{marginVertical: normalize(5)}}>{item.created_at}</Text>
+        <Text style={styles.tripDate}>{item.created_at}</Text>
         <Text style={styles.tripCost}>{currency(item.cost_of_trip)}</Text>
       </View>
 
       <View style={styles.itemStatusContainer} >
-        <Text>{item.trip_status}</Text>
+        <Text style={styles.statusText}>{item.trip_status}</Text>
         <RenderActionButton item={item} />
       </View>
     </View>
