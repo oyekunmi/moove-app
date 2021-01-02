@@ -1,8 +1,8 @@
-import React, { Children } from 'react'
+import React from 'react'
 import { StyleSheet, Image,Text, View } from 'react-native';
-import RedButton from '../components/RedButton';
+import RedButton from './RedButton';
 import { normalize } from '../normalizeFont';
-import Title from '../components/Title';
+import Title from './Title';
 import { ScrollView } from 'react-native-gesture-handler';
 
 
@@ -81,4 +81,5 @@ const SuccessAlert = ({
 
     )
 }
-export default SuccessAlert
+
+export default SuccessAlert;

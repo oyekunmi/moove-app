@@ -95,18 +95,21 @@ export const setTripCost = (value) => {
     value
   }
 }
+
 export const addRecipientPhone = (value) => {
   return {
     type: RECIPIENT_PHONE_ADDED,
     value
   }
 }
+
 export const addRecipientName = (value) => {
   return {
     type: RECIPIENT_NAME_ADDED,
     value
   }
 }
+
 export const tripCreated = (value) =>{
   return {
     type: TRIP_CREATED,
@@ -127,12 +130,14 @@ export const setPaymentMethod = (value) => {
     value
   }
 }
+
 export const riderFound = (value) => {
   return {
     type: RIDER_DETAILS,
     value
   }
 }
+
 export const getRiderCoords = (value) => {
   return {
     type: GET_RIDER_COORDS,

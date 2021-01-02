@@ -13,27 +13,19 @@ import {
 import { createStackNavigator } from '@react-navigation/stack';
 
 import LoginScreen from './LoginScreen';
-import HistoryDetailsScreen from './HistoryDetailScreen';
 import IntroSlidersScreen from './IntroSlidesScreen';
-import PackageDescriptionScreen from './PackageDescriptionScreen';
-import MooveVerificationScreen from './MooveVerificationScreen';
-import PaymentMethodScreen from './PaymentMethodScreen';
-import ActiveMooveDetailsScreen from './ActiveMooveDetailsScreen';
-import CreditCardPaymentMethodScreen from './CreditCardPaymentMethodScreen';
-import TrackActiveMooveScreen from './TrackActiveMooveScreen';
 import BiometricsScreen from './BiometricsScreen';
 import SignupScreen from './SignupScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
 import PasswordResetScreen from './PasswordResetScreen';
 import PasswordUpdateSuccessfulScreen from './PasswordUpdateSuccessfulScreen';
-import RegistrationVerifySuccessfulScreen from './RegistrationVerifySuccessfulScreen';
 import RegistrationVerificationScreen from './RegistrationVerificationScreen';
-import AddCardSuccessfulScreen from './AddCardSuccessfulScreen';
 import SuccessScreen from './SuccessScreen';
-import HomeDrawerScreen from './HomeDrawerScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
 import PasswordResetEmailSentScreen from './PasswordResetEmailSentScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import MooveFlow from './MooveFlow';
 
 
 const Stack = createStackNavigator();
@@ -90,22 +82,7 @@ export default function Application() {
       <StatusBar translucent backgroundColor="transparent" />
       <Stack.Navigator headerMode="none">
         {state.userToken != null && state.userToken != undefined ?
-          <>
-            <Stack.Screen name="History" component={HomeDrawerScreen} />
-            <Stack.Screen name = "HistoryDetails" component = {HistoryDetailsScreen}/>
-            <Stack.Screen name="Home" component={HomeDrawerScreen} />
-            <Stack.Screen name = "Wallet" component = {HomeDrawerScreen}/>
-
-            <Stack.Screen name="PackageDescription" component={PackageDescriptionScreen} />
-            <Stack.Screen name="MooveVerification" component={MooveVerificationScreen} />
-            <Stack.Screen name="PaymentMethod" component={PaymentMethodScreen} />
-            <Stack.Screen name="CreditCardPayment" component={CreditCardPaymentMethodScreen} />
-            <Stack.Screen name="ActiveMooveDetails" component={ActiveMooveDetailsScreen} />
-            <Stack.Screen name="TrackActiveMoove" component={TrackActiveMooveScreen} />
-            <Stack.Screen name="AddCardCardSuccess" component={AddCardSuccessfulScreen} />
-            <Stack.Screen name="RegistrationVerifySuccess" component={RegistrationVerifySuccessfulScreen} />
-            <Stack.Screen name="SignIn" component={LoginScreen} />
-          </>
+            <Stack.Screen name="MooveFlow" component={MooveFlow} />
           :
           <>
             <Stack.Screen name="SignIn" component={LoginScreen} />

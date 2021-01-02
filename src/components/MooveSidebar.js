@@ -6,25 +6,15 @@ import {
 	Text,
 } from 'react-native';
 import {
-	createDrawerNavigator,
 	DrawerContentScrollView,
 	DrawerItemList,
 } from '@react-navigation/drawer';
-import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
-
 import { normalize } from '../normalizeFont';
 import { signOut } from '../redux/actions';
 import { BorderlessButton } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons'; 
-import { FontAwesome } from '@expo/vector-icons'; 
-import MooveHistoryListScreen from './MooveHistoryListScreen';
-import HomeScreen from './OrderMooveDashboardScreen';
-import MooveFlow from './MooveFlow';
-import MooveHistoryFlow from './MooveHistoryFlow';
 
-const CustomDrawerContent = (props, dispatch, authState) => {
+const MooveSiderbar = (props, dispatch, authState) => {
 	const logoutUser = async () => {
 		await AsyncStorage.removeItem('userDetails');
 		dispatch(signOut());
@@ -42,46 +32,16 @@ const CustomDrawerContent = (props, dispatch, authState) => {
 				<Text style={styles.userName}> {authState.name}</Text>
 				<Text style={styles.userPhone}> {authState.phone}</Text>
 			</View>
-			
+
 			<View style={styles.menu}>
 				<DrawerItemList labelStyle={styles.itemLabel} activeTintColor="#CE0303"  {...props} />
 			</View>
 
-			<BorderlessButton onPress={logoutUser} style={styles.logoutContainer}><Text style={styles.logoutText}>Logout</Text></BorderlessButton>
+			<BorderlessButton onPress={logoutUser} style={styles.logoutContainer}>
+				<Text style={styles.logoutText}>Logout</Text>
+			</BorderlessButton>
 
 		</DrawerContentScrollView>
-
-	);
-};
-
-const HomeDrawer = createDrawerNavigator();
-
-const HomeDrawerScreen = () => {
-	const auth = useSelector((state) => state.auth);
-	const dispatch = useDispatch();
-
-	return (
-		<HomeDrawer.Navigator
-			drawerType={'front'}
-			drawerContent={(props) =>
-				CustomDrawerContent(props, dispatch, auth)
-			}
-			
-		>
-			<HomeDrawer.Screen name='Home' component={HomeScreen} 
-				options={{ 
-					drawerLabel: 'Order Moove', 
-					drawerIcon: () => <MaterialIcons name="directions-bike" size={24} color="black" /> 
-				}}
-			/>
-			<HomeDrawer.Screen name='History' label="My Orders" component={MooveHistoryFlow}
-				options={{ 
-					drawerLabel: 'My Mooves', 
-					drawerIcon: () => <FontAwesome name="history" size={24} color="black" /> 
-				}}
-			/>
-		</HomeDrawer.Navigator>
-
 	);
 };
 
@@ -116,17 +76,18 @@ const styles = StyleSheet.create({
 		fontSize: normalize(12),
 		color: '#2B4257',
 		fontFamily: 'Roboto_700Bold',
-		fontWeight: 'bold',
+		fontWeight: '700',
 		lineHeight: normalize(14),
 		textTransform: 'uppercase',
 	},
 	menu: {
-		flex:2,
-		backgroundColor: 'yellow',
+		flex: 2,
+		paddingVertical: normalize(40),
 	},
 	itemLabel: {
 		textTransform: 'uppercase',
-		fontFamily: 'Roboto_400Regular',
+		fontFamily: 'Roboto_900Black',
+		fontWeight: "900",
 	},
 	logoutContainer: {
 		alignItems: 'center',
@@ -141,4 +102,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default HomeDrawerScreen;
+export default MooveSiderbar;

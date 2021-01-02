@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { View, StyleSheet, Keyboard, ScrollView, StatusBar, Alert } from 'react-native';
 import Title from '../components/Title';
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
   }
 });
 
-function HomeScreen({ navigation, route }) {
+function OrderMooveDashboardScreen({ navigation, route }) {
 
   useEffect(() => {
     if (route.params && route.params.logoutUser === true) {
@@ -69,7 +69,7 @@ function HomeScreen({ navigation, route }) {
       return;
     }
 
-    navigation.navigate('PackageDescription');
+    navigation.navigate('OrderMoovePackageDescription');
   }
  
   useEffect(() => {
@@ -93,11 +93,9 @@ function HomeScreen({ navigation, route }) {
     };
   }, []);
 
-  StatusBar.setBarStyle("dark-content");
-  StatusBar.setBackgroundColor("#fff");
-
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1, backgroundColor: '#ffffff' }} keyboardShouldPersistTaps='always'>
+      <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <Title
         title={"start a moove"}
         fontIcon="side_menu"
@@ -148,4 +146,4 @@ function HomeScreen({ navigation, route }) {
   );
 }
 
-export default HomeScreen
+export default OrderMooveDashboardScreen
