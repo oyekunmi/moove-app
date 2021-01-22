@@ -1,17 +1,14 @@
 import React from 'react';
-import SuccessAlert from '../components/SuccessAlert';
-
-
-
+import Message from '../components/Message';
 
 export default function RegistrationVerifySuccessfulScreen({navigation}){
     return(
-        <SuccessAlert
-            title = "user signup"
+        <Message
+            title={`user signup`}
             subTitle="Registration completed"
-            text = "Grab a coffee"
-            buttonTitle ="Go To Dashboard"
-            routeTo = {() => navigation.navigate('Home') }
+            text="Grab a coffee"
+            buttonTitle="Go To Dashboard"
+            routeTo={() => navigation.navigate('MooveFlow')}
         />
     )
 }

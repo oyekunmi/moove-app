@@ -15,10 +15,10 @@ import { signOut } from '../redux/actions';
 import { BorderlessButton } from 'react-native-gesture-handler';
 
 const MooveSiderbar = (props, dispatch, authState) => {
-	const logoutUser = async () => {
+	const logoutUser = async () => { 
 		await AsyncStorage.removeItem('userDetails');
 		dispatch(signOut());
-		props.navigation.navigate('Home', { 'logoutUser': true });
+		props.navigation.navigate('SignIn', { 'logoutUser': true });
 	};
 
 	return (

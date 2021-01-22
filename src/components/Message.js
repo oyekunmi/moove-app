@@ -55,6 +55,7 @@ const Message = ({
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#132535',
+        paddingTop: normalize(20),
     },
     text: {
         color: '#F1F1F1',

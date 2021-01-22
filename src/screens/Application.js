@@ -19,8 +19,7 @@ import SignupScreen from './SignupScreen';
 import ForgotPasswordScreen from './ForgotPasswordScreen';
 import PasswordResetScreen from './PasswordResetScreen';
 import PasswordUpdateSuccessfulScreen from './PasswordUpdateSuccessfulScreen';
-import RegistrationVerificationScreen from './RegistrationVerificationScreen';
-import SuccessScreen from './SuccessScreen';
+import RegistrationVerifySuccessfulScreen from './RegistrationVerifySuccessfulScreen';
 import VerifyEmailScreen from './VerifyEmailScreen';
 import PasswordResetEmailSentScreen from './PasswordResetEmailSentScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,7 +32,7 @@ const Stack = createStackNavigator();
 
 export default function Application() {
   const dispatch = useDispatch();
-  const state = useSelector(state => state.auth)
+  const state = useSelector(s => s.auth)
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -82,15 +81,16 @@ export default function Application() {
       <StatusBar translucent backgroundColor="transparent" />
       <Stack.Navigator headerMode="none">
         {state.userToken != null && state.userToken != undefined ?
+          <>
             <Stack.Screen name="MooveFlow" component={MooveFlow} />
+            <Stack.Screen name="RegistrationVerifySuccessfulScreen" component={RegistrationVerifySuccessfulScreen} />
+          </>
           :
           <>
             <Stack.Screen name="SignIn" component={LoginScreen} />
             <Stack.Screen name="SignupScreen" component={SignupScreen} />
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
             <Stack.Screen name="PasswordResetScreen" component={PasswordResetScreen} />
-            <Stack.Screen name="RegistrationVerification" component={RegistrationVerificationScreen} />
-            <Stack.Screen name="SuccessScreen" component={SuccessScreen} />
             <Stack.Screen name="Biometrics" component={BiometricsScreen} />
             <Stack.Screen name="PasswordUpdateSuccess" component={PasswordUpdateSuccessfulScreen} />
             <Stack.Screen name="VerifyEmailScreen" component={VerifyEmailScreen} />

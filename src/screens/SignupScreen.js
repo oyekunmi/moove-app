@@ -43,7 +43,7 @@ export default function SignupScreen({ navigation }) {
         //console.log('storing..')
            await AsyncStorage.setItem('userDetails', JSON.stringify({token, name, phone}));
             // console.log('navigating...')
-           navigation.navigate('RegistrationVerifySuccess');
+           navigation.navigate('RegistrationVerifySuccessfulScreen');
 
         } catch(error) {
             // console.log('something went wrong.')

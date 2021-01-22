@@ -44,7 +44,7 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
 
   return (
     <View style={_containerStyle}>
-      <View style={{ width: normalize(24)}}>
+      {headerOptionHandler? <View style={{ width: normalize(24)}}>
         <TouchableOpacity onPress={() => headerOptionHandler()}>
           {fontIcon === 'arrow_back' && (<View style={styles.icon}>
             <Image source={require('./../../assets/arrow_back.png')}  />
@@ -56,7 +56,7 @@ export default function Title({ subTitle, subTitleStyle, title, titleStyle, cont
             <Image source={require('./../../assets/menu.png')}  />
           </View>)}
         </TouchableOpacity>
-      </View>
+      </View>: <></> }
       <Text style={_titleStyle}>{title}</Text>
       <Text style={_subTitleStyle}>{subTitle} {orderId && <Text style={{ color: "#7AC043", borderWidth: 1, borderStyle: 'solid', borderColor: 'red' }}> {orderId}</Text>}</Text>
     </View>

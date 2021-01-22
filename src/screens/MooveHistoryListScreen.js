@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, ScrollView, TextInput, Image, TouchableOpacity, Alert, ActivityIndicator, StatusBar } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, Alert, ActivityIndicator, StatusBar } from 'react-native';
 import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
@@ -27,7 +27,6 @@ function MooveHistoryListScreen({ navigation }) {
           dispatch(historyDetails(response.data.data));
           console.log('just dispatched');
           setLoading(false);
-
         }
       })
     } catch (error) {
@@ -43,7 +42,6 @@ function MooveHistoryListScreen({ navigation }) {
         console.log('Error', error.message);
         Alert.alert('An error has occurred', error.message);
       }
-    } finally {
     }
   }, []);
 
@@ -85,7 +83,6 @@ function MooveHistoryListScreen({ navigation }) {
   );
 }
 
-
 function RenderMooveItems({ navigation, items }) {
 
   const onActionPressed = (item) => {
@@ -116,24 +113,22 @@ function RenderMooveItem({ item, action }) {
     </View>
   )
 
+}
 
-  function RenderActionButton({ item, onViewClicked }) {
+function RenderActionButton({ item, onViewClicked }) {
 
-    const isActive = item.trip_status === 'IN_PROGRESS' || item.trip_status === 'PENDING' ;
-    return(
-      <BorderlessButton style={[styles.viewDetails, isActive ? styles.viewDetailsActive:{}]} onPress={() => onViewClicked(item)}>
-        <Text style={styles.viewText}>Track</Text>
-      </BorderlessButton>
-    )
-  }
+  const isActive = item.trip_status === 'IN_PROGRESS' || item.trip_status === 'PENDING' ;
+  return(
+    <BorderlessButton style={[styles.viewDetails, isActive ? styles.viewDetailsActive:{}]} onPress={() => onViewClicked(item)}>
+      <Text style={styles.viewText}>Track</Text>
+    </BorderlessButton>
+  )
 }
 
 function GetStatus(status)
 {
   return status === 'IN_PROGRESS' ||  status === 'PENDING' ? 'ACTIVE': status;
 }
-
-
 
 const styles = StyleSheet.create({
   container: {

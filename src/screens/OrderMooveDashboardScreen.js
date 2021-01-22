@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
 
 function OrderMooveDashboardScreen({ navigation, route }) {
 
-  useEffect(() => {
-    if (route.params && route.params.logoutUser === true) {
-      navigation.navigate('SignIn');
-    }
+  // useEffect(() => {
+  //   if (route.params && route.params.logoutUser === true) {
+  //     navigation.navigate('SignIn');
+  //   }
 
-  }, [route.params])
+  // }, [route.params])
 
   // const mapRef = useRef();
 
