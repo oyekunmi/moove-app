@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, StyleSheet, Text, TextInput, StatusBar, ScrollView, Linking } from 'react-native';
-import { useSelector } from 'react-redux';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
@@ -11,91 +10,87 @@ export default function MooveHistoryOrderDetailScreen({ navigation, route }) {
 
   const { order } = route.params;
 
-  console.log(order);
-  
-  const onContinue = () => {
-    navigation.navigate("TrackActiveMoove")
-  }
+  // const onContinue = () => {
+  //   navigation.navigate("MooveHistoryOrderTrackScreen", { order });
+  // }
 
   return (
-      <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
       <StatusBar barStyle="light-content" backgroundColor="#132535" />
+      <Title
+        title="moove details"
+        fontIcon="arrow_back_light"
+        statusBarStyle="light-content"
+        subTitle="Details of your moove request"
+        subTitleStyle={{ fontSize: normalize(22) }}
+        containerStyle={{ paddingHorizontal: normalize(18) }}
+        headerOptionHandler={() => navigation.goBack()}
+      />
 
-        <Title        
-          fontIcon="arrow_back_light"
-          statusBarStyle="light-content"
-          title={"active moove"}
-          subTitle={"Details of your moove request"}
-          subTitleStyle={{ fontSize: normalize(22) }}
-          containerStyle={{ paddingHorizontal: normalize(18) }}
-          // titleStyle={styles.title}
-          />
+      <View style={styles.content}>
 
-        <View style={styles.content}>
+        <View style={styles.phoneContainer}>
+          <Text style={styles.nameLabel}>Champion: {order.rider_name} </Text>
+          <Text style={styles.phone}>{order.rider_phone}</Text>
+          <TouchableOpacity onPress={() => Linking.openURL(`tel:${order.rider_phone}`)}>
+            <Text style={styles.telLabel}>tap to call or text</Text>
+          </TouchableOpacity>
+        </View>
 
-          <View style={styles.phoneContainer}>
-            <Text style={styles.nameLabel}>Champion: {"Oyesola"} </Text>
-            <Text style={styles.phone}>{"070"}</Text>
-            <TouchableOpacity onPress={() => Linking.openURL(`tel:${"070"}`)}>
-              <Text style={styles.telLabel }>tap to call or text</Text> 
-            </TouchableOpacity>
-          </View>
+        <View style={[styles.packageContainer, styles.mb9]}>
 
-          <View style={[styles.packageContainer, styles.mb9]}>
-
-          <View style={[styles.DeliveryItemDescription, styles.mb9 ]}>
+          <View style={[styles.DeliveryItemDescription, styles.mb9]}>
             <View style={styles.pickUpandDelivery}>
-              <Text style={styles.pickupAndLocationLabel}>Pick-up Location</Text>
+              <Text style={styles.pickupAndLocationLabel}>Pick-up address</Text>
               <Text style={styles.pickUpAndLocationDetails}>{order.start_location}</Text>
             </View>
           </View>
-          
-          <View style={[styles.DeliveryItemDescription, styles.mb9 ]}>
+
+          <View style={[styles.DeliveryItemDescription, styles.mb9]}>
             <View style={styles.pickUpandDelivery}>
-              <Text style={styles.pickupAndLocationLabel}>Pick-up Location</Text>
+              <Text style={styles.pickupAndLocationLabel}>Delivery address</Text>
               <Text style={styles.pickUpAndLocationDetails}>{order.end_location}</Text>
             </View>
           </View>
 
-          <View style={[styles.DeliveryItemDescription, styles.mb9 ]}>
+          <View style={[styles.DeliveryItemDescription, styles.mb9]}>
             <View style={styles.pickUpandDelivery}>
-              <Text style={styles.pickupAndLocationLabel}>Recipient Name</Text>
+              <Text style={styles.pickupAndLocationLabel}>Recipient name</Text>
               <Text style={styles.pickUpAndLocationDetails}>{order.recipient_name}</Text>
             </View>
           </View>
 
-          <View style={[styles.DeliveryItemDescription, styles.mb9 ]}>
+          <View style={[styles.DeliveryItemDescription, styles.mb9]}>
             <View style={styles.pickUpandDelivery}>
-              <Text style={styles.pickupAndLocationLabel}>Recipient Phone Number</Text>
+              <Text style={styles.pickupAndLocationLabel}>Recipient phone Number</Text>
               <Text style={styles.pickUpAndLocationDetails}>{order.recipient_phone_number}</Text>
             </View>
           </View>
 
-
           <View style={styles.DeliveryItemDescription}>
             <Text style={styles.packageDescriptionLabel}>Delivery Item(s) Description</Text>
             <TextInput
-                multiline={true}
-                numberOfLines={3}
-                style={styles.packageDescriptionInput}
-                value={order.package_description}
-                editable={false} />
+              multiline={true}
+              numberOfLines={3}
+              style={styles.packageDescriptionInput}
+              value={order.package_description}
+              editable={false} />
           </View>
         </View>
 
-          <RedButton
-            title="Track Moove Request"
-            buttonStyle={styles.button}
-            onPress={onContinue}
-          />
+        {/* {order.can_track && <RedButton
+          title="Track Moove Request"
+          buttonStyle={styles.button}
+          onPress={onContinue}
+        />
+        } */}
 
-        </View>
+      </View>
 
-      </ScrollView>
+    </ScrollView>
   );
 
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -127,7 +122,7 @@ const styles = StyleSheet.create({
     marginBottom: normalize(30),
   },
   packageContainer: {
-    flexGrow:1
+    flexGrow: 1
   },
   nameLabel: {
     color: "#908F8F",
@@ -141,14 +136,14 @@ const styles = StyleSheet.create({
     fontFamily: 'Roboto_400Regular',
     lineHeight: normalize(15),
     textDecorationLine: 'underline',
-    paddingTop:normalize(4)
+    paddingTop: normalize(4)
   },
   phone: {
     color: "#FFF",
     fontFamily: 'Roboto_700Bold',
     fontSize: normalize(40),
     fontWeight: 'bold',
-    
+
   },
   button: {
     alignSelf: "center",
@@ -173,7 +168,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: normalize(14),
     paddingTop: normalize(30),
-    paddingBottom:normalize(35)
+    paddingBottom: normalize(35)
   },
   pickupAndLocationLabel: {
     fontSize: normalize(14),
@@ -192,7 +187,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E3040',
     borderRadius: normalize(15),
     paddingTop: normalize(10),
-    paddingBottom:normalize(35)
+    paddingBottom: normalize(35)
   },
   packageDescriptionLabel: {
     color: '#DADADA',

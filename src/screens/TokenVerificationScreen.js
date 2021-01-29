@@ -9,8 +9,7 @@ import Title from '../components/Title';
 import { resendOTP, verifyOTP } from '../utils/helpers/api';
 import { isAppLoading, isBtnDisabled } from '../redux/actions';
 
-
-export default function RegistrationVerificationScreen({ navigation, route }) {
+export default function TokenVerificationScreen({ navigation, route }) {
 	const dispatch = useDispatch();
 	const { email } = route.params;
 	const [otp, setOtp]= useState('');
@@ -21,16 +20,16 @@ export default function RegistrationVerificationScreen({ navigation, route }) {
 	
 		for (let handler of fieldHandlers) {
 		  handler('');
-		}
+		} 
 	}
 	
 	const verifyOTPHandler = async ()=>{
 		dispatch(isAppLoading(true));
       	dispatch(isBtnDisabled(true));
 		try{
-			await verifyOTP(otp);
+			await verifyOTP(otp, email);
 			resetDetails();
-			navigation.navigate('PasswordResetScreen', { otpCode:otp });
+			navigation.navigate('PasswordResetScreen', { token:otp, email });
 		}
 		catch(error){
 			if (error.response) {

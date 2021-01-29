@@ -13,7 +13,8 @@ import { isAppLoading, isBtnDisabled } from '../redux/actions';
 
 export default function PasswordResetScreen({ navigation ,route}) {
 
-	const otpCode = route.params.otpCode;
+	const token = route.params.token;
+	const email = route.params.email;
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [errorBag, setError] = useState({});
@@ -26,7 +27,7 @@ export default function PasswordResetScreen({ navigation ,route}) {
 		dispatch(isAppLoading(true));
 		dispatch(isBtnDisabled(true));
 		try {
-			await resetNewPassword(otpCode, password, confirmPassword);
+			await resetNewPassword(email, token, password, confirmPassword);
 			resetDetails();
 
 			dispatch(isAppLoading(false));

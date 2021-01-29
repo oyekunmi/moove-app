@@ -24,7 +24,7 @@ export default function ForgotPasswordScreen({ navigation }) {
       const fieldHandlers = [setEmail];
 
       for (let handler of fieldHandlers) {
-          handler('');
+          handler(''); 
       }
   }
 
@@ -47,7 +47,7 @@ export default function ForgotPasswordScreen({ navigation }) {
       try {
         await forgotPassword(email);
         resetDetails();
-        navigation.navigate('RegistrationVerification', { email });
+        navigation.navigate('TokenVerificationScreen', { email });
 
       } catch(error){
         if (error.response) {

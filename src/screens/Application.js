@@ -25,6 +25,7 @@ import PasswordResetEmailSentScreen from './PasswordResetEmailSentScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import MooveFlow from './MooveFlow';
+import TokenVerificationScreen from './TokenVerificationScreen';
 
 
 const Stack = createStackNavigator();
@@ -33,7 +34,7 @@ const Stack = createStackNavigator();
 export default function Application() {
   const dispatch = useDispatch();
   const state = useSelector(s => s.auth)
-
+  // console.log("reload app");
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
@@ -75,7 +76,7 @@ export default function Application() {
   if (state.showIntro) {
     return <IntroSlidersScreen />
   }
-  // console.log(state.userToken)
+
   return (
     <>
       <StatusBar translucent backgroundColor="transparent" />
@@ -90,6 +91,7 @@ export default function Application() {
             <Stack.Screen name="SignIn" component={LoginScreen} />
             <Stack.Screen name="SignupScreen" component={SignupScreen} />
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
+            <Stack.Screen name="TokenVerificationScreen" component={TokenVerificationScreen} />
             <Stack.Screen name="PasswordResetScreen" component={PasswordResetScreen} />
             <Stack.Screen name="Biometrics" component={BiometricsScreen} />
             <Stack.Screen name="PasswordUpdateSuccess" component={PasswordUpdateSuccessfulScreen} />

@@ -1,53 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Text, ScrollView, Alert, ActivityIndicator, StatusBar } from 'react-native';
 import Title from '../components/Title';
 import { normalize } from '../normalizeFont';
 import RedButton from '../components/RedButton';
 import { useSelector, useDispatch } from 'react-redux';
 import { mooveHistory } from '../utils/helpers/api';
-import { historyDetails } from '../redux/actions';
+import { tripsUpdated } from '../redux/actions';
 import currency from '../currency';
 import { BorderlessButton } from 'react-native-gesture-handler';
+import { useFocusEffect } from '@react-navigation/native';
 
 
 function MooveHistoryListScreen({ navigation }) {
   
   const dispatch = useDispatch();
   const token = useSelector(state => state.auth.userToken);
-  const history = useSelector(state => state.trip.historyDetails);
+  const history = useSelector(state => state.trips.list);
   const [loading, setLoading] = useState(true);
 
-  console.log(token);
-  
-  useEffect(() => {
-    try {
+  useFocusEffect(
+    React.useCallback(() => {
       mooveHistory(token).then(response => {
-        if (response.data) {
-          console.log('about to dispatch...');
-          dispatch(historyDetails(response.data.data));
-          console.log('just dispatched');
-          setLoading(false);
-        }
-      })
-    } catch (error) {
-      if (error.response) {
-        if (error.response.data.message) {
-          console.log(error.response.data.message);
-          Alert.alert('An error has occurred', error.response.data.message);
-        }
-      } else if (error.request) {
-        console.log(error.request);
-        Alert.alert('An error has occurred', 'Network error, Please try again.');
-      } else {
-        console.log('Error', error.message);
-        Alert.alert('An error has occurred', error.message);
+        dispatch(tripsUpdated(response.data.data));
+        setLoading(false);
+      },
+      error => {
+        var errorMessage = error?.response?.data?.message ? error.response.data.message: 'Network error, Please try again.';
+        Alert.alert('Cannot complete', errorMessage);
+        setLoading(false);
       }
-    }
-  }, []);
-
+      );
+    }, [])
+  )
+  
   const toggleDrawerHandler = () => {
     navigation.openDrawer();
   }
+
+  console.log(history);
 
   return (
     <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps='always'>
@@ -63,7 +53,7 @@ function MooveHistoryListScreen({ navigation }) {
 
       {loading && <ActivityIndicator style={styles.loading} size="small" color="#0000ff" />}
 
-      {(!loading && history.length === 0) && <View style={styles.noItem}>
+      {(!loading && (!history || history.length === 0)) && <View style={styles.noItem}>
         <Text>You have not made a moove request yet...</Text>
         <RedButton
           title="Start a moove"
@@ -74,7 +64,7 @@ function MooveHistoryListScreen({ navigation }) {
       </View>
       }
 
-      {(!loading && history.length > 0) && <View>
+      {(!loading && (history && history.length > 0)) && <View>
         <RenderMooveItems navigation={navigation} items={history} />
       </View>
       }
@@ -97,17 +87,17 @@ function RenderMooveItems({ navigation, items }) {
 }
 
 function RenderMooveItem({ item, action }) {
-
+  console.log(item);
   return (
     <View style={styles.itemContainer}>
       <View style={styles.detailContainer}>
-        <Text style={styles.mooveId}>Moove - MV{item.moove_id}</Text>
+        <Text style={styles.mooveId}>Moove - {item.moove_name}</Text>
         <Text style={styles.tripDate}>{item.created_at}</Text>
         <Text style={styles.tripCost}>{currency(item.cost_of_trip)}</Text>
       </View>
 
       <View style={styles.itemStatusContainer} >
-        <Text style={styles.statusText}>{GetStatus(item.trip_status)}</Text>
+        <Text style={styles.statusText}>{item.display_status}</Text>
         <RenderActionButton onViewClicked={action} item={item} />
       </View>
     </View>
@@ -117,17 +107,11 @@ function RenderMooveItem({ item, action }) {
 
 function RenderActionButton({ item, onViewClicked }) {
 
-  const isActive = item.trip_status === 'IN_PROGRESS' || item.trip_status === 'PENDING' ;
   return(
-    <BorderlessButton style={[styles.viewDetails, isActive ? styles.viewDetailsActive:{}]} onPress={() => onViewClicked(item)}>
+    <BorderlessButton style={[styles.viewDetails, item.can_track ? styles.viewDetailsActive:{}]} onPress={() => onViewClicked(item)}>
       <Text style={styles.viewText}>Track</Text>
     </BorderlessButton>
   )
-}
-
-function GetStatus(status)
-{
-  return status === 'IN_PROGRESS' ||  status === 'PENDING' ? 'ACTIVE': status;
 }
 
 const styles = StyleSheet.create({

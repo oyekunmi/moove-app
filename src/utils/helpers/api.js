@@ -33,13 +33,14 @@ export const userSignIn = async (email, password) => {
 		token: { access_token },
 		user: {
 			phone_number,
-			profile: { first_name, last_name }
+			first_name, 
+			last_name
 		},
 	} = response.data.data;
 
 
 	return {
-		access_token,
+		token: access_token,
 		name: `${first_name} ${last_name}`,
 		phoneNo: phone_number,
 	};
@@ -53,8 +54,8 @@ export const resendOTP = async (email) => {
 	return axios.post(`${baseURL}/auth/resend/${email}`);
 }
 
-export const resetNewPassword = async (otpCode, newPassword, confirmNewPassword) => {
-	await axios.post(`${baseURL}/auth/password/reset/${otpCode}`, {'new_password': newPassword, 'new_password_confirmation': confirmNewPassword });
+export const resetNewPassword = async (email, token, password, password_confirmation) => {
+	await axios.post(`${baseURL}/auth/password/reset`, {email, token, password, password_confirmation });
 }
 
 export const calculateCost = async (recipient_name, recipient_phone_number, package_description, who_pays = "REQUESTER", start_location, end_location, payment_method = "card", km, time) => {
@@ -100,10 +101,11 @@ export const cancelTrip = async (tripId, riderId)=>{
 	
 }
 
-export const verifyOTP = async (otpCode)=>{
+export const verifyOTP = async (token, email)=>{
 	
 	await axios.post(`${baseURL}/auth/token/validate`, {
-		otp: otpCode
+		token,
+		email
 	  });
 	
 }
