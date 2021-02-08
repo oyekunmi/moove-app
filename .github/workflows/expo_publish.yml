@@ -1,8 +1,8 @@
 name: Expo Publish
 on:
   release:
-      types:
-        - published
+    types:
+      - published
 jobs:
   publish:
     name: Install and publish
