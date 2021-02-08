@@ -15,7 +15,7 @@ jobs:
       - uses: expo/expo-github-action@v5
         with:
           expo-version: 4.x
-          expo-token: ${{ 7yQNbtR8cgU_NFiM7CjeqHC--8Qux_KmZXcfJZcZ }}
+          expo-token: ${{ secrets.EXPO_TOKEN }}
           expo-cache: true
       - run: yarn install
       - run: expo publish
