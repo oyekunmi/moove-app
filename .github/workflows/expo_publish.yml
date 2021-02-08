@@ -18,4 +18,4 @@ jobs:
           expo-token: ${{ secrets.EXPO_TOKEN }}
           expo-cache: true
       - run: yarn install
-      - run: expo publish
+      - run: expo publish --target managed
