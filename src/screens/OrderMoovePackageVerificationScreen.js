@@ -1,28 +1,43 @@
-import React, { useEffect } from 'react';
-import { View, StyleSheet, Text, TextInput, StatusBar, ScrollView } from 'react-native';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { View, StyleSheet, Text, TextInput, StatusBar, ScrollView, Alert } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import RedButton from '../components/RedButton';
 import { normalize } from '../normalizeFont';
 import Title from '../components/Title';
+import { isAppLoading, setTripCost } from '../redux/actions';
+import { calculateCost } from '../utils/helpers/api';
 
 export default function OrderMoovePackageVerificationScreen({ navigation, route }) {
   const trip = useSelector(state => state.trip);
+  const dispatch = useDispatch();
 
   const onContinue = async () => {
-    navigation.navigate("OrderMoovePaymentMethods", {
-      recipient_name: trip.recipientName, recipient_phone_number: trip.recipientPhone, start_location: trip.source,
-      end_location: trip.destination, package_description: trip.package, who_pays: "REQUESTER",
-      latitude: trip.sourceCoord.latitude, longitude: trip.sourceCoord.longitude
-    })
-  };
 
-  useEffect(() => {
-    StatusBar.setBarStyle("light-content");
-    StatusBar.setBackgroundColor("#132535");
-  }, []);
+    dispatch(isAppLoading(true));
+
+    try {
+
+      const cost = await calculateCost(trip.recipientName, trip.recipientPhone, trip.package, null, trip.source, trip.destination, null, 10, 10);
+      dispatch(setTripCost(cost));
+      dispatch(isAppLoading(false));
+
+      console.log(cost);
+
+      navigation.navigate("OrderMoovePaymentMethods");
+
+    } catch (error) {
+      console.log(error);
+      // There is no error response that can be tapped into from the backend this should be changed to reflect the error
+      Alert.alert('An error has occurred', 'Please verify your input', null, { cancelable: true });
+      dispatch(isAppLoading(false));
+    }
+    
+
+  };
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+      <StatusBar barStyle="light-content" backgroundColor="#132535" />
       <Title
         showBackButton={true}
         statusBarStyle="light-content"

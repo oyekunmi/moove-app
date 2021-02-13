@@ -11,37 +11,36 @@ import RadioForm, {
 	RadioButtonLabel,
 } from 'react-native-simple-radio-button';
 import { findRider } from '../utils/helpers/api';
-import { riderFound, isAppLoading, tripCreated } from '../redux/actions';
+import { isAppLoading, tripCreated } from '../redux/actions';
 
 export default function OrderMoovePaymentMethodScreen({ navigation, route }) {
 	const trip = useSelector(state => state.trip);
 	const [paymentMethod, setPaymentMethod] = useState('CASH');
 	const dispatch = useDispatch();
-	const { recipient_name, recipient_phone_number, start_location, end_location,
-		package_description, who_pays, latitude, longitude
-	} = route.params;
 	const token = useSelector(state => state.auth.userToken);
 
 	const startMoove = async () => {
 		dispatch(isAppLoading(true));
-		try {
-			const response = await findRider(recipient_name, recipient_phone_number, start_location, end_location, package_description, who_pays, latitude, longitude, paymentMethod, token);
-			dispatch(riderFound({ riderPhone: response.riderDetails.phone_number, riderName: response.riderName }));
-			dispatch(tripCreated(response.trip));
-			navigation.navigate("MooveHistoryFlow", { screen: 'MooveHistoryOrderStatus', });
-		}
-		catch (error) {
-			if (error.response) {
-				if (error.response.data.message) {
-					Alert.alert('Opps! sorry, ', error.response.data.message);
-				}
-			} else if (error.request) {
+		
+		findRider(trip.recipientName, trip.recipientPhone, trip.source, trip.destination, trip.package, "REQUESTER", trip.sourceCoord.latitude, trip.sourceCoord.longitude, paymentMethod, token)
+		.then( response => {
+			const result = response.data.data;
+			dispatch(tripCreated(result));
+			navigation.navigate("MooveHistoryFlow", { screen: 'MooveHistoryOrderStatus', order: result, backScreen: 'MooveHistoryList' });
+			dispatch(isAppLoading(false));
+		},
+		err => {
+			if (err.response?.data?.message) {
+				Alert.alert('Opps! sorry, ', error.response.data.message);
+			} else if (err.request) {
 				Alert.alert('An error has occurred', 'Network error, Please try again.');
 			} else {
-				Alert.alert('An error has occurred', error.message);
+				Alert.alert('An error has occurred', err.message);
 			}
-		}
-		dispatch(isAppLoading(false));
+			dispatch(isAppLoading(false));
+
+		});
+		
 	}
 
 	const radio_props = [

@@ -31,12 +31,14 @@ export default function SourceAddress(props) {
   let containerStyle = [styles.container, useDarkContent? {backgroundColor: "#efefef"}: {}]
   let inputStyle = [styles.input, useDarkContent? {color: "#000"}: {}]
 
-  if(props.theme){
+  // if(props.theme){
 
-  }
+  // }
 
   const getLocation = async () => {
     const { status } = await Location.requestPermissionsAsync();
+
+    console.log(status)
 
     if (status !== 'granted') {
       Alert.alert('An error has occurred', 'Permission to access location was denied', null, { cancelable: true });

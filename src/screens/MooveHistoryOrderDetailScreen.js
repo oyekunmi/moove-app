@@ -101,8 +101,6 @@ const styles = StyleSheet.create({
     paddingVertical: normalize(10),
     flexGrow: 1,
   },
-  packageContainer: {
-  },
   label: {
     marginVertical: normalize(10),
     paddingHorizontal: normalize(15),

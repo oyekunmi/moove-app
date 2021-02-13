@@ -14,56 +14,44 @@ import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 export default function OrderMoovePackageDescriptionScreen({ navigation }) {
 
   let trip = useSelector(state => state.trip);
-  let common = useSelector(state => state.common);
 
-  const [distance, setDistance] = useState('');
-  const [duration, setDuration] = useState('');
+  // const [distance, setDistance] = useState('');
+  // const [duration, setDuration] = useState('');
   const [enableButton, setEnableButton] = useState(true);
   const recipientPhone = trip.recipientPhone;
   const recipientName = trip.recipientName;
   const packageDescription = trip.package;
+  // const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const distanceMatrixUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${trip.sourceCoord.latitude},${trip.sourceCoord.longitude}&destinations=${trip.destinationCoord.latitude},${trip.destinationCoord.longitude}&&mode=driving&key=${GOOGLE_PLACES_API_KEY}`;
+  //   const distanceMatrixUrl = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${trip.sourceCoord.latitude},${trip.sourceCoord.longitude}&destinations=${trip.destinationCoord.latitude},${trip.destinationCoord.longitude}&&mode=driving&key=${GOOGLE_PLACES_API_KEY}`;
 
-    async function fetchData() {
-      const response = await axios.get(distanceMatrixUrl);
-      let { distance, duration } = response.data.rows[0].elements[0];
-      const { status } = response.data.rows[0].elements[0];
+  //   async function fetchData() {
+  //     const response = await axios.get(distanceMatrixUrl);
+  //     console.log(response.data.rows[0].elements[0]);
+  //     let { distance, duration } = response.data.rows[0].elements[0];
+  //     const { status } = response.data.rows[0].elements[0];
 
-      if (status === 'OK') {
-        distance = distance.text.split(' ').filter(value => Number(value)).join('');
-        duration = duration.text.split(' ').filter(value => Number(value)).join('.');
-      }
+  //     if (status === 'OK') {
+  //       distance = distance.text.split(' ').filter(value => Number(value)).join('');
+  //       duration = duration.text.split(' ').filter(value => Number(value)).join('.');
+  //     }
 
-      setDistance(distance);
-      setDuration(duration);
+  //     setDistance(distance);
+  //     setDuration(duration);
 
-    }
+  //   }
 
-    fetchData();
+  //   fetchData();
 
-  }, []);
+  // }, []);
 
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
   const onContinue = async () => {
-
-    dispatch(isAppLoading(true));
-
-    try {
-
-      const cost = await calculateCost(recipientName, recipientPhone, trip.package, null, trip.source, trip.destination, null, distance, duration);
-      dispatch(setTripCost(cost));
-      dispatch(isAppLoading(false));
+      // dispatch(setTripCost(1500));
       navigation.navigate('OrderMoovePackageVerification');
-    } catch (error) {
-      // There is no error response that can be tapped into from the backend this should be changed to reflect the error
-      Alert.alert('An error has occurred', 'Please verify your input', null, { cancelable: true });
-      dispatch(isAppLoading(false));
-    }
   }
 
   const onChangeRecipientPhone = (recipientPhone) => {
@@ -76,26 +64,26 @@ export default function OrderMoovePackageDescriptionScreen({ navigation }) {
     dispatch(changePackageInfo(packageDescription));
   }
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const keyboardDidShowListener = Keyboard.addListener(
-      'keyboardDidShow',
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      'keyboardDidHide',
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
+  //   const keyboardDidShowListener = Keyboard.addListener(
+  //     'keyboardDidShow',
+  //     () => {
+  //       setKeyboardVisible(true); // or some other action
+  //     }
+  //   );
+  //   const keyboardDidHideListener = Keyboard.addListener(
+  //     'keyboardDidHide',
+  //     () => {
+  //       setKeyboardVisible(false); // or some other action
+  //     }
+  //   );
 
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
+  //   return () => {
+  //     keyboardDidHideListener.remove();
+  //     keyboardDidShowListener.remove();
+  //   };
+  // }, []);
 
 
   useEffect(()=>{

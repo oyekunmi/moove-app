@@ -87,7 +87,7 @@ function RenderMooveItems({ navigation, items }) {
 }
 
 function RenderMooveItem({ item, action }) {
-  console.log(item);
+
   return (
     <View style={styles.itemContainer}>
       <View style={styles.detailContainer}>

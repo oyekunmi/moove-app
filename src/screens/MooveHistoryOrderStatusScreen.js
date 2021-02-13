@@ -4,7 +4,9 @@ import Message from '../components/Message';
 
 const MooveHistoryOrderStatusScreen = ({navigation, route}) => {
 
-    const { order } = route.params;
+    console.log(route.params);
+    const { order, backScreen } = route.params;
+
     // console.log(order.display_status);
     return (
         <Message
@@ -14,7 +16,7 @@ const MooveHistoryOrderStatusScreen = ({navigation, route}) => {
             buttonTitle="View details"
             messageType={GetMessageType(order.display_status)}
             routeTo={() => navigation.navigate('MooveHistoryOrderDetail', {order})}
-            headerOptionHandler={() => navigation.goBack()}
+            headerOptionHandler={() => backScreen ? navigation.navigate(backScreen) : navigation.goBack()}
         />
     );
 }

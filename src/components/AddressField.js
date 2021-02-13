@@ -92,7 +92,7 @@ const AddressField = (props) => {
         query={{
           key: `${GOOGLE_PLACES_API_KEY}`,
           language: 'en',
-          components: 'country:ng',
+          // components: 'country:ng',
         }}
         fetchDetails={true}
         nearbyPlacesAPI="GooglePlacesSearch"
