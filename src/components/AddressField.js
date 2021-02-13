@@ -98,7 +98,7 @@ const AddressField = (props) => {
         nearbyPlacesAPI="GooglePlacesSearch"
         debounce={200}
         // currentLocation={true}
-        // currentLocationLabel='Current location'
+        //currentLocationLabel='Current location'
       />
     </>
   )
