@@ -59,7 +59,7 @@ function MooveHistoryListScreen({ navigation }) {
           title="Start a moove"
           buttonStyle={styles.dashboardButton}
           onPress={() => {
-            navigation.navigate('Home')
+            navigation.navigate('OrderMooveFlow')
           }}></RedButton>
       </View>
       }

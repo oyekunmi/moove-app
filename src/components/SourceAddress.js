@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import { normalize } from '../normalizeFont';
 import { changeSourceAddress } from '../redux/actions';
 import * as Location from 'expo-location';
+import { GOOGLE_PLACES_API_KEY } from '../utils/constants';
 
 const styles = StyleSheet.create({
   label: {
@@ -43,11 +44,31 @@ export default function SourceAddress(props) {
     if (status !== 'granted') {
       Alert.alert('An error has occurred', 'Permission to access location was denied', null, { cancelable: true });
     }
+    
+    try{
+      Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High }).then( response => {
+        Location.setGoogleApiKey(GOOGLE_PLACES_API_KEY)
+        Location.reverseGeocodeAsync({ ...response.coords }, {useGoogleMaps: true}).then( res => {
+          const [ { name, street, city, country} ] = res;
+          const sourceAddress = `${name ?? ''}, ${street ?? ''}, ${city ?? ''}, ${country ?? ''}`;
+          dispatch(changeSourceAddress( sourceAddress, response.coords));
+        },
+        err => {
+          console.log("reverse geocoding issue");
+          console.log(err);
+        });
+      }, 
+      err => {
+        console.log("cannot get location " );
+        console.log(err);
+      });
+    }
+    catch(ex)
+    {
+      console.log("Exception");
+      console.log(ex);
+    }
 
-    const currentLocation = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
-    const [ { name, street, city, country} ] = await Location.reverseGeocodeAsync({ ...currentLocation.coords });
-    const sourceAddress = `${name ?? ''}, ${street ?? ''}, ${city ?? ''}, ${country ?? ''}`;
-    dispatch(changeSourceAddress( sourceAddress, currentLocation.coords));
   }
 
   

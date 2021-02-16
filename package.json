@@ -5,7 +5,8 @@
     "ios": "react-native run-ios",
     "web": "expo start --web",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "start-android": "expo start --localhost --android"
   },
   "dependencies": {
     "@expo-google-fonts/roboto": "^0.1.0",
